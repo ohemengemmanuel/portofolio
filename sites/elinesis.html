@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elinesis Water Park & Leisure Center – Oyarifa, Ghana</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky: #0077CC;
+    --sky-dark: #005FA3;
+    --wave: #00B4D8;
+    --sun: #FFB703;
+    --sun-dark: #FB8500;
+    --leaf: #2DC653;
+    --leaf-dark: #1A9E3A;
+    --coral: #FF6B6B;
+    --sand: #FFF3CD;
+    --white: #FFFFFF;
+    --dark: #12293A;
+    --mid: #2D5A7B;
+    --text: #1C3A4F;
+    --muted: #5A7B91;
+    --card-bg: #FFFFFF;
+    --section-bg: #F0F9FF;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    color: var(--text);
+    background: var(--white);
+    overflow-x: hidden;
+  }
+  h1, h2, h3, h4 { font-family: 'Baloo 2', cursive; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(0,30,60,0.92);
+    backdrop-filter: blur(10px);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 1.2rem; height: 60px;
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-family: 'Baloo 2', cursive; font-size: 1.3rem; font-weight: 800;
+    color: var(--white); text-decoration: none;
+  }
+  .nav-logo svg { width: 32px; height: 32px; }
+  .nav-links {
+    display: flex; gap: 1.5rem; list-style: none;
+  }
+  .nav-links a {
+    color: rgba(255,255,255,0.8); text-decoration: none;
+    font-size: 0.9rem; font-weight: 600; transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--sun); }
+  .nav-cta {
+    background: var(--sun); color: var(--dark);
+    border: none; border-radius: 50px; padding: 0.45rem 1.1rem;
+    font-family: 'Baloo 2', cursive; font-weight: 700; font-size: 0.9rem;
+    cursor: pointer; text-decoration: none; transition: background 0.2s;
+  }
+  .nav-cta:hover { background: var(--sun-dark); }
+  .hamburger { display: none; background: none; border: none; cursor: pointer; }
+  .hamburger svg { width: 26px; height: 26px; stroke: white; }
+  .mobile-menu {
+    display: none; position: fixed; top: 60px; left: 0; right: 0;
+    background: rgba(0,30,60,0.97); z-index: 99;
+    padding: 1.5rem; flex-direction: column; gap: 1.2rem;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    color: white; text-decoration: none; font-size: 1.1rem;
+    font-weight: 600; font-family: 'Baloo 2', cursive;
+    padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100svh;
+    background: linear-gradient(160deg, #002B4F 0%, #005FA3 45%, #0096C7 70%, #00B4D8 100%);
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: flex-end; text-align: center;
+    position: relative; overflow: hidden;
+    padding-bottom: 3rem; padding-top: 60px;
+  }
+  .hero-bg-img {
+    position: absolute; inset: 0;
+    background: url('https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=1200&q=80') center/cover no-repeat;
+    opacity: 0.18;
+  }
+  .hero-waves {
+    position: absolute; bottom: 0; left: 0; right: 0;
+  }
+  .hero-content {
+    position: relative; z-index: 2; max-width: 680px; padding: 0 1.5rem;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: rgba(255,183,3,0.18); border: 1.5px solid var(--sun);
+    color: var(--sun); border-radius: 50px; padding: 0.3rem 1rem;
+    font-size: 0.82rem; font-weight: 700; letter-spacing: 0.05em;
+    text-transform: uppercase; margin-bottom: 1rem;
+  }
+  .hero h1 {
+    font-size: clamp(2.4rem, 8vw, 4.2rem);
+    font-weight: 800; color: var(--white); line-height: 1.1;
+    margin-bottom: 0.8rem;
+  }
+  .hero h1 span { color: var(--sun); }
+  .hero p {
+    color: rgba(255,255,255,0.82); font-size: 1.05rem;
+    line-height: 1.7; margin-bottom: 2rem;
+  }
+  .hero-btns { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--sun); color: var(--dark);
+    border: none; border-radius: 50px; padding: 0.85rem 2rem;
+    font-family: 'Baloo 2', cursive; font-weight: 700; font-size: 1rem;
+    cursor: pointer; text-decoration: none;
+    box-shadow: 0 4px 20px rgba(255,183,3,0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: inline-flex; align-items: center; gap: 0.4rem;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(255,183,3,0.5); }
+  .btn-outline {
+    background: transparent; color: white;
+    border: 2px solid rgba(255,255,255,0.5); border-radius: 50px;
+    padding: 0.85rem 2rem; font-family: 'Baloo 2', cursive;
+    font-weight: 700; font-size: 1rem; cursor: pointer; text-decoration: none;
+    transition: border-color 0.2s, background 0.2s;
+    display: inline-flex; align-items: center; gap: 0.4rem;
+  }
+  .btn-outline:hover { border-color: white; background: rgba(255,255,255,0.1); }
+  .hero-stats {
+    display: flex; gap: 2rem; justify-content: center;
+    margin-top: 2.5rem; flex-wrap: wrap;
+  }
+  .stat { text-align: center; }
+  .stat-num { font-family: 'Baloo 2', cursive; font-size: 2rem; font-weight: 800; color: var(--sun); }
+  .stat-label { font-size: 0.78rem; color: rgba(255,255,255,0.7); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  /* SECTION SHELL */
+  section { padding: 5rem 1.5rem; }
+  .section-label {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: rgba(0,180,216,0.1); border: 1.5px solid var(--wave);
+    color: var(--sky); border-radius: 50px; padding: 0.25rem 0.9rem;
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; margin-bottom: 0.8rem;
+  }
+  .section-title {
+    font-size: clamp(1.8rem, 5vw, 2.8rem); font-weight: 800;
+    color: var(--dark); line-height: 1.2; margin-bottom: 0.6rem;
+  }
+  .section-title span { color: var(--sky); }
+  .section-sub { color: var(--muted); font-size: 1rem; line-height: 1.7; max-width: 560px; }
+  .text-center { text-align: center; }
+  .text-center .section-sub { margin: 0 auto; }
+
+  /* ATTRACTIONS GRID */
+  #attractions { background: var(--section-bg); }
+  .attractions-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.2rem; margin-top: 2.5rem; max-width: 1100px; margin-left: auto; margin-right: auto;
+  }
+  .attract-card {
+    background: var(--white); border-radius: 20px; overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,60,120,0.08);
+    transition: transform 0.25s, box-shadow 0.25s;
+    cursor: pointer;
+  }
+  .attract-card:hover { transform: translateY(-6px); box-shadow: 0 12px 40px rgba(0,60,120,0.16); }
+  .attract-img {
+    height: 180px; object-fit: cover; width: 100%; display: block;
+  }
+  .attract-body { padding: 1.2rem 1.4rem; }
+  .attract-icon {
+    width: 44px; height: 44px; border-radius: 12px; display: flex;
+    align-items: center; justify-content: center; margin-bottom: 0.8rem;
+  }
+  .attract-icon svg { width: 24px; height: 24px; }
+  .attract-card h3 { font-size: 1.15rem; font-weight: 700; color: var(--dark); margin-bottom: 0.4rem; }
+  .attract-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
+  .attract-tag {
+    display: inline-block; margin-top: 0.8rem;
+    background: var(--section-bg); color: var(--sky);
+    border-radius: 50px; padding: 0.2rem 0.75rem;
+    font-size: 0.75rem; font-weight: 700;
+  }
+
+  /* EXPERIENCE / WHY US */
+  #why { background: var(--white); }
+  .why-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1rem; margin-top: 2rem; max-width: 900px; margin-left: auto; margin-right: auto;
+  }
+  .why-card {
+    background: var(--section-bg); border-radius: 16px;
+    padding: 1.4rem; display: flex; gap: 1rem; align-items: flex-start;
+    transition: background 0.2s;
+  }
+  .why-card:hover { background: #ddeeff; }
+  .why-icon {
+    width: 48px; height: 48px; min-width: 48px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .why-icon svg { width: 26px; height: 26px; }
+  .why-card h4 { font-size: 1rem; font-weight: 700; color: var(--dark); margin-bottom: 0.3rem; }
+  .why-card p { font-size: 0.84rem; color: var(--muted); line-height: 1.55; }
+
+  /* GALLERY SCROLL */
+  #gallery { background: var(--dark); padding-left: 0; padding-right: 0; }
+  #gallery .inner { padding: 0 1.5rem; }
+  #gallery .section-title { color: white; }
+  #gallery .section-sub { color: rgba(255,255,255,0.6); }
+  .gallery-scroll {
+    display: flex; gap: 1rem; overflow-x: auto; padding: 1.5rem 1.5rem 0.5rem;
+    scrollbar-width: none;
+    scroll-snap-type: x mandatory;
+  }
+  .gallery-scroll::-webkit-scrollbar { display: none; }
+  .gallery-item {
+    min-width: 260px; height: 200px; border-radius: 16px; overflow: hidden;
+    flex-shrink: 0; scroll-snap-align: start; position: relative;
+  }
+  .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.35s; }
+  .gallery-item:hover img { transform: scale(1.06); }
+  .gallery-item .overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,30,60,0.7) 0%, transparent 50%);
+    display: flex; align-items: flex-end; padding: 0.9rem;
+  }
+  .overlay-text { color: white; font-size: 0.85rem; font-weight: 700; }
+
+  /* PRICING */
+  #pricing { background: var(--section-bg); }
+  .pricing-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.2rem; max-width: 900px; margin: 2.5rem auto 0;
+  }
+  .price-card {
+    background: var(--white); border-radius: 20px; padding: 2rem 1.5rem;
+    text-align: center; box-shadow: 0 4px 20px rgba(0,60,120,0.07);
+    border: 2px solid transparent; transition: border-color 0.2s, transform 0.2s;
+    position: relative;
+  }
+  .price-card.featured { border-color: var(--sky); transform: scale(1.03); }
+  .price-card.featured::before {
+    content: 'Most Popular'; position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+    background: var(--sky); color: white; font-size: 0.72rem; font-weight: 700;
+    padding: 0.25rem 1rem; border-radius: 50px; letter-spacing: 0.05em;
+    text-transform: uppercase; white-space: nowrap;
+  }
+  .price-icon {
+    width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 1rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .price-icon svg { width: 32px; height: 32px; }
+  .price-card h3 { font-size: 1.1rem; font-weight: 700; color: var(--dark); margin-bottom: 0.3rem; }
+  .price-amount {
+    font-family: 'Baloo 2', cursive; font-size: 2.4rem; font-weight: 800;
+    color: var(--sky); line-height: 1;
+  }
+  .price-amount span { font-size: 1rem; color: var(--muted); font-family: 'Nunito', sans-serif; font-weight: 400; }
+  .price-list { list-style: none; margin: 1.2rem 0 1.5rem; text-align: left; }
+  .price-list li {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: 0.88rem; color: var(--text); padding: 0.3rem 0;
+  }
+  .price-list li svg { width: 16px; height: 16px; color: var(--leaf); flex-shrink: 0; }
+
+  /* TICKET BUILDER */
+  #tickets { background: var(--white); }
+  .ticket-builder {
+    max-width: 560px; margin: 2rem auto 0;
+    background: var(--section-bg); border-radius: 24px; padding: 2rem;
+  }
+  .ticket-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.9rem 0; border-bottom: 1px solid rgba(0,60,120,0.08);
+  }
+  .ticket-row:last-of-type { border-bottom: none; }
+  .ticket-label { font-weight: 700; color: var(--dark); font-size: 0.95rem; }
+  .ticket-price { font-size: 0.82rem; color: var(--muted); }
+  .qty-control {
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .qty-btn {
+    width: 34px; height: 34px; border-radius: 50%;
+    border: 2px solid var(--sky); background: none;
+    color: var(--sky); font-size: 1.2rem; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .qty-btn:hover { background: var(--sky); color: white; }
+  .qty-num { font-family: 'Baloo 2', cursive; font-size: 1.1rem; font-weight: 700; min-width: 24px; text-align: center; }
+  .ticket-total {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 1.2rem; padding-top: 1.2rem; border-top: 2px solid var(--wave);
+  }
+  .total-label { font-size: 1rem; font-weight: 700; color: var(--dark); }
+  .total-amount { font-family: 'Baloo 2', cursive; font-size: 1.8rem; font-weight: 800; color: var(--sky); }
+  .ticket-cta {
+    width: 100%; margin-top: 1.2rem; background: var(--sky); color: white;
+    border: none; border-radius: 50px; padding: 1rem;
+    font-family: 'Baloo 2', cursive; font-weight: 700; font-size: 1.1rem;
+    cursor: pointer; transition: background 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  }
+  .ticket-cta:hover { background: var(--sky-dark); }
+  .ticket-cta svg { width: 20px; height: 20px; }
+
+  /* TESTIMONIALS */
+  #reviews { background: var(--dark); }
+  #reviews .section-title { color: white; }
+  #reviews .section-sub { color: rgba(255,255,255,0.6); }
+  .reviews-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.2rem; margin-top: 2rem; max-width: 960px; margin-left: auto; margin-right: auto;
+  }
+  .review-card {
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 18px; padding: 1.5rem;
+  }
+  .stars { display: flex; gap: 3px; margin-bottom: 0.8rem; }
+  .stars svg { width: 16px; height: 16px; fill: var(--sun); }
+  .review-card p { color: rgba(255,255,255,0.82); font-size: 0.9rem; line-height: 1.65; }
+  .reviewer { display: flex; align-items: center; gap: 0.75rem; margin-top: 1.1rem; }
+  .reviewer-avatar {
+    width: 40px; height: 40px; border-radius: 50%; overflow: hidden;
+    background: var(--wave); display: flex; align-items: center; justify-content: center;
+    font-family: 'Baloo 2', cursive; font-weight: 700; color: white; font-size: 1rem;
+  }
+  .reviewer-name { font-weight: 700; color: white; font-size: 0.9rem; }
+  .reviewer-loc { font-size: 0.78rem; color: rgba(255,255,255,0.5); }
+
+  /* MAP / VISIT */
+  #visit { background: var(--section-bg); }
+  .visit-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
+    max-width: 900px; margin: 2rem auto 0; align-items: start;
+  }
+  .info-block { background: var(--white); border-radius: 18px; padding: 1.5rem; }
+  .info-item { display: flex; gap: 0.8rem; align-items: flex-start; margin-bottom: 1.2rem; }
+  .info-item:last-child { margin-bottom: 0; }
+  .info-icon { width: 40px; height: 40px; min-width: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+  .info-icon svg { width: 20px; height: 20px; }
+  .info-item h4 { font-size: 0.9rem; font-weight: 700; color: var(--dark); }
+  .info-item p { font-size: 0.83rem; color: var(--muted); margin-top: 0.15rem; line-height: 1.55; }
+  .map-placeholder {
+    border-radius: 18px; overflow: hidden; height: 280px; background: var(--mid);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 1rem; color: rgba(255,255,255,0.7);
+    font-family: 'Baloo 2', cursive; font-size: 1rem; text-align: center;
+    position: relative;
+  }
+  .map-placeholder iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+
+  /* CTA BAND */
+  .cta-band {
+    background: linear-gradient(135deg, var(--sky) 0%, #003A6E 100%);
+    padding: 4rem 1.5rem; text-align: center;
+  }
+  .cta-band h2 { font-size: clamp(1.8rem, 5vw, 2.6rem); color: white; font-weight: 800; margin-bottom: 0.8rem; }
+  .cta-band p { color: rgba(255,255,255,0.78); margin-bottom: 1.8rem; font-size: 1rem; }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark); color: rgba(255,255,255,0.6);
+    padding: 3rem 1.5rem 2rem;
+  }
+  .footer-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem; max-width: 960px; margin: 0 auto;
+  }
+  .footer-brand p { font-size: 0.87rem; line-height: 1.7; margin-top: 0.8rem; }
+  .footer-col h4 { color: white; font-family: 'Baloo 2', cursive; font-weight: 700; margin-bottom: 0.8rem; font-size: 1rem; }
+  .footer-col ul { list-style: none; }
+  .footer-col li { margin-bottom: 0.4rem; }
+  .footer-col a { color: rgba(255,255,255,0.55); text-decoration: none; font-size: 0.87rem; transition: color 0.2s; }
+  .footer-col a:hover { color: var(--sun); }
+  .footer-bottom {
+    text-align: center; margin-top: 2.5rem; padding-top: 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.08); font-size: 0.8rem;
+  }
+  .social-links { display: flex; gap: 0.8rem; margin-top: 0.8rem; }
+  .social-link {
+    width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s; text-decoration: none;
+  }
+  .social-link:hover { background: var(--sky); }
+  .social-link svg { width: 18px; height: 18px; fill: white; }
+
+  /* STICKY BOOK BTN (mobile) */
+  .sticky-book {
+    display: none; position: fixed; bottom: 1.2rem; right: 1.2rem; z-index: 99;
+    background: var(--sun); color: var(--dark); border: none; border-radius: 50px;
+    padding: 0.8rem 1.4rem; font-family: 'Baloo 2', cursive; font-weight: 700;
+    font-size: 0.95rem; cursor: pointer; box-shadow: 0 6px 24px rgba(255,183,3,0.5);
+    display: flex; align-items: center; gap: 0.4rem; text-decoration: none;
+  }
+  .sticky-book svg { width: 18px; height: 18px; }
+
+  /* WAVE DIVIDER */
+  .wave-divider { display: block; width: 100%; }
+
+  /* RESPONSIVE */
+  @media (max-width: 700px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .why-grid { grid-template-columns: 1fr; }
+    .visit-grid { grid-template-columns: 1fr; }
+    nav .nav-cta { display: none; }
+    .attract-img { height: 150px; }
+  }
+  @media (min-width: 701px) {
+    .sticky-book { display: none !important; }
+  }
+
+  /* ANIMATIONS */
+  .fade-up {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .fade-up.visible { opacity: 1; transform: none; }
+  .delay-1 { transition-delay: 0.1s; }
+  .delay-2 { transition-delay: 0.2s; }
+  .delay-3 { transition-delay: 0.3s; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="16" cy="16" r="16" fill="#0077CC"/>
+      <path d="M6 22c2-3 4-5 6-4s4 3 6 2 4-3 8-3" stroke="#00B4D8" stroke-width="2" stroke-linecap="round"/>
+      <path d="M8 18c2-3 4-5 6-4s4 3 6 2 4-3 6-3" stroke="white" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="16" cy="11" r="3" fill="#FFB703"/>
+      <path d="M16 14v2" stroke="#FFB703" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    Elinesis
+  </a>
+  <ul class="nav-links">
+    <li><a href="#attractions">Attractions</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#visit">Visit Us</a></li>
+  </ul>
+  <a href="#tickets" class="nav-cta">Book Now</a>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <line x1="3" y1="12" x2="21" y2="12"/>
+      <line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#attractions" onclick="toggleMenu()">Attractions</a>
+  <a href="#pricing" onclick="toggleMenu()">Pricing</a>
+  <a href="#gallery" onclick="toggleMenu()">Gallery</a>
+  <a href="#reviews" onclick="toggleMenu()">Reviews</a>
+  <a href="#visit" onclick="toggleMenu()">Visit Us</a>
+  <a href="#tickets" class="btn-primary" onclick="toggleMenu()">Book Tickets</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-img"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <svg viewBox="0 0 20 20" fill="none" width="14" height="14"><path d="M10 2l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 14.3l-4.8 2.5.9-5.3L2.2 7.7l5.4-.8L10 2z" fill="#FFB703"/></svg>
+      Oyarifa, Greater Accra
+    </div>
+    <h1>Where <span>Every Splash</span> Creates a Memory</h1>
+    <p>Ghana's most exciting water park & leisure center — thrilling slides, serene pools, gourmet food, and endless fun for the whole family. Just minutes from Accra.</p>
+    <div class="hero-btns">
+      <a href="#tickets" class="btn-primary">
+        <svg viewBox="0 0 24 24" fill="none" width="18" height="18" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="10" rx="2"/><path d="M16 7V5a2 2 0 0 0-4 0v2M8 7V5a2 2 0 0 0-4 0v2"/></svg>
+        Book Tickets
+      </a>
+      <a href="#attractions" class="btn-outline">
+        <svg viewBox="0 0 24 24" fill="none" width="18" height="18" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor"/></svg>
+        Explore Park
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">12+</div><div class="stat-label">Rides & Slides</div></div>
+      <div class="stat"><div class="stat-num">5</div><div class="stat-label">Pool Zones</div></div>
+      <div class="stat"><div class="stat-num">4K+</div><div class="stat-label">Happy Visitors</div></div>
+    </div>
+  </div>
+  <svg class="hero-waves" viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" fill="#F0F9FF"/>
+  </svg>
+</section>
+
+<!-- ATTRACTIONS -->
+<section id="attractions">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="text-center">
+      <div class="section-label">
+        <svg viewBox="0 0 20 20" fill="none" width="14" height="14"><path d="M10 2C6.13 2 3 5.13 3 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#0077CC"/><circle cx="10" cy="9" r="2.5" fill="white"/></svg>
+        Attractions
+      </div>
+      <h2 class="section-title">Something for <span>Everyone</span></h2>
+      <p class="section-sub">From heart-pounding slides to gentle kiddie pools — Elinesis has the perfect adventure for every age and personality.</p>
+    </div>
+    <div class="attractions-grid">
+      <div class="attract-card fade-up">
+        <img class="attract-img" src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&q=80" alt="Water Slides" loading="lazy">
+        <div class="attract-body">
+          <div class="attract-icon" style="background:#E6F1FB;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#0077CC" stroke-width="2"><path d="M3 20c3-6 6-9 9-9s6 3 9 9"/><path d="M12 11V3"/><path d="M8 7l4-4 4 4"/></svg>
+          </div>
+          <h3>Mega Slides</h3>
+          <p>Soar down our multi-lane speed slides and twisting tube slides for maximum thrills and non-stop laughs.</p>
+          <span class="attract-tag">All Ages (Height 1.2m+)</span>
+        </div>
+      </div>
+      <div class="attract-card fade-up delay-1">
+        <img class="attract-img" src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=80" alt="Wave Pool" loading="lazy">
+        <div class="attract-body">
+          <div class="attract-icon" style="background:#E1F5EE;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#2DC653" stroke-width="2"><path d="M2 12c2-4 5-4 7 0s5 4 7 0 5-4 6 0"/><path d="M2 18c2-4 5-4 7 0s5 4 7 0 5-4 6 0"/></svg>
+          </div>
+          <h3>Wave Pool</h3>
+          <p>Ride the waves in our giant wave pool — perfect for relaxing floats or a fun surf experience right here in Oyarifa.</p>
+          <span class="attract-tag" style="background:#E1F5EE;color:#1A9E3A;">Family Favourite</span>
+        </div>
+      </div>
+      <div class="attract-card fade-up delay-2">
+        <img class="attract-img" src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600&q=80" alt="Kids Zone" loading="lazy">
+        <div class="attract-body">
+          <div class="attract-icon" style="background:#FAEEDA;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#FFB703" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+          <h3>Splash Kiddie Zone</h3>
+          <p>A shallow, safe water playground designed for toddlers and little ones — spray jets, mini slides, and bucket dumps galore!</p>
+          <span class="attract-tag" style="background:#FAEEDA;color:#854F0B;">Ages 0–7</span>
+        </div>
+      </div>
+      <div class="attract-card fade-up">
+        <img class="attract-img" src="https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80" alt="Lazy River" loading="lazy">
+        <div class="attract-body">
+          <div class="attract-icon" style="background:#FBEAF0;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#D4537E" stroke-width="2"><path d="M3 12c2-3 5-3 7 0s5 3 7 0 5-3 4 0"/><path d="M5 8C3 6 2 5 2 5s1 2 3 3"/></svg>
+          </div>
+          <h3>Lazy River</h3>
+          <p>Drift along our 200m winding lazy river on inflatable rings — the ultimate way for parents to unwind while kids splash around.</p>
+          <span class="attract-tag" style="background:#FBEAF0;color:#993556;">Pure Relaxation</span>
+        </div>
+      </div>
+      <div class="attract-card fade-up delay-1">
+        <img class="attract-img" src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&q=80" alt="Restaurant" loading="lazy">
+        <div class="attract-body">
+          <div class="attract-icon" style="background:#F0FFF4;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#2DC653" stroke-width="2"><path d="M3 2h1v20H3zM9 2h1v5a3 3 0 0 1-3 3V2h1"/><path d="M21 15a3 3 0 0 0-6 0v5h6v-5z"/><path d="M18 2v10"/></svg>
+          </div>
+          <h3>Ocean Bites Dining</h3>
+          <p>Jollof rice, grilled tilapia, fresh juices, snacks and international favorites — fueling your day of fun from morning to sunset.</p>
+          <span class="attract-tag" style="background:#F0FFF4;color:#3B6D11;">Food & Drinks</span>
+        </div>
+      </div>
+      <div class="attract-card fade-up delay-2">
+        <img class="attract-img" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80" alt="Relaxation Cabanas" loading="lazy">
+        <div class="attract-body">
+          <div class="attract-icon" style="background:#F0F9FF;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#0077CC" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/><rect x="7" y="3" width="10" height="18" rx="1"/></svg>
+          </div>
+          <h3>Private Cabanas</h3>
+          <p>Reserve a shaded private cabana with lounge chairs, towel service, and a dedicated waitstaff for a VIP poolside experience.</p>
+          <span class="attract-tag">VIP Add-on</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY ELINESIS -->
+<section id="why">
+  <div style="max-width:900px;margin:0 auto;">
+    <div class="text-center">
+      <div class="section-label">
+        <svg viewBox="0 0 20 20" fill="#0077CC" width="14" height="14"><path d="M10 1l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 13.3l-4.8 2.5.9-5.3L2.2 6.7l5.4-.8L10 1z"/></svg>
+        Why Choose Us
+      </div>
+      <h2 class="section-title">A Paradise <span>Built for Joy</span></h2>
+      <p class="section-sub">We've thought of everything — so all you have to think about is making memories.</p>
+    </div>
+    <div class="why-grid">
+      <div class="why-card fade-up">
+        <div class="why-icon" style="background:#E6F1FB;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#0077CC" stroke-width="2" width="26" height="26"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div><h4>Certified Safe & Clean</h4><p>Our pools are tested daily and all rides inspected by certified safety engineers. Your family's safety is our top priority.</p></div>
+      </div>
+      <div class="why-card fade-up delay-1">
+        <div class="why-icon" style="background:#E1F5EE;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#2DC653" stroke-width="2" width="26" height="26"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>
+        </div>
+        <div><h4>Family Friendly</h4><p>From infants to grandparents — every zone is designed with a range of ages in mind. Changing rooms, nursing areas, and accessibility ramps included.</p></div>
+      </div>
+      <div class="why-card fade-up delay-2">
+        <div class="why-icon" style="background:#FAEEDA;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#FB8500" stroke-width="2" width="26" height="26"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+        </div>
+        <div><h4>Sunny Year-Round</h4><p>Oyarifa's warm climate means we're open 365 days. Perfect weather, perfect vibes — any weekend works for a water park day.</p></div>
+      </div>
+      <div class="why-card fade-up delay-3">
+        <div class="why-icon" style="background:#FBEAF0;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#D4537E" stroke-width="2" width="26" height="26"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <div><h4>Events & Birthday Parties</h4><p>Celebrate in style! We host birthday parties, school outings, and corporate events with custom packages and dedicated event staff.</p></div>
+      </div>
+      <div class="why-card fade-up">
+        <div class="why-icon" style="background:#EAF3DE;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#3B6D11" stroke-width="2" width="26" height="26"><path d="M12 22V12M12 12C10 8 6 6 2 8M12 12c2-4 6-6 10-4"/></svg>
+        </div>
+        <div><h4>Eco-Conscious Park</h4><p>Our water recycling system and solar panels ensure your fun has the lightest possible footprint. We love Ghana's environment.</p></div>
+      </div>
+      <div class="why-card fade-up delay-1">
+        <div class="why-icon" style="background:#E6F1FB;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#0077CC" stroke-width="2" width="26" height="26"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
+        </div>
+        <div><h4>Easy Online Booking</h4><p>Skip the queue! Buy tickets online, choose your preferred date, and walk straight to the fun. Group discounts available.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="inner">
+    <div class="section-label" style="background:rgba(0,180,216,0.15);">
+      <svg viewBox="0 0 20 20" fill="#00B4D8" width="14" height="14"><rect x="2" y="4" width="16" height="12" rx="2"/><circle cx="7" cy="8" r="1.5"/><path d="M2 14l5-5 4 4 2-2 5 5"/></svg>
+      Gallery
+    </div>
+    <h2 class="section-title" style="color:white;">See the <span style="color:var(--wave);">Magic</span></h2>
+    <p class="section-sub" style="color:rgba(255,255,255,0.6);">Real moments. Real smiles. Real fun at Elinesis.</p>
+  </div>
+  <div class="gallery-scroll">
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=500&q=80" alt="Slide fun" loading="lazy">
+      <div class="overlay"><span class="overlay-text">Thrilling Slides</span></div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1561489396-888724a1543d?w=500&q=80" alt="Kids pool" loading="lazy">
+      <div class="overlay"><span class="overlay-text">Kids Paradise</span></div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=500&q=80" alt="Resort pool" loading="lazy">
+      <div class="overlay"><span class="overlay-text">Leisure Pools</span></div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=500&q=80" alt="Food" loading="lazy">
+      <div class="overlay"><span class="overlay-text">Delicious Food</span></div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=500&q=80" alt="Relaxation" loading="lazy">
+      <div class="overlay"><span class="overlay-text">Pure Relaxation</span></div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=500&q=80" alt="Cabanas" loading="lazy">
+      <div class="overlay"><span class="overlay-text">Private Cabanas</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div style="max-width:900px;margin:0 auto;">
+    <div class="text-center">
+      <div class="section-label">
+        <svg viewBox="0 0 20 20" fill="none" stroke="#0077CC" stroke-width="2" width="14" height="14"><circle cx="10" cy="10" r="8"/><path d="M10 6v4l3 3"/></svg>
+        Pricing
+      </div>
+      <h2 class="section-title">Simple, <span>Fair Prices</span></h2>
+      <p class="section-sub">All-day access included with every ticket. No hidden fees — just pure fun.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card fade-up">
+        <div class="price-icon" style="background:#E1F5EE;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#2DC653" stroke-width="2" width="32" height="32"><path d="M12 2c-4 0-7 3-7 7 0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        </div>
+        <h3>Child Ticket</h3>
+        <p style="font-size:0.82rem;color:var(--muted);margin-bottom:0.6rem;">Ages 3–12</p>
+        <div class="price-amount">GH₵ 80 <span>/ day</span></div>
+        <ul class="price-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> All kiddie zones & pools</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Lazy river access</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Splash pad unlimited</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Life jacket included</li>
+        </ul>
+        <a href="#tickets" class="btn-primary" style="width:100%;justify-content:center;">Select</a>
+      </div>
+      <div class="price-card featured fade-up delay-1">
+        <div class="price-icon" style="background:#E6F1FB;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#0077CC" stroke-width="2" width="32" height="32"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>
+        </div>
+        <h3>Adult Ticket</h3>
+        <p style="font-size:0.82rem;color:var(--muted);margin-bottom:0.6rem;">Ages 13+</p>
+        <div class="price-amount">GH₵ 120 <span>/ day</span></div>
+        <ul class="price-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> All slides & pools</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Wave pool & lazy river</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Locker included</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Towel rental discount</li>
+        </ul>
+        <a href="#tickets" class="btn-primary" style="width:100%;justify-content:center;">Select</a>
+      </div>
+      <div class="price-card fade-up delay-2">
+        <div class="price-icon" style="background:#FAEEDA;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#FFB703" stroke-width="2" width="32" height="32"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3>Family Bundle</h3>
+        <p style="font-size:0.82rem;color:var(--muted);margin-bottom:0.6rem;">2 Adults + 2 Kids</p>
+        <div class="price-amount">GH₵ 360 <span>/ day</span></div>
+        <ul class="price-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> All zones for 4 people</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Save GH₵ 40</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Priority entry</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Free photo spot</li>
+        </ul>
+        <a href="#tickets" class="btn-primary" style="width:100%;justify-content:center;">Select</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKET BUILDER -->
+<section id="tickets">
+  <div style="max-width:560px;margin:0 auto;text-align:center;">
+    <div class="section-label" style="margin:0 auto 0.8rem;">
+      <svg viewBox="0 0 20 20" fill="none" stroke="#0077CC" stroke-width="2" width="14" height="14"><rect x="2" y="6" width="16" height="10" rx="2"/><path d="M14 6V4a2 2 0 0 0-4 0v2M6 6V4a2 2 0 0 0-4 0v2"/></svg>
+      Book Now
+    </div>
+    <h2 class="section-title">Build Your <span>Ticket</span></h2>
+    <p class="section-sub" style="margin:0 auto 0;">Choose your date and how many are joining the fun today!</p>
+    <div class="ticket-builder" style="margin-top:1.5rem;">
+      <div style="margin-bottom:1.2rem;">
+        <label style="font-size:0.85rem;font-weight:700;color:var(--muted);display:block;margin-bottom:0.4rem;">Select Visit Date</label>
+        <input type="date" id="visitDate" style="width:100%;padding:0.7rem 1rem;border:2px solid var(--wave);border-radius:12px;font-family:'Nunito',sans-serif;font-size:0.95rem;color:var(--dark);background:white;outline:none;">
+      </div>
+      <div class="ticket-row">
+        <div><div class="ticket-label">Adult Ticket</div><div class="ticket-price">GH₵ 120 each</div></div>
+        <div class="qty-control">
+          <button class="qty-btn" onclick="change('adult',-1)">−</button>
+          <span class="qty-num" id="adult-qty">1</span>
+          <button class="qty-btn" onclick="change('adult',1)">+</button>
+        </div>
+      </div>
+      <div class="ticket-row">
+        <div><div class="ticket-label">Child Ticket</div><div class="ticket-price">GH₵ 80 each</div></div>
+        <div class="qty-control">
+          <button class="qty-btn" onclick="change('child',-1)">−</button>
+          <span class="qty-num" id="child-qty">0</span>
+          <button class="qty-btn" onclick="change('child',1)">+</button>
+        </div>
+      </div>
+      <div class="ticket-row">
+        <div><div class="ticket-label">Private Cabana</div><div class="ticket-price">GH₵ 200 each</div></div>
+        <div class="qty-control">
+          <button class="qty-btn" onclick="change('cabana',-1)">−</button>
+          <span class="qty-num" id="cabana-qty">0</span>
+          <button class="qty-btn" onclick="change('cabana',1)">+</button>
+        </div>
+      </div>
+      <div class="ticket-total">
+        <span class="total-label">Total</span>
+        <span class="total-amount" id="total">GH₵ 120</span>
+      </div>
+      <button class="ticket-cta" onclick="bookNow()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Proceed to Checkout
+      </button>
+      <p style="font-size:0.78rem;color:var(--muted);margin-top:0.8rem;text-align:center;">
+        <svg viewBox="0 0 20 20" fill="none" stroke="#2DC653" stroke-width="2" width="13" height="13" style="vertical-align:middle;"><path d="M10 2c-4 0-7 3-7 7s3 7 7 7 7-3 7-7-3-7-7-7z"/><path d="M7 10l2 2 4-4"/></svg>
+        Free cancellation up to 24h before your visit
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <div style="max-width:960px;margin:0 auto;">
+    <div class="text-center">
+      <div class="section-label" style="background:rgba(255,183,3,0.15);border-color:var(--sun);color:var(--sun);">
+        <svg viewBox="0 0 20 20" fill="#FFB703" width="14" height="14"><path d="M10 1l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 13.3l-4.8 2.5.9-5.3L2.2 6.7l5.4-.8L10 1z"/></svg>
+        Reviews
+      </div>
+      <h2 class="section-title" style="color:white;">Families <span style="color:var(--wave);">Love Us</span></h2>
+      <p class="section-sub" style="color:rgba(255,255,255,0.6);margin:0 auto;">Here's what visitors are saying about Elinesis Water Park.</p>
+    </div>
+    <div class="reviews-grid" style="margin-top:2rem;">
+      <div class="review-card fade-up">
+        <div class="stars">
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 13.3l-4.8 2.5.9-5.3L2.2 6.7l5.4-.8L10 1z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 13.3l-4.8 2.5.9-5.3L2.2 6.7l5.4-.8L10 1z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 13.3l-4.8 2.5.9-5.3L2.2 6.7l5.4-.8L10 1z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 13.3l-4.8 2.5.9-5.3L2.2 6.7l5.4-.8L10 1z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 13.3l-4.8 2.5.9-5.3L2.2 6.7l5.4-.8L10 1z"/></svg>
+        </div>
+        <p>"We brought the kids here for the Easter weekend and they absolutely refused to leave! The slides were incredible and the staff were so kind and helpful. Definitely our new favourite spot in Accra!"</p>
+        <div class="reviewer">
+          <div class="reviewer-avatar">AA</div>
+          <div>
+            <div class="reviewer-name">Ama Asante</div>
+            <div class="reviewer-loc">East Legon, Accra</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-card fade-up delay-1">
+        <div class="stars">
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 13.3l-4.8 2.5.9-5.3L2.2 6.7l5.4-.8L10 1z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 13.3l-4.8 2.5.9-5.3L2.2 6.7l5.4-.8L10 1z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 13.3l-4.8 2.5.9-5.3L2.2 6.7l5.4-.8L10 1z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 13.3l-4.8 2.5.9-5.3L2.2 6.7l5.4-.8L10 1z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 13.3l-4.8 2.5.9-5.3L2.2 6.7l5.4-.8L10 1z"/></svg>
+        </div>
+        <p>"The lazy river was my personal highlight — so peaceful. My wife and I just floated around while the kids had the time of their lives. The jollof rice at Ocean Bites is 10/10. We'll be back every school holiday."</p>
+        <div class="reviewer">
+          <div class="reviewer-avatar" style="background:var(--coral);">KO</div>
+          <div>
+            <div class="reviewer-name">Kweku Ofori</div>
+            <div class="reviewer-loc">Tema, Greater Accra</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-card fade-up delay-2">
+        <div class="stars">
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 13.3l-4.8 2.5.9-5.3L2.2 6.7l5.4-.8L10 1z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 13.3l-4.8 2.5.9-5.3L2.2 6.7l5.4-.8L10 1z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 13.3l-4.8 2.5.9-5.3L2.2 6.7l5.4-.8L10 1z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 13.3l-4.8 2.5.9-5.3L2.2 6.7l5.4-.8L10 1z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 13.3l-4.8 2.5.9-5.3L2.2 6.7l5.4-.8L10 1z"/></svg>
+        </div>
+        <p>"We booked the private cabana for my daughter's 7th birthday party and the experience was absolutely magical. The staff set everything up beautifully. Cannot recommend Elinesis enough — pure happiness in Oyarifa!"</p>
+        <div class="reviewer">
+          <div class="reviewer-avatar" style="background:#2DC653;">SD</div>
+          <div>
+            <div class="reviewer-name">Sarah Darko</div>
+            <div class="reviewer-loc">Adenta, Accra</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VISIT US -->
+<section id="visit">
+  <div style="max-width:900px;margin:0 auto;">
+    <div class="text-center">
+      <div class="section-label">
+        <svg viewBox="0 0 20 20" fill="#0077CC" width="14" height="14"><path d="M10 2C6.13 2 3 5.13 3 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="10" cy="9" r="2.5" fill="white"/></svg>
+        Find Us
+      </div>
+      <h2 class="section-title">Plan Your <span>Visit</span></h2>
+      <p class="section-sub">We're easy to reach from Accra and surrounding areas.</p>
+    </div>
+    <div class="visit-grid">
+      <div class="info-block fade-up">
+        <div class="info-item">
+          <div class="info-icon" style="background:#E6F1FB;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#0077CC" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          </div>
+          <div>
+            <h4>Location</h4>
+            <p>Elinesis Water Park & Leisure Center<br>Oyarifa Road, Oyarifa, Greater Accra, Ghana</p>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-icon" style="background:#E1F5EE;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#2DC653" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <div>
+            <h4>Opening Hours</h4>
+            <p>Monday – Friday: 9:00am – 7:00pm<br>Saturday & Sunday: 8:00am – 8:00pm<br>Public Holidays: 8:00am – 8:00pm</p>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-icon" style="background:#FAEEDA;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#FB8500" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 11a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 0h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 7.91a16 16 0 0 0 6 6l.8-.8a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 15.17v1.75z"/></svg>
+          </div>
+          <div>
+            <h4>Contact</h4>
+            <p>+233 55 000 0000<br>info@elinesis.com.gh</p>
+          </div>
+        </div>
+        <div class="info-item" style="margin-bottom:0;">
+          <div class="info-icon" style="background:#FBEAF0;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#D4537E" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          </div>
+          <div>
+            <h4>Getting Here</h4>
+            <p>Trotro from Madina Market (Oyarifa line). Free parking on site for 500+ vehicles. Uber & Bolt drop-off at main gate.</p>
+          </div>
+        </div>
+      </div>
+      <div class="map-placeholder fade-up delay-1">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3970.5!2d-0.17!3d5.68!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNcKwNDAnNDguMCJOIDDCsDEwJzEyLjAiVw!5e0!3m2!1sen!2sgh!4v1"
+          allowfullscreen loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<div class="cta-band">
+  <h2>Ready for a Splashing Good Time?</h2>
+  <p>Join thousands of happy families who call Elinesis their favourite weekend escape.<br>Book your tickets now and dive into unforgettable memories.</p>
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+    <a href="#tickets" class="btn-primary">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><rect x="2" y="7" width="20" height="10" rx="2"/><path d="M16 7V5a2 2 0 0 0-4 0v2M8 7V5a2 2 0 0 0-4 0v2"/></svg>
+      Book Tickets Now
+    </a>
+    <a href="tel:+233550000000" class="btn-outline">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 11a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 0h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 7.91a16 16 0 0 0 6 6l.8-.8a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 15.17v1.75z"/></svg>
+      Call Us
+    </a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a class="nav-logo" href="#" style="margin-bottom:0.5rem;display:inline-flex;">
+        <svg viewBox="0 0 32 32" fill="none" width="30" height="30"><circle cx="16" cy="16" r="16" fill="#0077CC"/><path d="M6 22c2-3 4-5 6-4s4 3 6 2 4-3 8-3" stroke="#00B4D8" stroke-width="2" stroke-linecap="round"/><path d="M8 18c2-3 4-5 6-4s4 3 6 2 4-3 6-3" stroke="white" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="11" r="3" fill="#FFB703"/></svg>
+        Elinesis
+      </a>
+      <p>Ghana's premier water park & leisure destination in the heart of Oyarifa. Fun, safety, and happiness — every single day.</p>
+      <div class="social-links" style="margin-top:1rem;">
+        <a href="#" class="social-link" aria-label="Facebook">
+          <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+        <a href="#" class="social-link" aria-label="Instagram">
+          <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke-width="2" stroke-linecap="round"/></svg>
+        </a>
+        <a href="#" class="social-link" aria-label="WhatsApp">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Explore</h4>
+      <ul>
+        <li><a href="#attractions">Attractions & Rides</a></li>
+        <li><a href="#gallery">Photo Gallery</a></li>
+        <li><a href="#pricing">Ticket Prices</a></li>
+        <li><a href="#reviews">Reviews</a></li>
+        <li><a href="#visit">Park Map</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Visit</h4>
+      <ul>
+        <li><a href="#">Group Bookings</a></li>
+        <li><a href="#">Birthday Parties</a></li>
+        <li><a href="#">School Trips</a></li>
+        <li><a href="#">Corporate Events</a></li>
+        <li><a href="#">Gift Vouchers</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Info</h4>
+      <ul>
+        <li><a href="#">Park Rules & Safety</a></li>
+        <li><a href="#">FAQs</a></li>
+        <li><a href="#">Accessibility</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2025 Elinesis Water Park & Leisure Center, Oyarifa, Ghana. All rights reserved.</p>
+  </div>
+</footer>
+
+<!-- STICKY MOBILE BOOK -->
+<a href="#tickets" class="sticky-book" id="stickyBook">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><rect x="2" y="7" width="20" height="10" rx="2"/><path d="M16 7V5a2 2 0 0 0-4 0v2"/></svg>
+  Book Now
+</a>
+
+<script>
+// MOBILE MENU
+function toggleMenu() {
+  const m = document.getElementById('mobileMenu');
+  m.classList.toggle('open');
+}
+
+// TICKET BUILDER
+const prices = { adult: 120, child: 80, cabana: 200 };
+const qtys = { adult: 1, child: 0, cabana: 0 };
+function change(type, delta) {
+  qtys[type] = Math.max(0, qtys[type] + delta);
+  if (type === 'adult' && qtys[type] === 0 && qtys['child'] === 0) qtys[type] = 0;
+  document.getElementById(type + '-qty').textContent = qtys[type];
+  const total = Object.keys(qtys).reduce((s, k) => s + qtys[k] * prices[k], 0);
+  document.getElementById('total').textContent = 'GH₵ ' + total.toLocaleString();
+}
+function bookNow() {
+  const d = document.getElementById('visitDate').value;
+  const total = Object.keys(qtys).reduce((s, k) => s + qtys[k] * prices[k], 0);
+  if (total === 0) { alert('Please add at least one ticket to proceed.'); return; }
+  if (!d) { alert('Please select your visit date.'); return; }
+  alert('🎉 Booking confirmed!\n\nDate: ' + new Date(d).toDateString() + '\nAdults: ' + qtys.adult + '  Children: ' + qtys.child + '  Cabanas: ' + qtys.cabana + '\nTotal: GH₵ ' + total.toLocaleString() + '\n\nThank you! A confirmation will be sent to your phone shortly.');
+}
+
+// SET MIN DATE
+const dateInput = document.getElementById('visitDate');
+const today = new Date().toISOString().split('T')[0];
+dateInput.min = today;
+dateInput.value = today;
+
+// SCROLL ANIMATIONS
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.15 });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+// STICKY BOOK BUTTON
+const hero = document.querySelector('.hero');
+const stickyBook = document.getElementById('stickyBook');
+const scrollObs = new IntersectionObserver(entries => {
+  stickyBook.style.display = entries[0].isIntersecting ? 'none' : 'flex';
+}, { threshold: 0.1 });
+scrollObs.observe(hero);
+</script>
+</body>
+</html>

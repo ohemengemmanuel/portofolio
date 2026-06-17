@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FaceAuth — Dashboard</title>
+  <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+  <nav>
+    <a class="nav-brand" href="index.html">&#9632; FaceAuth</a>
+    <div class="nav-links">
+      <span style="font-size:0.85rem; color:var(--muted);">
+        Logged in as <strong style="color:var(--text);">Emmanuel</strong>
+      </span>
+      <button class="btn btn-outline btn-sm">&#8594; Logout</button>
+    </div>
+  </nav>
+  <main class="page">
+    <div class="card card-wide">
+
+      <div class="dash-header">
+        <div>
+          <div class="dash-title">Welcome back,</div>
+          <div class="dash-name">Emmanuel &#128075;</div>
+          <div style="margin-top:6px;">
+            <span class="badge">&#10003; Identity Verified</span>
+          </div>
+        </div>
+        <button class="btn btn-outline btn-sm">&#8594; Logout</button>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-val">3</div>
+          <div class="stat-label">Registered Users</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" style="color:var(--success);">&#10003;</div>
+          <div class="stat-label">Face Verified</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" style="font-size:1.1rem; color:var(--text);">ArcFace</div>
+          <div class="stat-label">Recognition Model</div>
+        </div>
+      </div>
+
+      <div class="section-title">Registered Accounts</div>
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Joined</th>
+            <th>Last Login</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="color:var(--muted); font-size:0.82rem;">1</td>
+            <td>
+              <span class="avatar">E</span>
+              Emmanuel
+              <span class="you-tag">You</span>
+            </td>
+            <td style="color:var(--muted); font-size:0.85rem;">2025-01-10</td>
+            <td style="font-size:0.85rem;">
+              <span style="color:var(--text);">2025-04-01</span>
+              <span style="color:var(--muted);"> 09:32</span>
+            </td>
+            <td><span style="color:var(--success); font-size:0.82rem;">&#9679; Active</span></td>
+          </tr>
+          <tr>
+            <td style="color:var(--muted); font-size:0.82rem;">2</td>
+            <td><span class="avatar">K</span>Kofi Mensah</td>
+            <td style="color:var(--muted); font-size:0.85rem;">2025-01-12</td>
+            <td style="font-size:0.85rem;">
+              <span style="color:var(--text);">2025-03-28</span>
+              <span style="color:var(--muted);"> 14:05</span>
+            </td>
+            <td><span style="color:var(--success); font-size:0.82rem;">&#9679; Active</span></td>
+          </tr>
+          <tr>
+            <td style="color:var(--muted); font-size:0.82rem;">3</td>
+            <td><span class="avatar">A</span>Ama Owusu</td>
+            <td style="color:var(--muted); font-size:0.85rem;">2025-02-03</td>
+            <td style="font-size:0.85rem;">
+              <span style="color:var(--muted);">Never</span>
+            </td>
+            <td><span style="color:var(--success); font-size:0.82rem;">&#9679; Active</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </main>
+</body>
+</html>

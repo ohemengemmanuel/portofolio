@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FaceAuth — Sign Up</title>
+  <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+  <nav>
+    <a class="nav-brand" href="index.html">&#9632; FaceAuth</a>
+    <div class="nav-links">
+      <a class="btn btn-outline btn-sm" href="login.html">Already have an account?</a>
+    </div>
+  </nav>
+  <main class="page">
+    <div class="card" style="max-width:820px; width:100%;">
+      <div class="card-title">Create Account</div>
+      <div class="card-sub">Fill in your details, then enroll your face to complete sign up</div>
+
+      <div style="display:flex; gap:32px; flex-wrap:wrap; align-items:flex-start;">
+
+        <!-- Left: form fields -->
+        <div style="flex:1; min-width:240px;">
+          <div class="field">
+            <label for="first_name">First Name</label>
+            <input type="text" id="first_name" placeholder="e.g. Kwame" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Min. 6 characters">
+          </div>
+          <div class="field">
+            <label for="confirm_password">Confirm Password</label>
+            <input type="password" id="confirm_password" placeholder="Repeat password">
+          </div>
+          <div style="margin-top:10px; padding:12px; background:var(--input); border-radius:8px; font-size:0.82rem; color:var(--muted); line-height:1.6;">
+            After filling in your details, use the camera panel on the right to capture your face.
+            Make sure your face is centred and well lit.
+          </div>
+        </div>
+
+        <!-- Right: camera placeholder -->
+        <div style="flex:1; min-width:280px;">
+          <label style="margin-bottom:8px; display:block;">Face Enrollment</label>
+          <div class="camera-wrapper">
+            <div class="face-guide"></div>
+            <div class="camera-overlay">
+              <span style="font-size:1.8rem;">&#128247;</span>
+              <span>Camera not started</span>
+              <button class="btn btn-primary btn-sm" disabled>Open Camera</button>
+            </div>
+          </div>
+          <div class="btn-row" style="margin-top:12px;">
+            <button class="btn btn-outline" disabled>&#128247; Capture Face</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:28px; display:flex; align-items:center; gap:14px;">
+        <button class="btn btn-primary">
+          <span class="btn-label">Enroll &amp; Sign Up</span>
+        </button>
+        <a href="index.html" class="btn btn-ghost">Cancel</a>
+      </div>
+
+      <div class="text-sm text-center" style="margin-top:20px;">
+        Already registered? <a class="link" href="login.html">Login here</a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

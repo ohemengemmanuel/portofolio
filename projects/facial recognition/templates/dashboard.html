@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}FaceAuth — Dashboard{% endblock %}
+
+{% block nav %}
+  <span style="font-size:0.85rem; color:var(--muted);">
+    Logged in as <strong style="color:var(--text);">{{ current_user.name | title }}</strong>
+  </span>
+  <button class="btn btn-outline btn-sm" onclick="logout()">Logout</button>
+{% endblock %}
+
+{% block content %}
+<div class="card card-wide">
+
+  <!-- Header -->
+  <div class="dash-header">
+    <div>
+      <div class="dash-title">Welcome back,</div>
+      <div class="dash-name">{{ current_user.name | title }} &#128075;</div>
+      <div style="margin-top:6px;">
+        <span class="badge">&#10003; Identity Verified</span>
+      </div>
+    </div>
+    <button class="btn btn-outline btn-sm" onclick="logout()">&#8594; Logout</button>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-val">{{ users | length }}</div>
+      <div class="stat-label">Registered Users</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" style="color:var(--success);">&#10003;</div>
+      <div class="stat-label">Face Verified</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" style="font-size:1.1rem; color:var(--text);">ArcFace</div>
+      <div class="stat-label">Recognition Model</div>
+    </div>
+  </div>
+
+  <!-- Users table -->
+  <div class="section-title">Registered Accounts</div>
+
+  {% if users %}
+  <table class="user-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Joined</th>
+        <th>Last Login</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr>
+        <td style="color:var(--muted); font-size:0.82rem;">{{ loop.index }}</td>
+        <td>
+          <span class="avatar">{{ user[1][0] | upper }}</span>
+          {{ user[1] | title }}
+          {% if user[1] == current_user.name %}
+            <span class="you-tag">You</span>
+          {% endif %}
+        </td>
+        <td style="color:var(--muted); font-size:0.85rem;">
+          {{ user[2][:10] if user[2] else "—" }}
+        </td>
+        <td style="font-size:0.85rem;">
+          {% if user[3] %}
+            <span style="color:var(--text);">{{ user[3][:10] }}</span>
+            <span style="color:var(--muted);"> {{ user[3][11:16] }}</span>
+          {% else %}
+            <span style="color:var(--muted);">Never</span>
+          {% endif %}
+        </td>
+        <td>
+          <span style="color:var(--success); font-size:0.82rem;">&#9679; Active</span>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div style="text-align:center; padding:40px; color:var(--muted);">
+    No users found.
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/camera.js') }}"></script>
+<script>
+  async function logout() {
+    const data = await postJSON("/api/logout", {});
+    window.location.href = data.redirect;
+  }
+</script>
+{% endblock %}

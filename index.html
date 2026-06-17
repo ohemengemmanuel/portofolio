@@ -1,0 +1,1804 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emmanuel Ohemeng — Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script>
+    (function(){var t=localStorage.getItem('eo-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();
+  </script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    a { text-decoration: none; }
+
+    :root {
+      --bg:          #0a0a0c;
+      --bg-card:     #111116;
+      --bg-card2:    #16161c;
+      --border:      rgba(255,255,255,0.08);
+      --gold:        #c8a96e;
+      --gold-dim:    rgba(200,169,110,0.15);
+      --white:       #f5f4f0;
+      --muted:       #ababbb;
+      --accent:      #c8a96e;
+      --nav-bg:      rgba(10,10,12,0.92);
+      --carousel-btn-bg: rgba(10,10,12,0.82);
+    }
+
+    [data-theme="light"] {
+      --bg:          #f8f7f4;
+      --bg-card:     #ffffff;
+      --bg-card2:    #edecea;
+      --border:      rgba(0,0,0,0.10);
+      --gold:        #9e7a38;
+      --gold-dim:    rgba(158,122,56,0.12);
+      --white:       #18181b;
+      --muted:       #6b6b7a;
+      --accent:      #9e7a38;
+      --nav-bg:      rgba(248,247,244,0.94);
+      --carousel-btn-bg: rgba(248,247,244,0.92);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 60px;
+      height: 70px;
+      background: var(--nav-bg);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.08em;
+      color: var(--white);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--gold); }
+
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 0 60px;
+      gap: 60px;
+      padding-top: 70px;
+    }
+
+    .hero-text { max-width: 540px; }
+
+    .hero-eyebrow {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    .hero-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 5vw, 4.4rem);
+      font-weight: 700;
+      line-height: 1.08;
+      margin-bottom: 24px;
+    }
+    .hero-name em { font-style: italic; color: var(--gold); }
+
+    .hero-bio {
+      font-size: 1rem;
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 440px;
+      margin-bottom: 40px;
+    }
+
+    .hero-cta { display: flex; gap: 16px; flex-wrap: wrap; }
+
+    .btn-primary {
+      display: inline-block;
+      padding: 13px 32px;
+      background: var(--gold);
+      color: #0a0a0c;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: opacity 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+
+    .btn-ghost {
+      display: inline-block;
+      padding: 13px 32px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ── PHOTO PLACEHOLDER ── */
+    .hero-photo {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .photo-frame {
+      position: relative;
+      width: 380px;
+      height: 480px;
+    }
+    .photo-frame::before {
+      content: '';
+      position: absolute;
+      inset: -12px -12px 12px 12px;
+      border: 1px solid var(--gold);
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    .photo-placeholder {
+      width: 100%;
+      height: 100%;
+      background: var(--bg-card2);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: var(--muted);
+      overflow: hidden;
+    }
+    .photo-placeholder img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+    }
+    .photo-icon {
+      width: 56px;
+      height: 56px;
+      border: 1.5px dashed rgba(200,169,110,0.4);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      opacity: 0.6;
+    }
+    .photo-icon svg { width: 24px; height: 24px; fill: currentColor; }
+    .photo-label { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.5; }
+
+    /* ── SECTION SHARED ── */
+    section { padding: 100px 60px; }
+
+    .section-header { margin-bottom: 64px; }
+
+    .section-eyebrow {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 600;
+      line-height: 1.15;
+    }
+
+    .section-divider { display: none; }
+
+    /* ── SITES ── */
+    #sites { background: var(--bg); border-top: 1px solid var(--border); }
+
+    .sites-carousel { position: relative; overflow: hidden; }
+
+    .carousel-track-wrap { /* overflow visible — clipping done by .sites-carousel */ }
+
+    .carousel-track {
+      display: flex;
+      gap: 20px;
+      transition: transform 0.52s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      will-change: transform;
+    }
+
+    .carousel-nav-btn {
+      position: absolute;
+      top: calc(50% - 30px);
+      transform: translateY(-50%);
+      z-index: 10;
+      width: 48px;
+      height: 48px;
+      background: var(--carousel-btn-bg);
+      border: 1px solid var(--border);
+      color: var(--white);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s, color 0.2s;
+      backdrop-filter: blur(12px);
+      border-radius: 4px;
+      outline: none;
+    }
+    .carousel-nav-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .carousel-nav-btn:disabled { opacity: 0.22; cursor: default; pointer-events: none; }
+    .carousel-btn-prev { left: 16px; }
+    .carousel-btn-next { right: 16px; }
+
+    .carousel-footer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 28px;
+    }
+
+    .carousel-dots { display: flex; align-items: center; gap: 9px; }
+
+    .carousel-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.14);
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.25s, transform 0.25s;
+    }
+    .carousel-dot.active { background: var(--gold); transform: scale(1.45); }
+
+    .carousel-counter {
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      min-width: 36px;
+    }
+
+    .site-card {
+      flex-shrink: 0;
+      position: relative;
+      background: var(--bg-card);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      transition: border-color 0.3s, opacity 0.4s, transform 0.4s, border-radius 0.3s;
+    }
+    .site-card:hover { border-color: rgba(200,169,110,0.4); border-radius: 10px; }
+
+    .site-preview {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      background: var(--bg-card2);
+    }
+
+    .preview-scaler {
+      position: absolute;
+      top: 0; left: 0;
+      width: 1440px;
+      height: 900px;
+      transform-origin: top left;
+    }
+
+    .site-preview iframe {
+      width: 1440px;
+      height: 900px;
+      border: none;
+      pointer-events: none;
+      display: block;
+    }
+
+    .site-overlay {
+      position: absolute;
+      inset: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .site-info {
+      padding: 20px 24px 22px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .site-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .site-tag {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    .site-link {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-decoration: none;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .site-card:hover .site-link { opacity: 1; }
+
+    /* ── PROJECTS ── */
+    #projects { background: var(--bg-card); border-top: 1px solid var(--border); }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .project-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 40px;
+      transition: border-color 0.3s, border-radius 0.3s;
+    }
+    .project-card:hover { border-color: rgba(200,169,110,0.35); border-radius: 18px; }
+
+    .project-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: rgba(200,169,110,0.60);
+      line-height: 1;
+      margin-bottom: 24px;
+      letter-spacing: -0.02em;
+    }
+
+    .project-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.45rem;
+      font-weight: 600;
+      margin-bottom: 14px;
+      line-height: 1.25;
+    }
+
+    .project-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 28px;
+    }
+
+    .tech-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 32px;
+    }
+
+    .tech-badge {
+      padding: 5px 12px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .project-link {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .project-link:hover { opacity: 0.75; }
+
+    /* ── APP SHOWCASE ── */
+    #showcase { background: var(--bg); border-top: 1px solid var(--border); }
+
+    .showcase-block { margin-bottom: 72px; }
+    .showcase-block:last-child { margin-bottom: 0; }
+
+    .showcase-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .showcase-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .showcase-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      max-width: 500px;
+      line-height: 1.65;
+    }
+
+    .screens-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .screen-card {
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      overflow: hidden;
+      transition: border-color 0.3s, border-radius 0.3s;
+    }
+    .screen-card:hover { border-color: rgba(200,169,110,0.35); border-radius: 10px; }
+
+    .sc-chrome {
+      background: #1c1c24;
+      padding: 7px 10px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sc-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .sc-url { font-size: 0.58rem; color: var(--muted); margin-left: 7px; letter-spacing: 0.03em; opacity: 0.55; }
+
+    .sc-body { height: 158px; overflow: hidden; position: relative; }
+
+    /* ─ mock UI elements ─ */
+    .mk-nav {
+      background: #13131a; height: 20px;
+      display: flex; align-items: center;
+      padding: 0 7px; gap: 7px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .mk-logo  { width: 26px; height: 7px; background: #5b5ef4; border-radius: 2px; }
+    .mk-link  { height: 5px; border-radius: 2px; background: rgba(255,255,255,0.1); }
+    .mk-spacer { flex: 1; }
+    .mk-avatar { width: 13px; height: 13px; border-radius: 50%; background: rgba(255,255,255,0.14); }
+
+    .mk-content { padding: 7px 7px 0; }
+    .mk-section-title { height: 6px; width: 55%; background: rgba(255,255,255,0.22); border-radius: 2px; margin-bottom: 7px; }
+
+    .mk-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 3px;
+      padding: 6px;
+      margin-bottom: 5px;
+    }
+
+    .mk-input {
+      height: 7px; width: 100%;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 2px;
+      margin-bottom: 4px;
+    }
+
+    .mk-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-bottom: 4px; }
+
+    .mk-btn-primary { display:block; height: 7px; width: 50%; background: #5b5ef4; border-radius: 2px; margin-top: 3px; }
+    .mk-btn-green   { display:block; height: 7px; background: #26a96e; border-radius: 2px; }
+
+    .mk-thead { display:flex; gap:3px; margin-bottom:2px; padding-bottom:3px; border-bottom:1px solid rgba(255,255,255,0.08); }
+    .mk-th { height:4px; background:rgba(255,255,255,0.14); border-radius:1px; flex:1; }
+    .mk-row { display:flex; gap:3px; margin-bottom:2px; }
+    .mk-td  { height:4px; background:rgba(255,255,255,0.06); border-radius:1px; flex:1; }
+    .mk-td-hi { background:rgba(38,169,110,0.28); }
+
+    .mk-cam {
+      background: #06060a;
+      border: 1.5px dashed rgba(255,255,255,0.13);
+      border-radius: 3px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .mk-cam::after {
+      content:''; width:18px; height:18px;
+      border:1.5px solid rgba(255,255,255,0.18); border-radius:50%;
+    }
+
+    .mk-face-nav {
+      background: #0d0d0d; height: 20px;
+      display: flex; align-items: center;
+      padding: 0 7px; gap: 6px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .mk-face-brand { width: 34px; height: 6px; background: rgba(255,255,255,0.35); border-radius: 1px; }
+    .mk-face-btn-o { height: 7px; width: 26px; border: 1px solid rgba(255,255,255,0.18); border-radius: 2px; margin-left:auto; }
+    .mk-face-btn-p { height: 7px; width: 26px; background: rgba(92,158,220,0.55); border-radius: 2px; }
+
+    .mk-hero-wrap { padding: 10px 8px 0; }
+    .mk-h1a { height:8px; width:85%; background:rgba(255,255,255,0.28); border-radius:2px; margin-bottom:4px; }
+    .mk-h1b { height:8px; width:55%; background:rgba(92,158,220,0.5); border-radius:2px; margin-bottom:8px; }
+    .mk-sub { height:4px; width:100%; background:rgba(255,255,255,0.09); border-radius:1px; margin-bottom:3px; }
+    .mk-btns { display:flex; gap:4px; margin-top:8px; }
+
+    .mk-oval {
+      width:46px; height:54px;
+      border:2px solid rgba(92,158,220,0.45);
+      border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .mk-oval::after { content:''; width:20px; height:20px; border-radius:50%; background:rgba(92,158,220,0.12); }
+
+    .sc-info { padding: 10px 12px 12px; border-top: 1px solid var(--border); }
+    .sc-info-name { font-size: 0.77rem; font-weight: 600; letter-spacing: 0.04em; }
+    .sc-info-desc { font-size: 0.64rem; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+
+    @media (max-width: 1100px) { .screens-row { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 768px)  { .screens-row { grid-template-columns: repeat(2, 1fr); } }
+
+    /* ── UI/UX SECTION ── */
+    #uiux { background: var(--bg); border-top: 1px solid var(--border); }
+
+    .uiux-videos {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      margin-bottom: 48px;
+    }
+
+    .video-container {
+      position: relative;
+      border: 1px solid var(--border);
+      background: #000;
+      overflow: hidden;
+      transition: border-color 0.3s, border-radius 0.3s;
+    }
+    .video-container:hover { border-color: rgba(200,169,110,0.4); border-radius: 10px; }
+
+    .video-container::before {
+      content: '';
+      position: absolute;
+      inset: -10px -10px 10px 10px;
+      border: 1px solid var(--gold);
+      opacity: 0.2;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .video-container video {
+      width: 100%;
+      display: block;
+      position: relative;
+      z-index: 1;
+      outline: none;
+    }
+
+    .video-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 24px;
+      border-top: 1px solid var(--border);
+      background: var(--bg-card);
+      position: relative;
+      z-index: 1;
+    }
+
+    .video-meta-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .video-meta-sub {
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+
+    .wireframe-display {
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      overflow: hidden;
+      position: relative;
+      transition: border-color 0.3s, border-radius 0.3s;
+    }
+    .wireframe-display:hover { border-color: rgba(200,169,110,0.4); border-radius: 10px; }
+
+    .wireframe-display::before {
+      content: '';
+      position: absolute;
+      inset: -10px -10px 10px 10px;
+      border: 1px solid var(--gold);
+      opacity: 0.2;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wireframe-display img {
+      width: 100%;
+      display: block;
+      position: relative;
+      z-index: 1;
+    }
+
+    .wireframe-meta {
+      padding: 18px 24px;
+      border-top: 1px solid var(--border);
+      background: var(--bg-card);
+      position: relative;
+      z-index: 1;
+    }
+
+    .wireframe-meta-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .wireframe-meta-sub {
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+
+    @media (max-width: 900px) {
+      .uiux-videos { grid-template-columns: 1fr; }
+    }
+
+    /* ── RESUME ── */
+    #resume { background: var(--bg-card); border-top: 1px solid var(--border); }
+
+    .resume-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+    }
+
+    .resume-col-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .resume-col-title::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .resume-entry {
+      margin-bottom: 32px;
+      padding-left: 16px;
+      border-left: 1px solid var(--border);
+      position: relative;
+    }
+    .resume-entry::before {
+      content: '';
+      position: absolute;
+      left: -4px;
+      top: 6px;
+      width: 7px;
+      height: 7px;
+      border: 1.5px solid var(--gold);
+      background: var(--bg-card);
+      border-radius: 50%;
+    }
+
+    .resume-entry-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+    }
+
+    .resume-entry-sub {
+      font-size: 0.8rem;
+      color: var(--gold);
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .resume-entry-date {
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+    }
+
+    .resume-entry-body {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .skill-item {
+      font-size: 0.82rem;
+      color: var(--muted);
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      letter-spacing: 0.04em;
+    }
+
+    .resume-download {
+      margin-top: 48px;
+      grid-column: 1 / -1;
+    }
+
+    /* ── CONTACT STRIP ── */
+    #contact {
+      padding: 60px 60px;
+      border-top: 1px solid var(--border);
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .contact-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .contact-links { display: flex; gap: 12px; flex-wrap: wrap; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 28px 60px;
+      border-top: 1px solid var(--border);
+      background: var(--bg-card);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      nav { padding: 0 32px; }
+      #hero { padding: 70px 32px 60px; gap: 40px; }
+      section { padding: 80px 32px; }
+      #contact { padding: 50px 32px; }
+      footer { padding: 24px 32px; }
+      .resume-layout { grid-template-columns: 1fr; gap: 48px; }
+    }
+
+    /* ── THEME TOGGLE ── */
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      width: 36px;
+      height: 36px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-left: 24px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .theme-toggle:hover { border-color: var(--gold); color: var(--gold); }
+    .theme-toggle svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .icon-sun  { display: none; }
+    .icon-moon { display: block; }
+    [data-theme="light"] .icon-sun  { display: block; }
+    [data-theme="light"] .icon-moon { display: none; }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links { gap: 20px; }
+      .nav-links a { font-size: 0.7rem; }
+      #hero { grid-template-columns: 1fr; padding: 90px 20px 60px; text-align: center; }
+      .hero-text { max-width: 100%; }
+      .hero-bio { max-width: 100%; }
+      .hero-cta { justify-content: center; }
+      .hero-photo { order: -1; }
+      .photo-frame { width: 240px; height: 300px; }
+      section { padding: 64px 20px; }
+      .projects-grid { grid-template-columns: 1fr; }
+      #contact { padding: 40px 20px; flex-direction: column; }
+      footer { padding: 20px; flex-direction: column; gap: 8px; text-align: center; }
+      .video-meta { flex-direction: column; align-items: flex-start; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#hero" class="nav-logo">E<span>.</span>Ohemeng</a>
+    <ul class="nav-links">
+      <li><a href="#sites">Designs</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#showcase">Showcase</a></li>
+      <li><a href="#uiux">UI/UX</a></li>
+      <li><a href="#resume">Resume</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle light/dark mode">
+      <!-- Moon icon (shown in dark mode) -->
+      <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/></svg>
+      <!-- Sun icon (shown in light mode) -->
+      <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-text">
+      <p class="hero-eyebrow">Designer &amp; Developer</p>
+      <h1 class="hero-name">
+        Emmanuel<br><em>Ohemeng</em>
+      </h1>
+      <p class="hero-bio">
+        Computer Science undergraduate with hands-on experience building polished
+        web experiences and intelligent Python-powered systems — from bespoke
+        client websites to real-time facial recognition applications.
+      </p>
+      <div class="hero-cta">
+        <a href="#sites" class="btn-primary">View Designs</a>
+        <a href="#resume" class="btn-ghost">Resume</a>
+      </div>
+    </div>
+
+    <div class="hero-photo">
+      <div class="photo-frame">
+        <div class="photo-placeholder">
+          <img src="my potrait.jpeg" alt="Emmanuel Ohemeng">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SITES -->
+  <section id="sites">
+    <div class="section-header">
+      <p class="section-eyebrow">Web Design</p>
+      <h2 class="section-title">Designs &amp; Sites</h2>
+      <div class="section-divider"></div>
+    </div>
+
+    <div class="sites-carousel">
+      <button class="carousel-nav-btn carousel-btn-prev" id="sitesPrev" aria-label="Previous">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
+      <button class="carousel-nav-btn carousel-btn-next" id="sitesNext" aria-label="Next">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </button>
+      <div class="carousel-track-wrap">
+        <div class="carousel-track" id="sitesTrack">
+
+      <div class="site-card">
+        <div class="site-preview"><div class="preview-scaler" id="scale-casa"></div></div>
+        <div class="site-info">
+          <div>
+            <div class="site-name">Casa</div>
+            <div class="site-tag">Real Estate</div>
+          </div>
+          <a href="sites/casa.html" target="_blank" class="site-link">View →</a>
+        </div>
+        <div class="site-overlay" onclick="window.open('sites/casa.html','_blank')"></div>
+      </div>
+
+      <div class="site-card">
+        <div class="site-preview"><div class="preview-scaler" id="scale-scoops"></div></div>
+        <div class="site-info">
+          <div>
+            <div class="site-name">Scoops &amp; Co.</div>
+            <div class="site-tag">Artisan Ice Cream</div>
+          </div>
+          <a href="sites/scoops-website.html" target="_blank" class="site-link">View →</a>
+        </div>
+        <div class="site-overlay" onclick="window.open('sites/scoops-website.html','_blank')"></div>
+      </div>
+
+      <div class="site-card">
+        <div class="site-preview"><div class="preview-scaler" id="scale-lumina"></div></div>
+        <div class="site-info">
+          <div>
+            <div class="site-name">Lumina</div>
+            <div class="site-tag">Museum &amp; Exhibition</div>
+          </div>
+          <a href="sites/lumina.html" target="_blank" class="site-link">View →</a>
+        </div>
+        <div class="site-overlay" onclick="window.open('sites/lumina.html','_blank')"></div>
+      </div>
+
+      <div class="site-card">
+        <div class="site-preview"><div class="preview-scaler" id="scale-tidal"></div></div>
+        <div class="site-info">
+          <div>
+            <div class="site-name">Tidal</div>
+            <div class="site-tag">Luxury Water Experience</div>
+          </div>
+          <a href="sites/tidal-waterpark.html" target="_blank" class="site-link">View →</a>
+        </div>
+        <div class="site-overlay" onclick="window.open('sites/tidal-waterpark.html','_blank')"></div>
+      </div>
+
+      <div class="site-card">
+        <div class="site-preview"><div class="preview-scaler" id="scale-freq"></div></div>
+        <div class="site-info">
+          <div>
+            <div class="site-name">FREQ</div>
+            <div class="site-tag">Concert Booking</div>
+          </div>
+          <a href="sites/freq-concerts.html" target="_blank" class="site-link">View →</a>
+        </div>
+        <div class="site-overlay" onclick="window.open('sites/freq-concerts.html','_blank')"></div>
+      </div>
+
+      <div class="site-card">
+        <div class="site-preview"><div class="preview-scaler" id="scale-nexus"></div></div>
+        <div class="site-info">
+          <div>
+            <div class="site-name">Nexus</div>
+            <div class="site-tag">Tech Store</div>
+          </div>
+          <a href="sites/techshop.html" target="_blank" class="site-link">View →</a>
+        </div>
+        <div class="site-overlay" onclick="window.open('sites/techshop.html','_blank')"></div>
+      </div>
+
+      <div class="site-card">
+        <div class="site-preview"><div class="preview-scaler" id="scale-elinesis"></div></div>
+        <div class="site-info">
+          <div>
+            <div class="site-name">Elinesis</div>
+            <div class="site-tag">Water Park &amp; Leisure</div>
+          </div>
+          <a href="sites/elinesis.html" target="_blank" class="site-link">View →</a>
+        </div>
+        <div class="site-overlay" onclick="window.open('sites/elinesis.html','_blank')"></div>
+      </div>
+
+      <div class="site-card">
+        <div class="site-preview"><div class="preview-scaler" id="scale-bakery"></div></div>
+        <div class="site-info">
+          <div>
+            <div class="site-name">Aurore</div>
+            <div class="site-tag">Artisan Bakery</div>
+          </div>
+          <a href="sites/bakery.html" target="_blank" class="site-link">View →</a>
+        </div>
+        <div class="site-overlay" onclick="window.open('sites/bakery.html','_blank')"></div>
+      </div>
+
+      <div class="site-card">
+        <div class="site-preview"><div class="preview-scaler" id="scale-nba"></div></div>
+        <div class="site-info">
+          <div>
+            <div class="site-name">NBA ELITE</div>
+            <div class="site-tag">Sports Gallery</div>
+          </div>
+          <a href="sites/NBA/index.html" target="_blank" class="site-link">View →</a>
+        </div>
+        <div class="site-overlay" onclick="window.open('sites/NBA/index.html','_blank')"></div>
+      </div>
+
+        </div><!-- /.carousel-track -->
+      </div><!-- /.carousel-track-wrap -->
+      <div class="carousel-footer">
+        <div class="carousel-dots" id="sitesDots"></div>
+        <span class="carousel-counter" id="sitesCounter">1 / 9</span>
+      </div>
+    </div><!-- /.sites-carousel -->
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="section-header">
+      <p class="section-eyebrow">Engineering</p>
+      <h2 class="section-title">Projects</h2>
+      <div class="section-divider"></div>
+    </div>
+
+    <div class="projects-grid">
+
+      <div class="project-card">
+        <div class="project-number">01</div>
+        <h3 class="project-title">AttendLog — Facial Recognition Attendance System</h3>
+        <p class="project-desc">
+          A full-stack web application that automates classroom attendance using real-time
+          facial recognition. Students are enrolled once; the system identifies them from a
+          live camera feed and logs each session to a persistent SQLite database with a
+          clean admin dashboard.
+        </p>
+        <div class="tech-stack">
+          <span class="tech-badge">Python</span>
+          <span class="tech-badge">Flask</span>
+          <span class="tech-badge">OpenCV</span>
+          <span class="tech-badge">face_recognition</span>
+          <span class="tech-badge">SQLite</span>
+          <span class="tech-badge">JavaScript</span>
+        </div>
+        <a href="projects/attendance log and facaial rec integration/templates/index.html" class="project-link">View Project →</a>
+      </div>
+
+      <div class="project-card">
+        <div class="project-number">02</div>
+        <h3 class="project-title">FaceID — Web-Based Facial Authentication</h3>
+        <p class="project-desc">
+          A standalone facial recognition authentication system with user sign-up,
+          live camera verification, and a secure session dashboard. Users register
+          with a face capture; subsequent logins match against stored encodings
+          without passwords.
+        </p>
+        <div class="tech-stack">
+          <span class="tech-badge">Python</span>
+          <span class="tech-badge">Flask</span>
+          <span class="tech-badge">face_recognition</span>
+          <span class="tech-badge">SQLite</span>
+          <span class="tech-badge">JavaScript</span>
+          <span class="tech-badge">Camera API</span>
+        </div>
+        <a href="projects/facial recognition/preview/index.html" class="project-link">View Project →</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- APP SHOWCASE -->
+  <section id="showcase">
+    <div class="section-header">
+      <p class="section-eyebrow">Application Interfaces</p>
+      <h2 class="section-title">Project Showcase</h2>
+      <div class="section-divider"></div>
+    </div>
+
+    <!-- ── AttendLog ── -->
+    <div class="showcase-block">
+      <div class="showcase-header">
+        <div>
+          <div class="showcase-name">AttendLog</div>
+          <p class="showcase-desc">
+            Educator dashboard for managing students, classes, and attendance sessions.
+            Supports manual entry, photo-based recognition, and live camera scanning.
+          </p>
+        </div>
+        <div class="tech-stack" style="margin-bottom:0">
+          <span class="tech-badge">Python</span>
+          <span class="tech-badge">Flask</span>
+          <span class="tech-badge">OpenCV</span>
+          <span class="tech-badge">SQLite</span>
+        </div>
+      </div>
+
+      <div class="screens-row">
+
+        <!-- Login -->
+        <div class="screen-card">
+          <div class="sc-chrome">
+            <div class="sc-dot" style="background:#ff5f57"></div>
+            <div class="sc-dot" style="background:#ffbd2e"></div>
+            <div class="sc-dot" style="background:#28c840"></div>
+            <span class="sc-url">attendlog / login</span>
+          </div>
+          <div class="sc-body" style="display:flex;align-items:center;justify-content:center;background:#0d0d14">
+            <div class="mk-card" style="width:115px;padding:10px">
+              <div style="display:flex;align-items:center;gap:4px;margin-bottom:9px">
+                <div style="width:9px;height:9px;border-radius:2px;background:#5b5ef4"></div>
+                <div style="height:5px;width:42px;background:rgba(255,255,255,0.28);border-radius:1px"></div>
+              </div>
+              <div class="mk-input"></div>
+              <div class="mk-input"></div>
+              <div class="mk-btn-primary" style="width:100%;margin-top:2px"></div>
+            </div>
+          </div>
+          <div class="sc-info">
+            <div class="sc-info-name">Login</div>
+            <div class="sc-info-desc">Educator sign-in</div>
+          </div>
+        </div>
+
+        <!-- Student Registry -->
+        <div class="screen-card">
+          <div class="sc-chrome">
+            <div class="sc-dot" style="background:#ff5f57"></div>
+            <div class="sc-dot" style="background:#ffbd2e"></div>
+            <div class="sc-dot" style="background:#28c840"></div>
+            <span class="sc-url">attendlog / registry</span>
+          </div>
+          <div class="sc-body">
+            <div class="mk-nav">
+              <div class="mk-logo"></div>
+              <div class="mk-link" style="width:30px"></div>
+              <div class="mk-link" style="width:22px"></div>
+              <div class="mk-spacer"></div>
+              <div class="mk-avatar"></div>
+            </div>
+            <div class="mk-content">
+              <div class="mk-section-title"></div>
+              <div class="mk-card">
+                <div class="mk-grid2"><div class="mk-input"></div><div class="mk-input"></div></div>
+                <div class="mk-input"></div>
+                <div class="mk-btn-primary"></div>
+              </div>
+              <div class="mk-thead"><div class="mk-th"></div><div class="mk-th"></div><div class="mk-th"></div></div>
+              <div class="mk-row"><div class="mk-td"></div><div class="mk-td"></div><div class="mk-td mk-td-hi"></div></div>
+              <div class="mk-row"><div class="mk-td"></div><div class="mk-td"></div><div class="mk-td mk-td-hi"></div></div>
+            </div>
+          </div>
+          <div class="sc-info">
+            <div class="sc-info-name">Student Registry</div>
+            <div class="sc-info-desc">Enrol students with face photo</div>
+          </div>
+        </div>
+
+        <!-- Attendance / Camera -->
+        <div class="screen-card">
+          <div class="sc-chrome">
+            <div class="sc-dot" style="background:#ff5f57"></div>
+            <div class="sc-dot" style="background:#ffbd2e"></div>
+            <div class="sc-dot" style="background:#28c840"></div>
+            <span class="sc-url">attendlog / attendance</span>
+          </div>
+          <div class="sc-body">
+            <div class="mk-nav">
+              <div class="mk-logo"></div>
+              <div class="mk-link" style="width:30px"></div>
+              <div class="mk-spacer"></div>
+              <div class="mk-avatar"></div>
+            </div>
+            <div class="mk-content">
+              <div style="display:flex;gap:3px;margin-bottom:6px;align-items:center">
+                <div class="mk-input" style="flex:1;margin:0;height:7px"></div>
+                <div style="width:26px;height:7px;background:#26a96e;border-radius:2px;flex-shrink:0"></div>
+                <div style="width:26px;height:7px;background:rgba(255,255,255,0.09);border-radius:2px;flex-shrink:0"></div>
+              </div>
+              <div class="mk-cam" style="height:52px;margin-bottom:6px">
+                <div style="text-align:center">
+                  <div style="width:8px;height:8px;border-radius:50%;background:rgba(92,158,220,0.4);margin:0 auto 3px"></div>
+                  <div style="width:28px;height:6px;background:rgba(92,158,220,0.35);border-radius:2px;margin:0 auto"></div>
+                </div>
+              </div>
+              <div class="mk-thead"><div class="mk-th"></div><div class="mk-th"></div><div class="mk-th"></div></div>
+              <div class="mk-row"><div class="mk-td"></div><div class="mk-td"></div><div class="mk-td mk-td-hi"></div></div>
+            </div>
+          </div>
+          <div class="sc-info">
+            <div class="sc-info-name">Live Attendance</div>
+            <div class="sc-info-desc">Camera-based face scanning</div>
+          </div>
+        </div>
+
+        <!-- Classes -->
+        <div class="screen-card">
+          <div class="sc-chrome">
+            <div class="sc-dot" style="background:#ff5f57"></div>
+            <div class="sc-dot" style="background:#ffbd2e"></div>
+            <div class="sc-dot" style="background:#28c840"></div>
+            <span class="sc-url">attendlog / classes</span>
+          </div>
+          <div class="sc-body">
+            <div class="mk-nav">
+              <div class="mk-logo"></div>
+              <div class="mk-link" style="width:30px"></div>
+              <div class="mk-link" style="width:22px;background:rgba(91,94,244,0.5)"></div>
+              <div class="mk-spacer"></div>
+              <div class="mk-avatar"></div>
+            </div>
+            <div class="mk-content">
+              <div class="mk-section-title"></div>
+              <div class="mk-card">
+                <div class="mk-grid2"><div class="mk-input"></div><div class="mk-input"></div></div>
+                <div class="mk-btn-primary"></div>
+              </div>
+              <div class="mk-card" style="display:flex;align-items:center;gap:5px">
+                <div style="flex:1"><div class="mk-input" style="margin-bottom:2px"></div><div style="height:3px;width:38%;background:rgba(255,255,255,0.06);border-radius:1px"></div></div>
+                <div style="width:18px;height:6px;background:rgba(255,255,255,0.09);border-radius:2px"></div>
+              </div>
+              <div class="mk-card" style="display:flex;align-items:center;gap:5px">
+                <div style="flex:1"><div class="mk-input" style="margin-bottom:2px"></div><div style="height:3px;width:52%;background:rgba(255,255,255,0.06);border-radius:1px"></div></div>
+                <div style="width:18px;height:6px;background:rgba(255,255,255,0.09);border-radius:2px"></div>
+              </div>
+            </div>
+          </div>
+          <div class="sc-info">
+            <div class="sc-info-name">Classes</div>
+            <div class="sc-info-desc">Create &amp; manage class sessions</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── FaceID ── -->
+    <div class="showcase-block">
+      <div class="showcase-header">
+        <div>
+          <div class="showcase-name">FaceID — Facial Authentication</div>
+          <p class="showcase-desc">
+            Passwordless web authentication using facial recognition.
+            Users register once with a face capture; all subsequent logins
+            verify identity through the camera — no password required.
+          </p>
+        </div>
+        <div class="tech-stack" style="margin-bottom:0">
+          <span class="tech-badge">Python</span>
+          <span class="tech-badge">Flask</span>
+          <span class="tech-badge">face_recognition</span>
+          <span class="tech-badge">Camera API</span>
+        </div>
+      </div>
+
+      <div class="screens-row">
+
+        <!-- Home -->
+        <div class="screen-card">
+          <div class="sc-chrome">
+            <div class="sc-dot" style="background:#ff5f57"></div>
+            <div class="sc-dot" style="background:#ffbd2e"></div>
+            <div class="sc-dot" style="background:#28c840"></div>
+            <span class="sc-url">faceauth /</span>
+          </div>
+          <div class="sc-body">
+            <div class="mk-face-nav">
+              <div class="mk-face-brand"></div>
+              <div class="mk-face-btn-o"></div>
+              <div class="mk-face-btn-p"></div>
+            </div>
+            <div class="mk-hero-wrap">
+              <div class="mk-h1a"></div>
+              <div class="mk-h1b"></div>
+              <div class="mk-sub"></div>
+              <div class="mk-sub" style="width:72%"></div>
+              <div class="mk-btns">
+                <div style="height:9px;width:58px;background:rgba(92,158,220,0.55);border-radius:2px"></div>
+                <div style="height:9px;width:48px;border:1px solid rgba(255,255,255,0.15);border-radius:2px"></div>
+              </div>
+            </div>
+          </div>
+          <div class="sc-info">
+            <div class="sc-info-name">Home</div>
+            <div class="sc-info-desc">Landing &amp; entry point</div>
+          </div>
+        </div>
+
+        <!-- Sign Up -->
+        <div class="screen-card">
+          <div class="sc-chrome">
+            <div class="sc-dot" style="background:#ff5f57"></div>
+            <div class="sc-dot" style="background:#ffbd2e"></div>
+            <div class="sc-dot" style="background:#28c840"></div>
+            <span class="sc-url">faceauth / signup</span>
+          </div>
+          <div class="sc-body">
+            <div class="mk-face-nav">
+              <div class="mk-face-brand"></div>
+              <div class="mk-face-btn-o"></div>
+              <div class="mk-face-btn-p"></div>
+            </div>
+            <div style="display:flex;justify-content:center;padding-top:10px">
+              <div class="mk-card" style="width:112px;padding:9px">
+                <div style="height:6px;width:55%;background:rgba(255,255,255,0.28);border-radius:2px;margin-bottom:8px"></div>
+                <div class="mk-input"></div>
+                <div class="mk-input"></div>
+                <div class="mk-input"></div>
+                <div style="height:7px;width:100%;background:rgba(92,158,220,0.55);border-radius:2px;margin-top:3px"></div>
+              </div>
+            </div>
+          </div>
+          <div class="sc-info">
+            <div class="sc-info-name">Sign Up</div>
+            <div class="sc-info-desc">Create account with credentials</div>
+          </div>
+        </div>
+
+        <!-- Face Verify -->
+        <div class="screen-card">
+          <div class="sc-chrome">
+            <div class="sc-dot" style="background:#ff5f57"></div>
+            <div class="sc-dot" style="background:#ffbd2e"></div>
+            <div class="sc-dot" style="background:#28c840"></div>
+            <span class="sc-url">faceauth / verify</span>
+          </div>
+          <div class="sc-body">
+            <div class="mk-face-nav"><div class="mk-face-brand"></div></div>
+            <div style="padding:12px 8px;text-align:center">
+              <div style="height:5px;width:50%;background:rgba(255,255,255,0.18);border-radius:2px;margin:0 auto 4px"></div>
+              <div style="height:3px;width:70%;background:rgba(255,255,255,0.08);border-radius:1px;margin:0 auto 12px"></div>
+              <div class="mk-oval" style="margin:0 auto 10px">
+                <div style="width:18px;height:22px;border-radius:50% 50% 50% 50% / 40% 40% 60% 60%;background:rgba(92,158,220,0.18)"></div>
+              </div>
+              <div style="height:7px;width:68px;background:rgba(92,158,220,0.5);border-radius:2px;margin:0 auto"></div>
+            </div>
+          </div>
+          <div class="sc-info">
+            <div class="sc-info-name">Face Verify</div>
+            <div class="sc-info-desc">Live camera identity check</div>
+          </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div class="screen-card">
+          <div class="sc-chrome">
+            <div class="sc-dot" style="background:#ff5f57"></div>
+            <div class="sc-dot" style="background:#ffbd2e"></div>
+            <div class="sc-dot" style="background:#28c840"></div>
+            <span class="sc-url">faceauth / dashboard</span>
+          </div>
+          <div class="sc-body">
+            <div class="mk-face-nav">
+              <div class="mk-face-brand"></div>
+              <div style="margin-left:auto;width:13px;height:13px;border-radius:50%;background:rgba(92,158,220,0.38)"></div>
+            </div>
+            <div style="padding:8px">
+              <div style="background:rgba(92,158,220,0.08);border:1px solid rgba(92,158,220,0.2);border-radius:3px;padding:8px;margin-bottom:6px">
+                <div style="height:5px;width:65%;background:rgba(255,255,255,0.24);border-radius:2px;margin-bottom:4px"></div>
+                <div style="height:3px;width:42%;background:rgba(255,255,255,0.1);border-radius:1px"></div>
+              </div>
+              <div class="mk-card" style="padding:7px">
+                <div style="height:4px;width:48%;background:rgba(255,255,255,0.15);border-radius:2px;margin-bottom:6px"></div>
+                <div class="mk-grid2">
+                  <div style="height:22px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.07);border-radius:2px"></div>
+                  <div style="height:22px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.07);border-radius:2px"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="sc-info">
+            <div class="sc-info-name">Dashboard</div>
+            <div class="sc-info-desc">Post-auth user dashboard</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </section>
+
+  <!-- UI/UX -->
+  <section id="uiux">
+    <div class="section-header">
+      <p class="section-eyebrow">UI/UX Design</p>
+      <h2 class="section-title">Design Work</h2>
+      <div class="section-divider"></div>
+    </div>
+
+    <div class="uiux-videos">
+
+      <div class="video-container">
+        <video controls autoplay muted loop playsinline preload="metadata">
+          <source src="ui%20ux/final%20project%20video.mp4#t=5" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <div class="video-meta">
+          <div>
+            <div class="video-meta-title">Multimedia Technologies — Interactive Prototype</div>
+            <div class="video-meta-sub">Figma &middot; UI/UX Design &middot; BSc Computer Science, GCTU</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="video-container">
+        <video controls autoplay muted loop playsinline preload="metadata">
+          <source src="ui%20ux/night%20night.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <div class="video-meta">
+          <div>
+            <div class="video-meta-title">Night Night</div>
+            <div class="video-meta-sub">Figma &middot; UI/UX Design</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="wireframe-display">
+      <img src="ui%20ux/whatsapp%20wireframe.png" alt="WhatsApp Wireframe">
+      <div class="wireframe-meta">
+        <div class="wireframe-meta-title">WhatsApp Wireframe</div>
+        <div class="wireframe-meta-sub">Figma &middot; Wireframing &middot; UI/UX</div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- RESUME -->
+  <section id="resume">
+    <div class="section-header">
+      <p class="section-eyebrow">Background</p>
+      <h2 class="section-title">Resume</h2>
+      <div class="section-divider"></div>
+    </div>
+
+    <div class="resume-layout">
+
+      <!-- LEFT COLUMN -->
+      <div>
+        <h3 class="resume-col-title">Education</h3>
+
+        <div class="resume-entry">
+          <div class="resume-entry-title">BSc Computer Science</div>
+          <div class="resume-entry-sub">Ghana Communication Technology University</div>
+          <div class="resume-entry-date">Present — Undergraduate</div>
+          <div class="resume-entry-body">
+            Pursuing a degree in Computer Science with a focus on software development,
+            algorithms, and intelligent systems.
+          </div>
+        </div>
+
+        <div class="resume-entry">
+          <div class="resume-entry-title">West African Senior School Certificate (WASSCE)</div>
+          <div class="resume-entry-sub">Sogakofe Senior High School</div>
+          <div class="resume-entry-date">Completed</div>
+          <div class="resume-entry-body">
+            Secondary education at Sogakofe Senior High, Volta Region, Ghana.
+          </div>
+        </div>
+
+        <h3 class="resume-col-title" style="margin-top: 40px;">Skills</h3>
+        <div class="skills-grid">
+          <div class="skill-item">Python</div>
+          <div class="skill-item">Flask</div>
+          <div class="skill-item">HTML / CSS</div>
+          <div class="skill-item">JavaScript</div>
+          <div class="skill-item">OpenCV</div>
+          <div class="skill-item">SQLite</div>
+          <div class="skill-item">UI / UX Design</div>
+          <div class="skill-item">Web Design</div>
+          <div class="skill-item">Microsoft Word</div>
+          <div class="skill-item">Microsoft Excel</div>
+          <div class="skill-item">Microsoft PowerPoint</div>
+          <div class="skill-item">Microsoft Access</div>
+          <div class="skill-item">Figma (Self-taught)</div>
+          <div class="skill-item">Adobe Photoshop</div>
+          <div class="skill-item">C++</div>
+          <div class="skill-item">React</div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div>
+        <h3 class="resume-col-title">Experience</h3>
+
+        <div class="resume-entry">
+          <div class="resume-entry-title">Lead Intern — Creative &amp; Content Strategy</div>
+          <div class="resume-entry-sub">IBG Comms</div>
+          <div class="resume-entry-date">Internship</div>
+          <div class="resume-entry-body">
+            Led a team of interns in developing creative content plans for client companies.
+            Also responsible for training co-interns in UI/UX design fundamentals and
+            practical Figma workflows, bridging design thinking with real-world execution.
+          </div>
+        </div>
+
+        <div class="resume-entry">
+          <div class="resume-entry-title">Intern → Web Developer &amp; Designer</div>
+          <div class="resume-entry-sub">Emperial Waste</div>
+          <div class="resume-entry-date">Internship</div>
+          <div class="resume-entry-body">
+            Started at Emperial Waste maintaining and organising company records in Microsoft Excel.
+            Later tasked by Emperial Waste with designing advertising materials, flyers, and websites —
+            and developed and managed the company's web presence.
+          </div>
+        </div>
+
+        <div class="resume-entry">
+          <div class="resume-entry-title">Freelance Designer &amp; Developer</div>
+          <div class="resume-entry-sub">Independent</div>
+          <div class="resume-entry-date">Ongoing</div>
+          <div class="resume-entry-body">
+            Delivered design and document work for individual clients across various
+            briefs — including visual assets, layouts, and written documents.
+            Several projects completed under NDA.
+          </div>
+        </div>
+
+        <h3 class="resume-col-title" style="margin-top: 40px;">Leadership</h3>
+
+        <div class="resume-entry">
+          <div class="resume-entry-title">Assistant Organizer — ACS</div>
+          <div class="resume-entry-sub">Association of Computing Students · Ghana Communication Technology University</div>
+          <div class="resume-entry-date">Present</div>
+          <div class="resume-entry-body">
+            Serving as Assistant Organizer of the Association of Computing Students (ACS) at GCTU,
+            supporting the planning and coordination of student activities, events, and initiatives
+            within the computing faculty.
+          </div>
+        </div>
+
+        <div class="resume-entry">
+          <div class="resume-entry-title">IT President — Elective IT</div>
+          <div class="resume-entry-sub">Sogakofe Senior High School</div>
+          <div class="resume-entry-date">Final Year of High School</div>
+          <div class="resume-entry-body">
+            Elected IT President by peers in my final year. Managed and guided elective IT students
+            at Sogakofe SHS, leading sessions on IT fundamentals and introductory programming
+            concepts to help classmates build a solid foundation in the subject.
+          </div>
+        </div>
+
+        <h3 class="resume-col-title" style="margin-top: 40px;">Achievements &amp; Extras</h3>
+
+        <div class="resume-entry">
+          <div class="resume-entry-title">Self-taught UI/UX Design — Figma</div>
+          <div class="resume-entry-sub">Independent Study</div>
+          <div class="resume-entry-date">Ongoing</div>
+          <div class="resume-entry-body">
+            Independently learned UI/UX principles and Figma through self-study,
+            applying the skills across multiple design projects including a
+            Multimedia Technologies interactive prototype and seven client-style web designs.
+          </div>
+        </div>
+
+        <div class="resume-entry">
+          <div class="resume-entry-title">Self-taught Graphic Design</div>
+          <div class="resume-entry-sub">Independent Study</div>
+          <div class="resume-entry-date">Ongoing</div>
+          <div class="resume-entry-body">
+            Independently developed graphic design skills through self-directed learning,
+            creating visual assets and branding materials across personal and client-style projects.
+          </div>
+        </div>
+
+        <div class="resume-entry">
+          <div class="resume-entry-title">Database Management</div>
+          <div class="resume-entry-sub">Independent Study</div>
+          <div class="resume-entry-date">Ongoing</div>
+          <div class="resume-entry-body">
+            Gained hands-on experience designing and managing relational databases,
+            including schema design, querying, and integrating databases into full-stack applications.
+          </div>
+        </div>
+
+        <div class="resume-entry">
+          <div class="resume-entry-title">Distributed Systems Design</div>
+          <div class="resume-entry-sub">Independent Study</div>
+          <div class="resume-entry-date">Ongoing</div>
+          <div class="resume-entry-body">
+            Self-studied core concepts in distributed systems including fault tolerance,
+            scalability, consistency models, and service communication patterns.
+          </div>
+        </div>
+      </div>
+
+      <div class="resume-download">
+        <a href="Emmanuel_Ohemeng_Resume.docx" download class="btn-primary">Download Full Resume</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CONTACT STRIP -->
+  <div id="contact">
+    <p class="contact-text">Let's work together.</p>
+    <div class="contact-links">
+      <a href="mailto:ohemengemmanuel104@gmail.com" class="btn-primary">ohemengemmanuel104@gmail.com</a>
+      <a href="tel:+233501754564" class="btn-ghost">+233 50 175 4564</a>
+      <a href="https://www.linkedin.com/in/emmanuel-ohemeng-269ba5312/" target="_blank" class="btn-ghost">LinkedIn</a>
+      <a href="https://github.com/ohemengemmanuel" target="_blank" class="btn-ghost">GitHub</a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>&copy; 2026 Emmanuel Ohemeng</span>
+    <span>Designer &amp; Developer &mdash; Ghana</span>
+  </footer>
+
+  <!-- IFRAME PREVIEW + CAROUSEL -->
+  <script>
+    // ── THEME TOGGLE ──
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', () => {
+      const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('eo-theme', next);
+    });
+
+    const previews = [
+      { id: 'scale-casa',     src: 'sites/casa.html' },
+      { id: 'scale-scoops',   src: 'sites/scoops-website.html' },
+      { id: 'scale-lumina',   src: 'sites/lumina.html' },
+      { id: 'scale-tidal',    src: 'sites/tidal-waterpark.html' },
+      { id: 'scale-freq',     src: 'sites/freq-concerts.html' },
+      { id: 'scale-nexus',    src: 'sites/techshop.html' },
+      { id: 'scale-elinesis', src: 'sites/elinesis.html' },
+      { id: 'scale-bakery',   src: 'sites/bakery.html' },
+      { id: 'scale-nba',     src: 'sites/NBA/index.html' },
+    ];
+
+    function scaleIframes() {
+      previews.forEach(({ id, src }) => {
+        const scaler = document.getElementById(id);
+        if (!scaler) return;
+        const parent = scaler.closest('.site-preview');
+        const cardWidth = parent.offsetWidth;
+        if (!cardWidth) return;
+        const scale = cardWidth / 1440;
+        scaler.style.transform = `scale(${scale})`;
+        parent.style.height = (900 * scale) + 'px';
+        if (!scaler.querySelector('iframe')) {
+          const iframe = document.createElement('iframe');
+          iframe.src = src;
+          iframe.title = id;
+          scaler.appendChild(iframe);
+        }
+      });
+    }
+
+    // ── SITES CAROUSEL (peek style) ──
+    const CARD_RATIO = 0.68; // 68% of container width; ~16% peeking each side
+    const GAP = 20;
+
+    const track    = document.getElementById('sitesTrack');
+    const prevBtn  = document.getElementById('sitesPrev');
+    const nextBtn  = document.getElementById('sitesNext');
+    const dotsWrap = document.getElementById('sitesDots');
+    const counter  = document.getElementById('sitesCounter');
+    const cards    = track ? Array.from(track.children) : [];
+    const total    = cards.length;
+    let current    = 0;
+
+    if (total) {
+      cards.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+        dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+        dot.addEventListener('click', () => goTo(i));
+        dotsWrap.appendChild(dot);
+      });
+
+      function getCardW() {
+        return Math.floor(track.parentElement.offsetWidth * CARD_RATIO);
+      }
+
+      function applyLayout() {
+        const cardW = getCardW();
+        cards.forEach(c => { c.style.width = cardW + 'px'; });
+        applyTransform();
+        applyCardStyles();
+        scaleIframes();
+      }
+
+      function applyTransform() {
+        const containerW = track.parentElement.offsetWidth;
+        const cardW = getCardW();
+        const offset = (containerW - cardW) / 2 - current * (cardW + GAP);
+        track.style.transform = `translateX(${offset}px)`;
+      }
+
+      function applyCardStyles() {
+        cards.forEach((card, i) => {
+          const dist = Math.abs(i - current);
+          card.style.opacity = dist === 0 ? '1' : dist === 1 ? '0.52' : '0.28';
+          card.style.transform = dist === 0 ? 'scale(1)' : 'scale(0.96)';
+        });
+        dotsWrap.querySelectorAll('.carousel-dot').forEach((d, i) => {
+          d.classList.toggle('active', i === current);
+        });
+        counter.textContent = (current + 1) + ' / ' + total;
+        prevBtn.disabled = false;
+        nextBtn.disabled = false;
+      }
+
+      function goTo(n) {
+        current = ((n % total) + total) % total;
+        applyTransform();
+        applyCardStyles();
+      }
+
+      // ── AUTOPLAY ──
+      let autoTimer;
+      let resumeTimer;
+
+      function startAuto() {
+        clearInterval(autoTimer);
+        autoTimer = setInterval(() => goTo(current + 1), 3000);
+      }
+
+      function pauseThenResume() {
+        clearInterval(autoTimer);
+        clearTimeout(resumeTimer);
+        resumeTimer = setTimeout(startAuto, 5000);
+      }
+
+      prevBtn.addEventListener('click', () => { goTo(current - 1); pauseThenResume(); });
+      nextBtn.addEventListener('click', () => { goTo(current + 1); pauseThenResume(); });
+
+      let startX = 0;
+      track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+      track.addEventListener('touchend', e => {
+        const dx = e.changedTouches[0].clientX - startX;
+        if (Math.abs(dx) > 50) { goTo(current + (dx < 0 ? 1 : -1)); pauseThenResume(); }
+      });
+
+      document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowLeft')  { goTo(current - 1); pauseThenResume(); }
+        if (e.key === 'ArrowRight') { goTo(current + 1); pauseThenResume(); }
+      });
+
+      document.addEventListener('DOMContentLoaded', () => { applyLayout(); startAuto(); });
+      window.addEventListener('resize', applyLayout);
+    }
+  </script>
+</body>
+</html>

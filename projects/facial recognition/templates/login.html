@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}FaceAuth — Login{% endblock %}
+
+{% block nav %}
+  <a class="btn btn-outline btn-sm" href="/signup">Create Account</a>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-title">Login</div>
+  <div class="card-sub">Step 1 of 2 — verify your credentials</div>
+
+  <div class="field">
+    <label for="first_name">First Name</label>
+    <input type="text" id="first_name" placeholder="Your registered first name" autocomplete="off" />
+  </div>
+
+  <div class="field">
+    <label for="password">Password</label>
+    <input type="password" id="password" placeholder="Your password" />
+  </div>
+
+  <div id="alert" class="alert"></div>
+
+  <div style="margin-top:24px; display:flex; align-items:center; gap:14px;">
+    <button class="btn btn-primary" id="submitBtn" onclick="doLogin()">
+      <span class="spinner" id="spinner"></span>
+      <span class="btn-label">Continue to Face Verification</span>
+    </button>
+  </div>
+
+  <div class="text-sm text-center" style="margin-top:20px;">
+    No account? <a class="link" href="/signup">Sign up here</a>
+  </div>
+
+  <div style="margin-top:28px; padding:14px; background:var(--input); border-radius:8px; font-size:0.82rem; color:var(--muted); line-height:1.6;">
+    <strong style="color:var(--text);">&#128274; Two-step authentication</strong><br/>
+    Your password is verified first. If it matches, you will be directed to the face verification
+    step — only your face is checked, not the entire database.
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/camera.js') }}"></script>
+<script>
+  document.getElementById("password").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") doLogin();
+  });
+
+  async function doLogin() {
+    const alertEl = document.getElementById("alert");
+    const btn = document.getElementById("submitBtn");
+    const spinner = document.getElementById("spinner");
+
+    setBtn(btn, spinner, true, "Checking credentials…");
+
+    const data = await postJSON("/api/login", {
+      first_name: document.getElementById("first_name").value,
+      password: document.getElementById("password").value,
+    });
+
+    setBtn(btn, spinner, false, "Continue to Face Verification");
+
+    if (data.success) {
+      window.location.href = data.redirect;
+    } else {
+      showAlert(alertEl, data.message, "error");
+    }
+  }
+</script>
+{% endblock %}

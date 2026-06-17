@@ -1,0 +1,7 @@
+
+
+sign up and login 
+facial enroll in sign up
+
+
+login while logging in detail are taking first name and password if they work then we perform verification to avoid searching the whole database

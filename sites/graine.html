@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GRAINE — Bread, Refined</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,300;0,9..40,400;1,9..40,200&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:     #e8e0d0;
+      --text:   #0e0b07;
+      --gold:   #b8955a;
+      --muted:  #5a4c3a;
+      --cream:  #ddd4c0;
+      --card:   #ede5d5;
+      --vis:    #d8ccb8;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 30px 64px;
+      background: rgba(232,224,208,.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem; font-weight: 300;
+      letter-spacing: .5em; text-transform: uppercase;
+      color: var(--text); text-decoration: none;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .nav-links { display: flex; gap: 44px; list-style: none; }
+    .nav-links a {
+      text-decoration: none; font-size: .63rem; font-weight: 200;
+      letter-spacing: .24em; text-transform: uppercase;
+      color: var(--muted); transition: color .3s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      font-size: .63rem; font-weight: 200; letter-spacing: .24em;
+      text-transform: uppercase; color: var(--gold);
+      text-decoration: none; border-bottom: 1px solid rgba(184,149,90,.5);
+      padding-bottom: 2px; transition: opacity .3s;
+    }
+    .nav-cta:hover { opacity: .55; }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 0 64px 88px;
+      position: relative; overflow: hidden;
+    }
+    .hero-ghost {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(10rem, 21vw, 22rem);
+      font-weight: 700; font-style: italic;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(184,149,90,.13);
+      white-space: nowrap; pointer-events: none; user-select: none;
+      letter-spacing: -.03em;
+    }
+    .hero-stem {
+      width: 1px; height: 110px;
+      background: linear-gradient(to bottom, transparent, var(--gold));
+      opacity: .45; margin-bottom: 44px;
+    }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(4rem, 10.5vw, 10rem);
+      font-weight: 300; font-style: italic;
+      line-height: .88; letter-spacing: -.025em;
+      margin-bottom: 36px;
+    }
+    .hero-title strong { font-weight: 700; font-style: normal; display: block; }
+    .hero-row {
+      display: flex; align-items: flex-end;
+      justify-content: space-between; gap: 40px;
+    }
+    .hero-sub {
+      font-size: .7rem; font-weight: 200;
+      letter-spacing: .26em; text-transform: uppercase;
+      color: var(--muted); line-height: 2.2;
+    }
+    .hero-ticker {
+      font-size: .58rem; font-weight: 200; letter-spacing: .32em;
+      text-transform: uppercase; color: var(--muted);
+      writing-mode: vertical-rl;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .hero-ticker::before {
+      content: ''; display: block; width: 1px; height: 64px;
+      background: var(--gold); opacity: .35;
+    }
+
+    /* ── SHARED ── */
+    .eyebrow {
+      font-size: .6rem; font-weight: 200;
+      letter-spacing: .38em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 18px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .reveal {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity .9s cubic-bezier(.16,1,.3,1),
+                  transform .9s cubic-bezier(.16,1,.3,1);
+    }
+    .reveal.in { opacity: 1; transform: none; }
+
+    /* ── MANIFESTO ── */
+    #manifesto {
+      padding: 160px 64px;
+      display: grid; grid-template-columns: 180px 1fr; gap: 80px;
+      align-items: center;
+      border-top: 1px solid rgba(0,0,0,.07);
+    }
+    .manifesto-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.7rem, 3.2vw, 2.8rem);
+      font-weight: 300; line-height: 1.5;
+      color: var(--text);
+    }
+    .manifesto-text em { font-style: italic; color: var(--gold); }
+
+    /* ── COLLECTION ── */
+    #collection {
+      border-top: 1px solid rgba(0,0,0,.07);
+      padding-bottom: 40px;
+    }
+    .col-head {
+      padding: 80px 64px 56px;
+      display: flex; align-items: baseline;
+      justify-content: space-between;
+    }
+    .col-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 5vw, 5rem);
+      font-weight: 300; font-style: italic;
+    }
+    .col-season {
+      font-size: .6rem; font-weight: 200;
+      letter-spacing: .36em; text-transform: uppercase;
+      color: var(--muted);
+    }
+    .col-track {
+      display: flex; gap: 16px; overflow-x: auto;
+      padding: 0 64px 48px;
+      scrollbar-width: none; -ms-overflow-style: none;
+    }
+    .col-track::-webkit-scrollbar { display: none; }
+
+    /* bread cards */
+    .bc {
+      flex-shrink: 0; width: 320px;
+      background: var(--card);
+      border: 1px solid rgba(0,0,0,.07);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: border-color .4s, transform .3s, box-shadow .3s;
+    }
+    .bc:hover {
+      border-color: rgba(184,149,90,.35);
+      transform: translateY(-5px);
+      box-shadow: 0 22px 52px rgba(0,0,0,.09);
+    }
+    .bc-vis {
+      height: 400px; position: relative;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; background: var(--vis);
+      border-radius: 20px 20px 0 0;
+    }
+    .bc-num {
+      position: absolute; top: 22px; left: 22px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: .72rem; font-weight: 300;
+      letter-spacing: .18em; color: var(--muted);
+    }
+    .bc-tag {
+      position: absolute; top: 22px; right: 22px;
+      font-size: .52rem; font-weight: 200;
+      letter-spacing: .28em; text-transform: uppercase;
+      color: var(--gold); border: 1px solid rgba(184,149,90,.35);
+      padding: 4px 12px; border-radius: 20px;
+      background: rgba(184,149,90,.08);
+    }
+    .bc-info {
+      padding: 26px 26px 30px;
+      border-top: 1px solid rgba(0,0,0,.06);
+    }
+    .bc-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.55rem; font-weight: 300; font-style: italic;
+      margin-bottom: 8px;
+    }
+    .bc-desc {
+      font-size: .7rem; font-weight: 200;
+      color: var(--muted); line-height: 1.9;
+      letter-spacing: .03em; margin-bottom: 18px;
+    }
+    .bc-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem; font-weight: 300; color: var(--gold);
+    }
+
+    /* ── CSS BREAD ART ── */
+
+    .art-sourdough {
+      width: 148px; height: 148px;
+      background: radial-gradient(ellipse at 38% 32%,
+        #d09a5a 0%, #9a6228 44%, #5c360e 100%);
+      border-radius: 50%;
+      box-shadow:
+        inset -18px -12px 36px rgba(0,0,0,.55),
+        inset 10px 6px 22px rgba(210,160,80,.25),
+        0 24px 64px rgba(0,0,0,.15);
+      position: relative;
+    }
+    .art-sourdough::before {
+      content: '';
+      position: absolute; top: 34px; left: 22px;
+      width: 104px; height: 2px;
+      background: rgba(0,0,0,.35); border-radius: 2px;
+      transform: rotate(-22deg);
+      box-shadow: 0 22px 0 rgba(0,0,0,.22), 0 44px 0 rgba(0,0,0,.12);
+    }
+    .art-sourdough::after {
+      content: '';
+      position: absolute; inset: 0;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at 28% 22%,
+        rgba(255,220,150,.18) 0%, transparent 55%);
+    }
+
+    .art-croissant {
+      position: relative; width: 170px; height: 90px;
+    }
+    .art-croissant .body {
+      position: absolute; bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 140px; height: 70px;
+      background: linear-gradient(145deg, #d4a456 0%, #b07830 45%, #7a4e18 100%);
+      border-radius: 70px 70px 0 0 / 36px 36px 0 0;
+      box-shadow: 0 12px 40px rgba(0,0,0,.18);
+    }
+    .art-croissant .tip-l,
+    .art-croissant .tip-r {
+      position: absolute; bottom: 0;
+      width: 58px; height: 48px;
+      background: linear-gradient(135deg, #b07830, #6a3e10);
+    }
+    .art-croissant .tip-l {
+      left: 0; border-radius: 0 0 0 40px;
+      transform: rotate(-32deg); transform-origin: right bottom;
+    }
+    .art-croissant .tip-r {
+      right: 0; border-radius: 0 0 40px 0;
+      transform: rotate(32deg); transform-origin: left bottom;
+    }
+    .art-croissant .shine {
+      position: absolute; top: 10px; left: 50%;
+      transform: translateX(-44%);
+      width: 90px; height: 18px;
+      background: rgba(255,220,130,.12);
+      border-radius: 50%; filter: blur(4px);
+    }
+
+    .art-baguette {
+      width: 210px; height: 46px;
+      background: linear-gradient(to bottom,
+        #c8935c 0%, #9a6030 50%, #6a3e18 100%);
+      border-radius: 23px;
+      box-shadow:
+        0 10px 32px rgba(0,0,0,.15),
+        inset 0 -6px 12px rgba(0,0,0,.3),
+        inset 0 3px 8px rgba(200,160,80,.2);
+      position: relative;
+    }
+    .art-baguette::before {
+      content: '';
+      position: absolute; top: 14px; left: 22px; right: 22px;
+      height: 1.5px; background: rgba(0,0,0,.28); border-radius: 1px;
+      box-shadow: 0 9px 0 rgba(0,0,0,.22), 0 18px 0 rgba(0,0,0,.15);
+    }
+    .art-baguette::after {
+      content: '';
+      position: absolute; top: 6px; left: 20px; right: 20px;
+      height: 8px;
+      background: rgba(255,200,100,.1);
+      border-radius: 4px; filter: blur(2px);
+    }
+
+    .art-focaccia {
+      width: 180px; height: 120px;
+      background: linear-gradient(150deg,
+        #d0a050 0%, #9a6826 60%, #6a4010 100%);
+      border-radius: 18px;
+      box-shadow: 0 14px 40px rgba(0,0,0,.15);
+      position: relative; overflow: hidden;
+    }
+    .art-focaccia::before {
+      content: '';
+      position: absolute; inset: 14px;
+      background-image: radial-gradient(circle, rgba(0,0,0,.45) 3px, transparent 3px);
+      background-size: 24px 24px;
+      background-position: 12px 12px;
+    }
+    .art-focaccia::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 30% 28%,
+        rgba(255,210,100,.14) 0%, transparent 60%);
+    }
+
+    .art-brioche { position: relative; width: 138px; height: 118px; }
+    .art-brioche .base {
+      position: absolute; bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 128px; height: 68px;
+      background: radial-gradient(ellipse at 42% 38%,
+        #c8915a 0%, #8a5a28 60%, #5a3510 100%);
+      border-radius: 50%;
+      box-shadow: 0 12px 32px rgba(0,0,0,.18);
+    }
+    .art-brioche .top {
+      position: absolute; top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 82px; height: 74px;
+      background: radial-gradient(ellipse at 38% 32%,
+        #d4a262 0%, #9a6630 60%, #6a4015 100%);
+      border-radius: 50% 50% 42% 42%;
+      box-shadow: 0 6px 20px rgba(0,0,0,.18);
+    }
+    .art-brioche .shine {
+      position: absolute; top: 8px; left: 50%;
+      transform: translateX(-36%);
+      width: 34px; height: 12px;
+      background: rgba(255,220,140,.18);
+      border-radius: 50%; filter: blur(3px);
+    }
+
+    .art-rye { width: 170px; height: 96px; position: relative; }
+    .art-rye .loaf {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 76px;
+      background: linear-gradient(to bottom,
+        #5c3814 0%, #3a2008 60%, #221208 100%);
+      border-radius: 8px;
+      box-shadow: 0 10px 32px rgba(0,0,0,.18);
+    }
+    .art-rye .crown {
+      position: absolute; top: 0; left: 0; right: 0; height: 40px;
+      background: linear-gradient(to bottom, #8a5428 0%, #5c3414 100%);
+      border-radius: 50% 50% 0 0 / 38px 38px 0 0;
+      box-shadow: inset 0 6px 16px rgba(0,0,0,.3);
+    }
+    .art-rye .split {
+      position: absolute; top: 32px; left: 18px; right: 18px;
+      height: 2px; background: rgba(200,140,60,.35); border-radius: 1px;
+    }
+
+    /* ── PROCESS ── */
+    #process {
+      padding: 160px 64px;
+      border-top: 1px solid rgba(0,0,0,.07);
+    }
+    .process-hd { margin-bottom: 96px; }
+    .process-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 5vw, 5rem);
+      font-weight: 300; font-style: italic; line-height: 1.05;
+      max-width: 580px;
+    }
+    .steps {
+      display: grid; grid-template-columns: repeat(4,1fr); gap: 16px;
+    }
+    .step {
+      padding: 36px 30px; background: var(--card);
+      border: 1px solid rgba(0,0,0,.06);
+      border-radius: 18px;
+      transition: box-shadow .3s, transform .3s;
+    }
+    .step:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(0,0,0,.07);
+    }
+    .step-icon {
+      width: 42px; height: 42px;
+      background: rgba(184,149,90,.12);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+    }
+    .step-n {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.8rem; font-weight: 700;
+      color: rgba(184,149,90,.14); line-height: 1;
+      margin-bottom: 14px; letter-spacing: -.04em;
+    }
+    .step-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem; font-weight: 400; margin-bottom: 10px;
+    }
+    .step-desc {
+      font-size: .7rem; font-weight: 200; color: var(--muted);
+      line-height: 1.9; letter-spacing: .025em;
+    }
+
+    /* ── QUOTE ── */
+    #quote {
+      padding: 160px 64px; text-align: center;
+      border-top: 1px solid rgba(0,0,0,.07);
+      position: relative;
+    }
+    .quote-stem {
+      width: 1px; height: 96px;
+      background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+      margin: 0 auto 64px; opacity: .35;
+    }
+    .quote-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.8rem, 4vw, 3.6rem);
+      font-weight: 300; font-style: italic;
+      line-height: 1.4; max-width: 860px; margin: 0 auto 48px;
+      color: var(--text);
+    }
+    .quote-attr {
+      font-size: .58rem; font-weight: 200;
+      letter-spacing: .42em; text-transform: uppercase; color: var(--muted);
+    }
+
+    /* ── RESERVE ── */
+    #reserve {
+      padding: 140px 64px;
+      border-top: 1px solid rgba(0,0,0,.07);
+      display: grid; grid-template-columns: 1fr 1fr; gap: 100px;
+      align-items: start;
+    }
+    .reserve-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 5vw, 5rem);
+      font-weight: 300; font-style: italic; line-height: 1.02;
+      margin-bottom: 24px;
+    }
+    .reserve-sub {
+      font-size: .72rem; font-weight: 200; color: var(--muted);
+      line-height: 1.95; letter-spacing: .03em;
+      margin-bottom: 40px; max-width: 380px;
+    }
+    .hours-label {
+      display: flex; align-items: center; gap: 8px;
+      font-size: .56rem; font-weight: 200; letter-spacing: .32em;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 18px;
+    }
+    .hours { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .hr-item { border-top: 1px solid rgba(0,0,0,.08); padding-top: 14px; }
+    .hr-day {
+      font-size: .56rem; font-weight: 200; letter-spacing: .32em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 5px;
+    }
+    .hr-time {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem; font-weight: 300; color: var(--text);
+    }
+
+    .rform { display: flex; flex-direction: column; gap: 20px; }
+    .fg { display: flex; flex-direction: column; gap: 8px; }
+    .fl {
+      font-size: .56rem; font-weight: 200;
+      letter-spacing: .32em; text-transform: uppercase; color: var(--muted);
+    }
+    .fi {
+      background: var(--card); border: 1px solid rgba(0,0,0,.1);
+      border-radius: 10px;
+      padding: 13px 16px; color: var(--text);
+      font-family: 'DM Sans', sans-serif; font-size: .88rem; font-weight: 200;
+      outline: none; transition: border-color .3s; width: 100%;
+    }
+    .fi:focus { border-color: var(--gold); }
+    .fi::placeholder { color: rgba(14,11,7,.35); }
+    .frow { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    .fsubmit {
+      margin-top: 8px; padding: 18px 0; width: 100%;
+      background: var(--gold); border: 1px solid var(--gold);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif; font-size: .62rem; font-weight: 200;
+      letter-spacing: .34em; text-transform: uppercase;
+      cursor: pointer; transition: opacity .3s;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    .fsubmit:hover { opacity: .8; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 64px;
+      border-top: 1px solid rgba(0,0,0,.07);
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px;
+      align-items: end;
+      background: var(--cream);
+    }
+    .f-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem; font-weight: 300; font-style: italic;
+      letter-spacing: .1em; margin-bottom: 10px;
+    }
+    .f-tag {
+      font-size: .58rem; font-weight: 200;
+      letter-spacing: .28em; text-transform: uppercase; color: var(--muted);
+    }
+    .f-col-title {
+      font-size: .56rem; font-weight: 200;
+      letter-spacing: .38em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 20px;
+    }
+    .f-links { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+    .f-links a {
+      text-decoration: none; font-size: .78rem; font-weight: 200;
+      color: var(--muted); transition: color .3s;
+      display: flex; align-items: center; gap: 9px;
+    }
+    .f-links a:hover { color: var(--text); }
+    .f-copy {
+      font-size: .56rem; font-weight: 200; letter-spacing: .18em;
+      color: rgba(14,11,7,.45);
+      grid-column: 1 / -1;
+      border-top: 1px solid rgba(0,0,0,.07);
+      padding-top: 32px; margin-top: 20px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(36px); }
+      to   { opacity: 1; transform: none; }
+    }
+    .hero-stem   { animation: fadeUp 1.1s .15s both; }
+    .hero-title  { animation: fadeUp 1.1s .3s both; }
+    .hero-row    { animation: fadeUp 1.1s .5s both; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1100px) {
+      nav { padding: 22px 32px; }
+      #hero { padding: 0 32px 64px; }
+      #manifesto { padding: 100px 32px; grid-template-columns: 1fr; gap: 36px; }
+      .col-head { padding: 64px 32px 44px; }
+      .col-track { padding: 0 32px 36px; }
+      #process { padding: 100px 32px; }
+      .steps { grid-template-columns: 1fr 1fr; }
+      #quote { padding: 100px 32px; }
+      #reserve { padding: 100px 32px; grid-template-columns: 1fr; gap: 64px; }
+      footer { padding: 48px 32px; grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 720px) {
+      nav { padding: 18px 20px; }
+      .nav-links { display: none; }
+      #hero { padding: 0 20px 52px; }
+      #manifesto { padding: 80px 20px; }
+      .col-head { padding: 56px 20px 36px; }
+      .col-track { padding: 0 20px 28px; }
+      #process { padding: 80px 20px; }
+      .steps { grid-template-columns: 1fr; }
+      #quote { padding: 80px 20px; }
+      #reserve { padding: 80px 20px; }
+      footer { padding: 40px 20px; grid-template-columns: 1fr; }
+      .f-copy { flex-direction: column; gap: 8px; text-align: center; }
+      .frow { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#hero" class="nav-logo">
+      <svg width="15" height="18" viewBox="0 0 15 18" fill="none">
+        <path d="M7.5 1C7.5 1 3.5 4.5 3.5 9C3.5 12.5 5.5 15.5 7.5 17C9.5 15.5 11.5 12.5 11.5 9C11.5 4.5 7.5 1 7.5 1Z" stroke="#b8955a" stroke-width="1.1" fill="none"/>
+        <path d="M7.5 5V17" stroke="#b8955a" stroke-width="1.1" stroke-linecap="round"/>
+        <path d="M5 7.5C5.8 8.1 6.6 8.3 7.5 8.3" stroke="#b8955a" stroke-width=".9" stroke-linecap="round"/>
+        <path d="M10 7.5C9.2 8.1 8.4 8.3 7.5 8.3" stroke="#b8955a" stroke-width=".9" stroke-linecap="round"/>
+        <path d="M5.5 11C6.2 11.5 6.9 11.7 7.5 11.7" stroke="#b8955a" stroke-width=".9" stroke-linecap="round"/>
+        <path d="M9.5 11C8.8 11.5 8.1 11.7 7.5 11.7" stroke="#b8955a" stroke-width=".9" stroke-linecap="round"/>
+      </svg>
+      Graine
+    </a>
+    <ul class="nav-links">
+      <li><a href="#collection">Collection</a></li>
+      <li><a href="#process">Atelier</a></li>
+      <li><a href="#reserve">Reserve</a></li>
+    </ul>
+    <a href="#reserve" class="nav-cta">Reserve a loaf</a>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-ghost" aria-hidden="true">GRAINE</div>
+    <div class="hero-stem"></div>
+    <h1 class="hero-title">
+      The Art<br>
+      <strong>of Bread.</strong>
+    </h1>
+    <div class="hero-row">
+      <p class="hero-sub">
+        Slow fermentation.<br>
+        Open crumb.<br>
+        Unforgettable crust.<br>
+        Baked before dawn.
+      </p>
+      <div class="hero-ticker">Scroll</div>
+    </div>
+  </section>
+
+  <!-- MANIFESTO -->
+  <section id="manifesto">
+    <p class="eyebrow reveal">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <circle cx="7" cy="7" r="2.8" stroke="#b8955a" stroke-width="1"/>
+        <path d="M7 1v2M7 11v2M1 7h2M11 7h2" stroke="#b8955a" stroke-width="1" stroke-linecap="round"/>
+      </svg>
+      Our Philosophy
+    </p>
+    <p class="manifesto-text reveal">
+      We do not bake for convenience.<br>
+      We bake for <em>those who notice</em>.<br>
+      Each loaf is a 36-hour ritual —
+      flour, water, salt, and the audacity
+      to believe that bread
+      can be <em>extraordinary</em>.
+    </p>
+  </section>
+
+  <!-- COLLECTION -->
+  <section id="collection">
+    <div class="col-head">
+      <h2 class="col-title reveal">The Collection</h2>
+      <span class="col-season reveal">Season II — Autumn</span>
+    </div>
+
+    <div class="col-track">
+
+      <div class="bc reveal">
+        <div class="bc-vis">
+          <span class="bc-num">No. 01</span>
+          <span class="bc-tag">Signature</span>
+          <div class="art-sourdough"></div>
+        </div>
+        <div class="bc-info">
+          <div class="bc-name">Country Sourdough</div>
+          <p class="bc-desc">78 % hydration. 36-hour cold retard.<br>A wild-fermented open crumb beneath<br>a mahogany crust that shatters.</p>
+          <div class="bc-price">GH₵ 48.00</div>
+        </div>
+      </div>
+
+      <div class="bc reveal">
+        <div class="bc-vis">
+          <span class="bc-num">No. 02</span>
+          <span class="bc-tag">Viennoiserie</span>
+          <div class="art-croissant">
+            <div class="body"></div>
+            <div class="tip-l"></div>
+            <div class="tip-r"></div>
+            <div class="shine"></div>
+          </div>
+        </div>
+        <div class="bc-info">
+          <div class="bc-name">Laminated Croissant</div>
+          <p class="bc-desc">72 layers. French AOP butter.<br>27 careful folds across 48 hours.<br>Each bite is architecture.</p>
+          <div class="bc-price">GH₵ 22.00</div>
+        </div>
+      </div>
+
+      <div class="bc reveal">
+        <div class="bc-vis">
+          <span class="bc-num">No. 03</span>
+          <span class="bc-tag">French</span>
+          <div class="art-baguette"></div>
+        </div>
+        <div class="bc-info">
+          <div class="bc-name">Baguette de Tradition</div>
+          <p class="bc-desc">Stone-baked. Thin blistered crust.<br>An irregular crumb that tells you<br>it was made by hand, not machine.</p>
+          <div class="bc-price">GH₵ 18.00</div>
+        </div>
+      </div>
+
+      <div class="bc reveal">
+        <div class="bc-vis">
+          <span class="bc-num">No. 04</span>
+          <span class="bc-tag">Italian</span>
+          <div class="art-focaccia"></div>
+        </div>
+        <div class="bc-info">
+          <div class="bc-name">Focaccia Bianca</div>
+          <p class="bc-desc">Olive oil-soaked. Dimpled by hand.<br>Rosemary and fleur de sel pressed<br>into each crater before the oven.</p>
+          <div class="bc-price">GH₵ 35.00</div>
+        </div>
+      </div>
+
+      <div class="bc reveal">
+        <div class="bc-vis">
+          <span class="bc-num">No. 05</span>
+          <span class="bc-tag">Enriched</span>
+          <div class="art-brioche">
+            <div class="base"></div>
+            <div class="top"></div>
+            <div class="shine"></div>
+          </div>
+        </div>
+        <div class="bc-info">
+          <div class="bc-name">Brioche Nanterre</div>
+          <p class="bc-desc">40 % butter by weight. Enriched,<br>pillowy, gilded. A bread that forgets<br>it is bread entirely.</p>
+          <div class="bc-price">GH₵ 55.00</div>
+        </div>
+      </div>
+
+      <div class="bc reveal">
+        <div class="bc-vis">
+          <span class="bc-num">No. 06</span>
+          <span class="bc-tag">Dark</span>
+          <div class="art-rye">
+            <div class="loaf"></div>
+            <div class="crown"></div>
+            <div class="split"></div>
+          </div>
+        </div>
+        <div class="bc-info">
+          <div class="bc-name">Dark Rye Tin</div>
+          <p class="bc-desc">100 % rye. Molasses and caraway.<br>Dense, earthy, serious.<br>Not for the impatient palate.</p>
+          <div class="bc-price">GH₵ 42.00</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section id="process">
+    <div class="process-hd">
+      <p class="eyebrow reveal">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 12L7 2L12 12" stroke="#b8955a" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M4 9h6" stroke="#b8955a" stroke-width="1" stroke-linecap="round"/>
+        </svg>
+        The Atelier
+      </p>
+      <h2 class="process-title reveal">How we work<br><em>in the dark.</em></h2>
+    </div>
+    <div class="steps">
+
+      <div class="step reveal">
+        <div class="step-icon">
+          <!-- Seedling / leaven -->
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 18V9" stroke="#b8955a" stroke-width="1.4" stroke-linecap="round"/>
+            <path d="M10 9C10 9 6.5 8 5.5 5C5.5 5 8.5 2.5 12 5C13.5 6.5 13 9 10 9Z" stroke="#b8955a" stroke-width="1.2" fill="rgba(184,149,90,.18)" stroke-linejoin="round"/>
+            <path d="M10 13C10 13 13 12 13.5 14.5C13.5 14.5 11 16 8 13.5C7.2 12.8 7.5 12 10 13Z" stroke="#b8955a" stroke-width="1.1" fill="rgba(184,149,90,.14)" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="step-n">I</div>
+        <div class="step-name">The Leaven</div>
+        <p class="step-desc">Our starter is nine years old. Fed twice daily, never refrigerated. It is the only living thing we bring to work.</p>
+      </div>
+
+      <div class="step reveal">
+        <div class="step-icon">
+          <!-- Spiral / mix -->
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 10C11.5 8.5 13.5 8.8 14.5 10.2C15.8 12 14.5 14.8 11.5 15C8.5 15.2 6 13 6.2 10C6.4 7.2 8.8 5.5 11.2 5.8C14.5 6.2 16.5 9 15.8 12" stroke="#b8955a" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+          </svg>
+        </div>
+        <div class="step-n">II</div>
+        <div class="step-name">The Mix</div>
+        <p class="step-desc">Flour, water, salt. No shortcuts. Autolyse for sixty minutes before the leaven touches it. Patience is the ingredient.</p>
+      </div>
+
+      <div class="step reveal">
+        <div class="step-icon">
+          <!-- Snowflake / cold -->
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 3v14M3 10h14" stroke="#b8955a" stroke-width="1.3" stroke-linecap="round"/>
+            <path d="M5.5 5.5l9 9M14.5 5.5l-9 9" stroke="#b8955a" stroke-width="1.3" stroke-linecap="round"/>
+            <circle cx="10" cy="10" r="1.6" fill="#b8955a"/>
+          </svg>
+        </div>
+        <div class="step-n">III</div>
+        <div class="step-name">The Cold</div>
+        <p class="step-desc">Every loaf sleeps in a refrigerator for thirty-six hours minimum. Flavor is time. We will not rush it for anyone.</p>
+      </div>
+
+      <div class="step reveal">
+        <div class="step-icon">
+          <!-- Flame / fire -->
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 17C10 17 5 14 5 9C5 6.5 6.5 4.2 8.5 3C8.5 5 9.5 6 10.5 6C10.5 6 12.5 4 12 2C15 4 15.5 7 15.5 9C15.5 13.5 13 16.5 10 17Z" stroke="#b8955a" stroke-width="1.3" fill="rgba(184,149,90,.15)" stroke-linejoin="round"/>
+            <path d="M10 17C10 17 8 15 8 13C8 11.8 9 11 10 12C11 11 12 11.8 12 13C12 15 10 17 10 17Z" stroke="#b8955a" stroke-width="1.1" fill="rgba(184,149,90,.28)" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="step-n">IV</div>
+        <div class="step-name">The Fire</div>
+        <p class="step-desc">A Dutch oven. 260 °C. Steam trapped for twenty minutes. The crust forms like a verdict — irreversible, defining.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- QUOTE -->
+  <section id="quote">
+    <div class="quote-stem"></div>
+    <blockquote class="quote-text reveal">
+      "Good bread does not need to announce itself.
+      It is felt in the weight of the loaf,
+      heard in the sound of the crust,
+      and understood only after the first bite."
+    </blockquote>
+    <p class="quote-attr reveal">— Graine, on bread</p>
+  </section>
+
+  <!-- RESERVE -->
+  <section id="reserve">
+    <div>
+      <h2 class="reserve-title reveal">Reserve<br><em>your loaf.</em></h2>
+      <p class="reserve-sub reveal">
+        We bake to order. No walk-ins. No surplus.
+        Place your reservation by Wednesday midnight
+        for Friday collection. Saturday orders close Thursday.
+      </p>
+      <div class="hours-label reveal">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+          <circle cx="6.5" cy="6.5" r="5.5" stroke="#b8955a" stroke-width="1"/>
+          <path d="M6.5 3.5V7L9 8.5" stroke="#b8955a" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Collection Hours
+      </div>
+      <div class="hours reveal">
+        <div class="hr-item">
+          <div class="hr-day">Friday</div>
+          <div class="hr-time">07:00 — 13:00</div>
+        </div>
+        <div class="hr-item">
+          <div class="hr-day">Saturday</div>
+          <div class="hr-time">07:00 — 12:00</div>
+        </div>
+        <div class="hr-item">
+          <div class="hr-day">Sunday</div>
+          <div class="hr-time">Closed</div>
+        </div>
+        <div class="hr-item">
+          <div class="hr-day">Mon — Thu</div>
+          <div class="hr-time">Closed</div>
+        </div>
+      </div>
+    </div>
+
+    <form class="rform reveal" onsubmit="return false;">
+      <div class="frow">
+        <div class="fg">
+          <label class="fl">First Name</label>
+          <input class="fi" type="text" placeholder="Your name">
+        </div>
+        <div class="fg">
+          <label class="fl">Contact</label>
+          <input class="fi" type="text" placeholder="+233 …">
+        </div>
+      </div>
+      <div class="fg">
+        <label class="fl">Selection</label>
+        <input class="fi" type="text" placeholder="e.g. Country Sourdough × 2">
+      </div>
+      <div class="fg">
+        <label class="fl">Collection Date</label>
+        <input class="fi" type="text" placeholder="Friday or Saturday">
+      </div>
+      <div class="fg">
+        <label class="fl">Note</label>
+        <input class="fi" type="text" placeholder="Allergies, preferences …">
+      </div>
+      <button type="submit" class="fsubmit">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+          <path d="M6.5 1L12 6.5L6.5 12" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M1 6.5H12" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        Place Reservation
+      </button>
+    </form>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div>
+      <div class="f-brand">Graine</div>
+      <div class="f-tag">Bread, Refined — Accra</div>
+    </div>
+    <div>
+      <div class="f-col-title">Navigate</div>
+      <ul class="f-links">
+        <li><a href="#collection">The Collection</a></li>
+        <li><a href="#process">The Atelier</a></li>
+        <li><a href="#reserve">Reserve a Loaf</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="f-col-title">Find Us</div>
+      <ul class="f-links">
+        <li>
+          <a href="#">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+              <path d="M6.5 1C4.3 1 2.5 2.8 2.5 5C2.5 7.8 6.5 12 6.5 12C6.5 12 10.5 7.8 10.5 5C10.5 2.8 8.7 1 6.5 1Z" stroke="#b8955a" stroke-width="1" fill="none"/>
+              <circle cx="6.5" cy="5" r="1.3" stroke="#b8955a" stroke-width="1"/>
+            </svg>
+            14 Labone Close, Accra
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+              <rect x="1" y="3" width="11" height="8" rx="1.5" stroke="#b8955a" stroke-width="1"/>
+              <path d="M1 4.5L6.5 8L12 4.5" stroke="#b8955a" stroke-width="1" stroke-linecap="round"/>
+            </svg>
+            graine@bread.gh
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+              <rect x="1.5" y="1.5" width="10" height="10" rx="3" stroke="#b8955a" stroke-width="1"/>
+              <circle cx="6.5" cy="6.5" r="2.2" stroke="#b8955a" stroke-width="1"/>
+              <circle cx="9.6" cy="3.4" r=".7" fill="#b8955a"/>
+            </svg>
+            @grainebakery
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="f-copy">
+      <span>&copy; 2026 Graine Bakery, Accra, Ghana</span>
+      <span>The bread is the message.</span>
+    </div>
+  </footer>
+
+  <script>
+    // ── SCROLL REVEAL ──
+    const io = new IntersectionObserver(entries => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('in'), i * 90);
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: .1 });
+
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    // ── PARALLAX GHOST TEXT ──
+    const ghost = document.querySelector('.hero-ghost');
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      if (ghost) ghost.style.transform = `translate(-50%, calc(-50% + ${y * .18}px))`;
+    }, { passive: true });
+  </script>
+</body>
+</html>

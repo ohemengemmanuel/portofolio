@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Casa — A Home on the Web</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #F5F0E8;
+    --warm-white: #FDFAF4;
+    --charcoal: #2B2420;
+    --bark: #6B4C3B;
+    --clay: #C4704A;
+    --sage: #7A9E7E;
+    --dusty-gold: #C9A84C;
+    --stone: #9C9189;
+    --pale-sage: #E8F0E9;
+    --pale-clay: #F5E8DF;
+    --ink: #1A1210;
+    --mist: #EAE6DE;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--warm-white);
+    color: var(--charcoal);
+    overflow-x: hidden;
+  }
+
+  /* NAV — The Front Door */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 4rem;
+    background: rgba(253, 250, 244, 0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(107, 76, 59, 0.12);
+  }
+
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    color: var(--bark);
+    letter-spacing: 0.04em;
+  }
+  .logo span { color: var(--clay); font-style: italic; }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2.5rem;
+  }
+
+  nav ul a {
+    text-decoration: none;
+    color: var(--stone);
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  nav ul a:hover { color: var(--clay); }
+
+  .nav-cta {
+    background: var(--bark);
+    color: var(--cream) !important;
+    padding: 0.55rem 1.4rem;
+    border-radius: 40px;
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--clay) !important; color: var(--cream) !important; }
+
+  /* FOYER — Hero */
+  #foyer {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    background: var(--cream);
+    padding: 8rem 4rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .foyer-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .foyer-text h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 5vw, 4.5rem);
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+  }
+  .foyer-text h1 em {
+    color: var(--clay);
+    font-style: italic;
+  }
+
+  .foyer-text p {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: var(--stone);
+    max-width: 440px;
+    margin-bottom: 2.5rem;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    background: var(--bark);
+    color: var(--cream);
+    padding: 0.85rem 2.2rem;
+    border-radius: 40px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    letter-spacing: 0.04em;
+    font-weight: 500;
+    transition: background 0.2s, transform 0.15s;
+    margin-right: 1rem;
+  }
+  .btn-primary:hover { background: var(--clay); transform: translateY(-2px); }
+
+  .btn-secondary {
+    display: inline-block;
+    color: var(--bark);
+    padding: 0.85rem 2.2rem;
+    border-radius: 40px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    letter-spacing: 0.04em;
+    font-weight: 500;
+    border: 1.5px solid var(--bark);
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { background: var(--bark); color: var(--cream); }
+
+  .foyer-illustration {
+    position: relative;
+    height: 500px;
+  }
+
+  .house-visual {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Decorative floating shapes */
+  .float-card {
+    position: absolute;
+    background: var(--warm-white);
+    border-radius: 20px;
+    padding: 1rem 1.4rem;
+    box-shadow: 0 8px 32px rgba(43,36,32,0.1);
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--bark);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    animation: float 4s ease-in-out infinite;
+  }
+  .float-card:nth-child(2) { animation-delay: 1.2s; }
+  .float-card:nth-child(3) { animation-delay: 2.4s; }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .fc1 { top: 10%; left: 5%; }
+  .fc2 { top: 60%; right: 0%; }
+  .fc3 { bottom: 8%; left: 20%; }
+
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sage); }
+  .dot-gold { background: var(--dusty-gold); }
+  .dot-clay { background: var(--clay); }
+
+  .big-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 14rem;
+    color: rgba(107, 76, 59, 0.06);
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    pointer-events: none;
+    font-style: italic;
+  }
+
+  /* Section shared styles */
+  section { padding: 6rem 4rem; }
+
+  .section-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--clay);
+    font-weight: 500;
+    margin-bottom: 0.8rem;
+    display: block;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 3.5vw, 2.8rem);
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 1rem;
+  }
+
+  .section-sub {
+    font-size: 1rem;
+    color: var(--stone);
+    line-height: 1.7;
+    max-width: 560px;
+  }
+
+  .inner { max-width: 1200px; margin: 0 auto; }
+
+  /* LIVING ROOM — Features */
+  #living-room {
+    background: var(--warm-white);
+  }
+
+  .living-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 3.5rem;
+    gap: 2rem;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .feature-card {
+    background: var(--cream);
+    border-radius: 20px;
+    padding: 2.2rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s;
+  }
+  .feature-card:hover { transform: translateY(-5px); }
+  .feature-card.accent { background: var(--bark); }
+  .feature-card.accent .fc-title,
+  .feature-card.accent .fc-body { color: var(--cream); }
+  .feature-card.accent .fc-num { color: rgba(245,240,232,0.2); }
+
+  .fc-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 4.5rem;
+    color: rgba(107,76,59,0.1);
+    position: absolute;
+    top: 0.5rem; right: 1rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .fc-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: var(--pale-clay);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1.4rem;
+  }
+  .feature-card.accent .fc-icon { background: rgba(255,255,255,0.15); }
+
+  .fc-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    color: var(--ink);
+    margin-bottom: 0.7rem;
+  }
+
+  .fc-body {
+    font-size: 0.9rem;
+    color: var(--stone);
+    line-height: 1.65;
+  }
+
+  /* BEDROOM — Testimonials */
+  #bedroom {
+    background: var(--charcoal);
+    color: var(--cream);
+  }
+
+  #bedroom .section-title { color: var(--cream); }
+  #bedroom .section-label { color: var(--dusty-gold); }
+  #bedroom .section-sub { color: rgba(245,240,232,0.65); }
+
+  .bedroom-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .testimonial {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 2rem;
+  }
+  .testimonial.featured {
+    background: var(--bark);
+    border-color: transparent;
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .quote-mark {
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem;
+    line-height: 0.5;
+    color: var(--dusty-gold);
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .quote-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--cream);
+    line-height: 1.65;
+    margin-bottom: 1.5rem;
+  }
+
+  .quote-author {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 500;
+    background: var(--clay);
+    color: var(--cream);
+    flex-shrink: 0;
+  }
+
+  .author-name { font-size: 0.9rem; font-weight: 500; color: var(--cream); }
+  .author-role { font-size: 0.78rem; color: rgba(245,240,232,0.55); }
+
+  .bedroom-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .stat-item { text-align: center; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    color: var(--dusty-gold);
+    font-weight: 700;
+    display: block;
+  }
+  .stat-label { font-size: 0.82rem; color: rgba(245,240,232,0.6); letter-spacing: 0.06em; }
+
+  /* KITCHEN — Pricing */
+  #kitchen {
+    background: var(--pale-clay);
+  }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3.5rem;
+    align-items: start;
+  }
+
+  .price-card {
+    background: var(--warm-white);
+    border-radius: 24px;
+    padding: 2.2rem;
+    border: 1.5px solid transparent;
+    transition: transform 0.25s;
+  }
+  .price-card:hover { transform: translateY(-4px); }
+  .price-card.popular {
+    border-color: var(--bark);
+    position: relative;
+  }
+
+  .popular-badge {
+    position: absolute;
+    top: -14px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--bark);
+    color: var(--cream);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .meal-type {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--clay);
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+  }
+
+  .price-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: var(--ink);
+    margin-bottom: 0.3rem;
+  }
+
+  .price-desc { font-size: 0.85rem; color: var(--stone); margin-bottom: 1.5rem; }
+
+  .price-amount {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    color: var(--bark);
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 0.2rem;
+  }
+  .price-period { font-size: 0.8rem; color: var(--stone); margin-bottom: 1.8rem; }
+
+  .price-features { list-style: none; margin-bottom: 2rem; }
+  .price-features li {
+    font-size: 0.88rem;
+    color: var(--charcoal);
+    padding: 0.45rem 0;
+    border-bottom: 1px solid var(--mist);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .price-features li::before { content: '✓'; color: var(--sage); font-weight: 700; }
+
+  .price-btn {
+    display: block;
+    text-align: center;
+    padding: 0.8rem;
+    border-radius: 40px;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 500;
+    background: var(--cream);
+    color: var(--bark);
+    border: 1.5px solid var(--bark);
+    transition: all 0.2s;
+  }
+  .price-card.popular .price-btn { background: var(--bark); color: var(--cream); border-color: var(--bark); }
+  .price-btn:hover { background: var(--bark); color: var(--cream); }
+
+  /* STUDY — FAQ / Blog */
+  #study {
+    background: var(--warm-white);
+  }
+
+  .study-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    margin-top: 3.5rem;
+    align-items: start;
+  }
+
+  .accordion-item {
+    border-bottom: 1px solid var(--mist);
+    padding: 1.2rem 0;
+  }
+
+  .accordion-q {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    color: var(--ink);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+  }
+
+  .accordion-q .toggle {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--mist);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    color: var(--bark);
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .accordion-a {
+    font-size: 0.9rem;
+    color: var(--stone);
+    line-height: 1.7;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s, padding 0.3s;
+  }
+  .accordion-a.open { max-height: 200px; padding-top: 0.8rem; }
+
+  .article-cards { display: flex; flex-direction: column; gap: 1.2rem; }
+
+  .article-card {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem;
+    background: var(--cream);
+    border-radius: 14px;
+    text-decoration: none;
+    transition: transform 0.2s;
+  }
+  .article-card:hover { transform: translateX(4px); }
+
+  .article-thumb {
+    width: 80px; height: 70px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .article-meta { font-size: 0.72rem; color: var(--clay); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.2rem; }
+  .article-title { font-family: 'Playfair Display', serif; font-size: 0.95rem; color: var(--ink); line-height: 1.3; }
+
+  /* GARDEN — CTA */
+  #garden {
+    background: var(--sage);
+    color: var(--warm-white);
+    text-align: center;
+    padding: 7rem 4rem;
+  }
+
+  #garden .section-label { color: rgba(253,250,244,0.7); }
+  #garden .section-title { color: var(--warm-white); font-size: 3rem; margin-bottom: 1rem; }
+  #garden .section-sub { color: rgba(253,250,244,0.75); margin: 0 auto 2.5rem; text-align: center; }
+
+  /* BASEMENT — Footer */
+  #basement {
+    background: var(--ink);
+    padding: 4rem 4rem 2rem;
+    color: rgba(245,240,232,0.6);
+  }
+
+  .basement-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 3rem;
+  }
+
+  .basement-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: var(--cream);
+    margin-bottom: 0.8rem;
+  }
+  .basement-logo span { color: var(--clay); font-style: italic; }
+
+  .basement-tagline { font-size: 0.85rem; line-height: 1.6; }
+
+  .footer-heading {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--cream);
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+
+  .footer-links { list-style: none; }
+  .footer-links li { margin-bottom: 0.55rem; }
+  .footer-links a {
+    text-decoration: none;
+    color: rgba(245,240,232,0.55);
+    font-size: 0.88rem;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--cream); }
+
+  .basement-bottom {
+    border-top: 1px solid rgba(255,255,255,0.07);
+    padding-top: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+  }
+
+  /* Animations */
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .foyer-text { animation: slideIn 0.8s ease both; }
+  .foyer-illustration { animation: slideIn 0.8s 0.2s ease both; }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s, transform 0.6s;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 900px) {
+    nav { padding: 1rem 2rem; }
+    nav ul { display: none; }
+    section { padding: 4rem 2rem; }
+    #foyer { padding: 6rem 2rem 4rem; }
+    .foyer-grid, .features-grid, .pricing-grid, .bedroom-grid,
+    .study-grid, .basement-grid { grid-template-columns: 1fr; }
+    .testimonial.featured { grid-column: span 1; grid-template-columns: 1fr; }
+    .foyer-illustration { height: 280px; }
+    .living-header { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- THE FRONT DOOR -->
+<nav>
+  <div class="logo">Casa<span>·</span></div>
+  <ul>
+    <li><a href="#foyer">Foyer</a></li>
+    <li><a href="#living-room">Living Room</a></li>
+    <li><a href="#bedroom">Bedroom</a></li>
+    <li><a href="#kitchen">Kitchen</a></li>
+    <li><a href="#study">Study</a></li>
+    <li><a href="#garden" class="nav-cta">Move In</a></li>
+  </ul>
+</nav>
+
+<!-- FOYER — Where you first arrive -->
+<section id="foyer">
+  <div class="foyer-grid">
+    <div class="foyer-text">
+      <span class="section-label">Welcome to the Foyer</span>
+      <h1>Step inside.<br>This is your <em>digital home.</em></h1>
+      <p>Every great house begins with a warm entrance. Here, we've built something that feels less like a website and more like a place you belong — curated, comfortable, and entirely yours.</p>
+      <a href="#living-room" class="btn-primary">Explore the Rooms</a>
+      <a href="#garden" class="btn-secondary">Move In Today</a>
+    </div>
+    <div class="foyer-illustration">
+      <div class="big-number">Casa</div>
+      <div class="float-card fc1"><div class="dot"></div> 4,200 residents moved in</div>
+      <div class="float-card fc2"><div class="dot dot-gold"></div> Neighbourhood of the year</div>
+      <div class="float-card fc3"><div class="dot dot-clay"></div> Warm since 2021</div>
+    </div>
+  </div>
+</section>
+
+<!-- LIVING ROOM — Main features, where you spend the most time -->
+<section id="living-room">
+  <div class="inner">
+    <div class="living-header">
+      <div>
+        <span class="section-label">The Living Room</span>
+        <h2 class="section-title">Where life<br>actually happens.</h2>
+      </div>
+      <p class="section-sub">The living room is the heart of the house — open, inviting, designed for connection. Here's what makes ours special.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <span class="fc-num">01</span>
+        <div class="fc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--clay)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3"/><path d="M2 11a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4H2v-4z"/><path d="M4 15v3"/><path d="M20 15v3"/><path d="M6 15h12"/></svg></div>
+        <h3 class="fc-title">The Comfort Sofa</h3>
+        <p class="fc-body">Settle in. Our interface is built for long stays — no clutter, no noise. Just a clean, breathing space that makes work feel like rest.</p>
+      </div>
+      <div class="feature-card accent reveal">
+        <span class="fc-num">02</span>
+        <div class="fc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--cream)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="18" rx="2"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="12" y1="3" x2="12" y2="21"/></svg></div>
+        <h3 class="fc-title">The Bay Window</h3>
+        <p class="fc-body">A clear view of everything important. Dashboards, insights, and your whole world summarised in one generous, sun-lit panel.</p>
+      </div>
+      <div class="feature-card reveal">
+        <span class="fc-num">03</span>
+        <div class="fc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--clay)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></div>
+        <h3 class="fc-title">The Fireplace</h3>
+        <p class="fc-body">Community warmth, always lit. Your housemates, collaborators, and guests all gather here — conversation flows, ideas catch fire.</p>
+      </div>
+      <div class="feature-card reveal">
+        <span class="fc-num">04</span>
+        <div class="fc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--clay)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M12 2a10 10 0 0 1 0 20"/><path d="M12 2a10 10 0 0 0 0 20"/><path d="M12 6a6 6 0 0 1 0 12"/><path d="M12 6a6 6 0 0 0 0 12"/></svg></div>
+        <h3 class="fc-title">The Record Player</h3>
+        <p class="fc-body">Set the ambiance. Customise every corner — your palette, your rhythm, your vibe. Because this house runs on your frequency.</p>
+      </div>
+      <div class="feature-card reveal">
+        <span class="fc-num">05</span>
+        <div class="fc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--clay)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
+        <h3 class="fc-title">The Bookshelf</h3>
+        <p class="fc-body">Everything you've collected, organised beautifully. Your history, your notes, your favourites — all within an arm's reach.</p>
+      </div>
+      <div class="feature-card reveal">
+        <span class="fc-num">06</span>
+        <div class="fc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--clay)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V12"/><path d="M5 12H2a10 10 0 0 0 10 10"/><path d="M8 6H5a7 7 0 0 0 7 7"/><path d="M19 6h3a10 10 0 0 1-10 10"/><path d="M16 6h3a7 7 0 0 0-7-7"/></svg></div>
+        <h3 class="fc-title">The Corner Plant</h3>
+        <p class="fc-body">Growing quietly in the background. Automated routines and smart integrations keep things alive while you focus on what matters.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BEDROOM — Testimonials, private and intimate -->
+<section id="bedroom">
+  <div class="inner">
+    <span class="section-label">The Bedroom</span>
+    <h2 class="section-title">Whispers from the residents.</h2>
+    <p class="section-sub">The bedroom is where people are honest. No performance, no filter — just what it really felt like to live here.</p>
+    <div class="bedroom-grid">
+      <div class="testimonial featured reveal">
+        <div>
+          <span class="quote-mark">"</span>
+          <p class="quote-text">Moving into Casa felt like finally unpacking after years of living out of a suitcase. Everything is in its place. The foyer welcomed me, the living room kept me, and the bedroom — this bedroom — is where I finally exhaled.</p>
+          <div class="quote-author">
+            <div class="avatar">AK</div>
+            <div>
+              <div class="author-name">Ama Kyerewaa</div>
+              <div class="author-role">Designer & Resident since 2022</div>
+            </div>
+          </div>
+        </div>
+        <div class="bedroom-stats">
+          <div class="stat-item">
+            <span class="stat-num">4,200+</span>
+            <span class="stat-label">Residents at home</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">98%</span>
+            <span class="stat-label">Renewed their lease</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">12</span>
+            <span class="stat-label">Rooms to explore</span>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial reveal">
+        <span class="quote-mark" style="font-size:2.5rem;">"</span>
+        <p class="quote-text" style="font-size:0.95rem;">I built a whole side project from the study. Having everything under one roof — storage, tools, collaboration — changed everything for me.</p>
+        <div class="quote-author" style="margin-top:1rem;">
+          <div class="avatar" style="background: #7A9E7E;">KA</div>
+          <div>
+            <div class="author-name">Kwame Asante</div>
+            <div class="author-role">Developer & Weekend Resident</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial reveal">
+        <span class="quote-mark" style="font-size:2.5rem;">"</span>
+        <p class="quote-text" style="font-size:0.95rem;">The kitchen is genuinely where I live. The templates, the recipes for automation — I cook up something new every single week.</p>
+        <div class="quote-author" style="margin-top:1rem;">
+          <div class="avatar" style="background: #C9A84C; color: #2B2420;">FO</div>
+          <div>
+            <div class="author-name">Fatima Owusu</div>
+            <div class="author-role">Entrepreneur & Power User</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KITCHEN — Pricing, where you decide what nourishes you -->
+<section id="kitchen">
+  <div class="inner">
+    <span class="section-label">The Kitchen</span>
+    <h2 class="section-title">Pick your recipe.</h2>
+    <p class="section-sub">Every kitchen has a budget. Ours come stocked with exactly what you need — nothing more, nothing less. Choose how you want to nourish your work.</p>
+    <div class="pricing-grid">
+      <div class="price-card reveal">
+        <div class="meal-type">Starter</div>
+        <div class="price-name">The Snack</div>
+        <div class="price-desc">Light, free, always on the counter. Great for tasting before committing.</div>
+        <div class="price-amount">$0</div>
+        <div class="price-period">forever free, no card needed</div>
+        <ul class="price-features">
+          <li>1 room to call your own</li>
+          <li>5GB in the pantry (storage)</li>
+          <li>Basic recipe templates</li>
+          <li>Community cookbook access</li>
+        </ul>
+        <a href="#" class="price-btn">Set the Table</a>
+      </div>
+      <div class="price-card popular reveal">
+        <div class="popular-badge">Chef's Favourite</div>
+        <div class="meal-type">Full Meal</div>
+        <div class="price-name">The Dinner</div>
+        <div class="price-desc">Everything a full household needs. Three courses, perfectly prepared.</div>
+        <div class="price-amount">$19</div>
+        <div class="price-period">per month, billed monthly</div>
+        <ul class="price-features">
+          <li>Unlimited rooms</li>
+          <li>100GB in the pantry</li>
+          <li>Advanced recipe builder</li>
+          <li>5 housemates invited</li>
+          <li>Priority kitchen support</li>
+        </ul>
+        <a href="#" class="price-btn">Book Your Seat</a>
+      </div>
+      <div class="price-card reveal">
+        <div class="meal-type">Banquet</div>
+        <div class="price-name">The Feast</div>
+        <div class="price-desc">For estates and large households. Custom everything. The whole house, yours.</div>
+        <div class="price-amount">$79</div>
+        <div class="price-period">per month, annual billing</div>
+        <ul class="price-features">
+          <li>Unlimited everything</li>
+          <li>1TB in the pantry</li>
+          <li>Custom recipe workflows</li>
+          <li>Unlimited housemates</li>
+          <li>Private chef onboarding</li>
+          <li>SSO & security audit</li>
+        </ul>
+        <a href="#" class="price-btn">Host the Feast</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STUDY — FAQ & Blog, where thinking happens -->
+<section id="study">
+  <div class="inner">
+    <span class="section-label">The Study</span>
+    <h2 class="section-title">Come, think with us.</h2>
+    <p class="section-sub">The study is for the curious. Questions get answered, ideas get shelved, and the reading pile never quite shrinks — just the way it should be.</p>
+    <div class="study-grid">
+      <div>
+        <div style="font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--bark);font-weight:500;margin-bottom:1.5rem;">Frequently asked in the hallway</div>
+        <div class="accordion-item">
+          <div class="accordion-q" onclick="toggle(this)">
+            What exactly is a "room" here?
+            <span class="toggle">+</span>
+          </div>
+          <div class="accordion-a">A room is a dedicated workspace inside Casa — think of it as a digital room you own. You can fill it with projects, files, tools, and collaborators. Each room has its own key and its own character.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-q" onclick="toggle(this)">
+            Can I redecorate my rooms?
+            <span class="toggle">+</span>
+          </div>
+          <div class="accordion-a">Absolutely. Every room supports full theming — colours, layouts, widgets, and custom domains. Move the furniture. Paint the walls. This is your house.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-q" onclick="toggle(this)">
+            How many housemates can I invite?
+            <span class="toggle">+</span>
+          </div>
+          <div class="accordion-a">On the Snack plan, you live solo or with one guest. Dinner invites five, and the Feast keeps the door open to everyone — unlimited housemates, always.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-q" onclick="toggle(this)">
+            What happens if I want to move out?
+            <span class="toggle">+</span>
+          </div>
+          <div class="accordion-a">We'll pack your bags for you. Full data export available at any time, in standard formats. No lock-in. We'd rather you stay because you love it, not because it's hard to leave.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-q" onclick="toggle(this)">
+            Is the house secure at night?
+            <span class="toggle">+</span>
+          </div>
+          <div class="accordion-a">Locks, alarms, the works. End-to-end encryption, 2FA, SSO, and SOC 2 Type II compliance. The neighbourhood watch is always on duty.</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--bark);font-weight:500;margin-bottom:1.5rem;">From the reading pile</div>
+        <div class="article-cards">
+          <a href="#" class="article-card">
+            <div class="article-thumb" style="background:var(--pale-clay);"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--clay)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg></div>
+            <div>
+              <div class="article-meta">Interior design · 4 min</div>
+              <div class="article-title">How to arrange your rooms for deep focus</div>
+            </div>
+          </a>
+          <a href="#" class="article-card">
+            <div class="article-thumb" style="background:var(--pale-sage);"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></div>
+            <div>
+              <div class="article-meta">Garden journal · 6 min</div>
+              <div class="article-title">Automations that grow while you sleep</div>
+            </div>
+          </a>
+          <a href="#" class="article-card">
+            <div class="article-thumb" style="background:#EEE8F5;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8B6BB1" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2c0 1.5 1.5 2 1.5 3.5S9 7 9 8.5 10.5 9 10.5 11"/><line x1="12" y1="13" x2="12" y2="22"/><path d="M8 22h8"/><rect x="8" y="13" width="8" height="1" rx="0.5"/></svg></div>
+            <div>
+              <div class="article-meta">Bedroom thoughts · 3 min</div>
+              <div class="article-title">Why your workspace feels like a hotel (and how to fix it)</div>
+            </div>
+          </a>
+          <a href="#" class="article-card">
+            <div class="article-thumb" style="background:#E8F5F0;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 11h.01"/><path d="M11 15a4 4 0 1 0 8 0 4 4 0 0 0-8 0z"/><path d="M7.9 7.9 4 4"/><path d="m4 4 .01-.01"/><path d="M4 4 2 2"/></svg></div>
+            <div>
+              <div class="article-meta">Kitchen notes · 5 min</div>
+              <div class="article-title">12 recipes for a smoother morning workflow</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GARDEN — CTA, where you breathe and decide -->
+<section id="garden">
+  <div class="inner">
+    <span class="section-label">The Garden</span>
+    <h2 class="section-title">Plant something that lasts.</h2>
+    <p class="section-sub">Every great house has a garden — a place to breathe, to grow, to let something beautiful take root. Come plant yours with us.</p>
+    <a href="#" class="btn-primary" style="background:var(--warm-white);color:var(--bark);">Unlock the Front Door</a>
+    &nbsp;&nbsp;
+    <a href="#living-room" class="btn-secondary" style="border-color:rgba(253,250,244,0.4);color:var(--warm-white);">Take the Tour First</a>
+  </div>
+</section>
+
+<!-- BASEMENT — Footer, the foundation -->
+<footer id="basement">
+  <div class="inner">
+    <div class="basement-grid">
+      <div>
+        <div class="basement-logo">Casa<span>·</span></div>
+        <p class="basement-tagline">A home built for the way you actually live and work online. Warm, considered, entirely yours.</p>
+      </div>
+      <div>
+        <div class="footer-heading">The Rooms</div>
+        <ul class="footer-links">
+          <li><a href="#foyer">Foyer</a></li>
+          <li><a href="#living-room">Living Room</a></li>
+          <li><a href="#bedroom">Bedroom</a></li>
+          <li><a href="#kitchen">Kitchen</a></li>
+          <li><a href="#study">Study</a></li>
+          <li><a href="#garden">Garden</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-heading">The Estate</div>
+        <ul class="footer-links">
+          <li><a href="#">About the Architects</a></li>
+          <li><a href="#">Neighbourhood Blog</a></li>
+          <li><a href="#">Open Positions</a></li>
+          <li><a href="#">Press & Awards</a></li>
+          <li><a href="#">Investor Relations</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-heading">Housekeeping</div>
+        <ul class="footer-links">
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Lease</a></li>
+          <li><a href="#">Cookie Jar</a></li>
+          <li><a href="#">Accessibility</a></li>
+          <li><a href="#">Status Board</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="basement-bottom">
+      <span>© 2025 Casa. All rooms reserved.</span>
+      <span>Built with warmth in Accra, Ghana</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function toggle(el) {
+    const ans = el.nextElementSibling;
+    const tog = el.querySelector('.toggle');
+    const isOpen = ans.classList.contains('open');
+    document.querySelectorAll('.accordion-a').forEach(a => a.classList.remove('open'));
+    document.querySelectorAll('.toggle').forEach(t => t.textContent = '+');
+    if (!isOpen) { ans.classList.add('open'); tog.textContent = '−'; }
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FaceAuth — Face Verification</title>
+  <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+  <nav>
+    <a class="nav-brand" href="index.html">&#9632; FaceAuth</a>
+    <div class="nav-links">
+      <span style="font-size:0.85rem; color:var(--muted);">
+        Verifying identity for <strong style="color:var(--text);">Demo User</strong>
+      </span>
+    </div>
+  </nav>
+  <main class="page">
+    <div class="card" style="max-width:780px; width:100%;">
+      <div class="card-title">Face Verification</div>
+      <div class="card-sub">Step 2 of 2 — confirm your identity with your face</div>
+
+      <div class="verify-layout">
+
+        <!-- Camera -->
+        <div class="verify-cam">
+          <label style="margin-bottom:8px; display:block;">Live Camera</label>
+          <div class="camera-wrapper">
+            <div class="face-guide"></div>
+            <div class="camera-overlay">
+              <span style="font-size:1.8rem;">&#128247;</span>
+              <span>Starting camera…</span>
+            </div>
+          </div>
+          <div style="margin-top:12px; background:var(--input); border-radius:8px; padding:10px 14px;
+                      display:flex; align-items:center; justify-content:space-between;">
+            <span style="font-size:0.85rem; color:var(--muted);">Waiting for camera…</span>
+          </div>
+          <button class="btn btn-ghost btn-full btn-sm" style="margin-top:8px;" disabled>
+            &#9646;&#9646; Pause Auto-Scan
+          </button>
+        </div>
+
+        <!-- Steps info -->
+        <div class="verify-info">
+          <div style="font-size:0.85rem; color:var(--muted); margin-bottom:20px;">
+            Checking identity for account:
+            <strong style="color:var(--accent);">Demo User</strong>
+          </div>
+
+          <div class="step">
+            <div class="step-num done">&#10003;</div>
+            <div class="step-text">
+              <strong>Credentials verified</strong>
+              Name and password matched successfully
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-text">
+              <strong>Face verification</strong>
+              Scanning automatically every 2 seconds
+            </div>
+          </div>
+
+          <div style="margin-top:24px; padding:14px; background:var(--input); border-radius:8px; font-size:0.82rem; color:var(--muted); line-height:1.7;">
+            <strong style="color:var(--text);">Tips for best results</strong><br>
+            &#9679; Good lighting — face the light source<br>
+            &#9679; Look straight at the camera<br>
+            &#9679; Remove sunglasses if wearing any<br>
+            &#9679; Keep a neutral expression
+          </div>
+
+          <a href="login.html" class="btn btn-ghost btn-sm" style="margin-top:20px; display:inline-flex;">
+            &#8592; Back to Login
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

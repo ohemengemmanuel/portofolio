@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NBA ELITE — The Wall of Legends</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--o:#FF6B00;--g:#FFD700;--dk:#080808;--w:#fff}
+html{scroll-behavior:smooth}
+body{background:var(--dk);color:var(--w);font-family:'Inter',-apple-system,sans-serif;overflow-x:hidden}
+
+/* ── HERO ── */
+.hero{position:relative;height:100vh;min-height:580px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden}
+.hero__bg{position:absolute;inset:0;background:url('mj.jpg') center 20%/cover no-repeat;filter:brightness(.14) saturate(.3);transform:scale(1.06)}
+.hero__grid{position:absolute;inset:0;opacity:.03;background-image:repeating-linear-gradient(0deg,#fff 0,#fff 1px,transparent 1px,transparent 70px),repeating-linear-gradient(90deg,#fff 0,#fff 1px,transparent 1px,transparent 70px)}
+.hero__glow{position:absolute;inset:0;background:radial-gradient(ellipse 90% 55% at 50% -5%,rgba(255,107,0,.13) 0%,transparent 70%),linear-gradient(to bottom,transparent 35%,var(--dk) 100%)}
+.hero__ball{position:absolute;right:-4vw;top:50%;transform:translateY(-50%);width:clamp(180px,38vw,580px);opacity:.055;animation:floatBall 9s ease-in-out infinite;pointer-events:none}
+@keyframes floatBall{0%,100%{transform:translateY(-50%) rotate(0deg)}50%{transform:translateY(calc(-50% - 22px)) rotate(14deg)}}
+.hero__c{position:relative;z-index:2}
+.hero__eye{font-size:.68rem;font-weight:700;letter-spacing:7px;text-transform:uppercase;color:var(--o);margin-bottom:1.4rem;opacity:0;animation:up .8s .2s cubic-bezier(.16,1,.3,1) forwards}
+.hero__t{font-family:'Bebas Neue',Impact,'Arial Black',sans-serif;font-size:clamp(5.5rem,17vw,15rem);line-height:.85;letter-spacing:-3px}
+.hero__nba{display:block;-webkit-text-stroke:2px rgba(255,255,255,.75);color:transparent;opacity:0;animation:up .9s .38s cubic-bezier(.16,1,.3,1) forwards}
+.hero__elit{display:block;background:linear-gradient(140deg,#fff 0%,var(--g) 38%,var(--o) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 45px rgba(255,107,0,.55));opacity:0;animation:up .9s .52s cubic-bezier(.16,1,.3,1) forwards}
+.hero__sub{font-size:clamp(.62rem,1.4vw,.82rem);letter-spacing:9px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-top:1.8rem;opacity:0;animation:up .8s .7s cubic-bezier(.16,1,.3,1) forwards}
+.hero__stats{display:flex;gap:clamp(1.5rem,5vw,4rem);margin-top:3.2rem;justify-content:center;opacity:0;animation:up .8s .9s cubic-bezier(.16,1,.3,1) forwards}
+.sn{font-family:'Bebas Neue',Impact,sans-serif;font-size:clamp(1.8rem,3.5vw,2.8rem);color:var(--o);display:block;line-height:1}
+.sl{font-size:.58rem;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,.28);margin-top:4px;display:block}
+.hero__scroll{position:absolute;bottom:2.2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.55rem;font-size:.54rem;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,.22);opacity:0;animation:up .8s 1.15s forwards}
+.hero__scroll-ln{width:1px;height:48px;background:linear-gradient(to bottom,var(--o),transparent);animation:pulse 2.2s ease-in-out infinite}
+@keyframes pulse{0%{opacity:0;transform:scaleY(.4)}50%{opacity:1;transform:scaleY(1)}100%{opacity:0;transform:scaleY(.4)}}
+
+/* ── MAIN ── */
+.main{max-width:1600px;margin:0 auto;padding:0 clamp(1rem,4vw,3rem) 6rem}
+.sh{display:flex;align-items:center;gap:1.4rem;margin-bottom:2rem}
+.sh__l{flex:1;height:1px}
+.sh__ll{background:linear-gradient(to right,transparent,rgba(255,107,0,.4))}
+.sh__lr{background:linear-gradient(to left,transparent,rgba(255,107,0,.4))}
+.sh__txt{font-size:.62rem;font-weight:700;letter-spacing:6px;text-transform:uppercase;color:var(--o);white-space:nowrap}
+
+/* ── FEATURED ── */
+.feat{margin-bottom:5rem}
+.feat__grid{display:grid;grid-template-columns:1.45fr 1fr 1fr;gap:1rem;height:clamp(340px,48vh,640px)}
+.fc{position:relative;border-radius:14px;overflow:hidden;cursor:pointer;border:1px solid rgba(255,255,255,.07);transition:transform .4s cubic-bezier(.16,1,.3,1),box-shadow .4s}
+.fc:hover{transform:translateY(-5px)}
+.fc--goat{border-color:rgba(255,215,0,.22)}
+.fc--goat:hover{box-shadow:0 24px 60px rgba(255,215,0,.22)}
+.fc--leg:hover{box-shadow:0 24px 60px rgba(255,107,0,.2)}
+.fc img{width:100%;height:100%;object-fit:cover;object-position:center 15%;transition:transform .6s cubic-bezier(.16,1,.3,1)}
+.fc:hover img{transform:scale(1.05)}
+.fc__ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.96) 0%,rgba(0,0,0,.45) 40%,rgba(0,0,0,.08) 70%,transparent 100%)}
+.fc__bdg{position:absolute;top:1.2rem;left:1.2rem;font-size:.52rem;font-weight:800;letter-spacing:3px;text-transform:uppercase;padding:.22rem .65rem;border-radius:3px}
+.fc__bdg--goat{background:var(--g);color:#000}
+.fc__bdg--leg{background:rgba(255,107,0,.18);color:var(--o);border:1px solid rgba(255,107,0,.35)}
+.fc__num{position:absolute;right:1rem;top:.4rem;font-family:'Bebas Neue',Impact,sans-serif;font-size:clamp(3rem,6vw,6.5rem);line-height:1;color:rgba(255,255,255,.06);user-select:none;transition:color .3s}
+.fc:hover .fc__num{color:rgba(255,255,255,.11)}
+.fc__body{position:absolute;bottom:0;left:0;right:0;padding:1.4rem 1.5rem 1.7rem}
+.fc__name{font-family:'Bebas Neue',Impact,sans-serif;font-size:clamp(1.7rem,2.8vw,2.6rem);line-height:1.05;margin-bottom:.35rem}
+.fc--goat .fc__name{font-size:clamp(2rem,3.6vw,3.5rem)}
+.fc__meta{font-size:.58rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.38)}
+
+/* ── CONTROLS ── */
+.ctrl{display:flex;align-items:center;gap:.75rem;margin-bottom:1.8rem;flex-wrap:wrap}
+.tabs{display:flex;background:rgba(255,255,255,.04);border-radius:8px;padding:3px;border:1px solid rgba(255,255,255,.07)}
+.tab{padding:.42rem 1.05rem;border-radius:5px;font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border:none;background:transparent;color:rgba(255,255,255,.32);transition:all .2s;font-family:inherit}
+.tab:hover{color:rgba(255,255,255,.68)}
+.tab.on{background:var(--o);color:#fff}
+.cbadge{margin-left:auto;font-size:.62rem;color:rgba(255,255,255,.22);letter-spacing:2px}
+.srch{position:relative}
+.srch svg{position:absolute;left:.78rem;top:50%;transform:translateY(-50%);width:14px;height:14px;stroke:rgba(255,255,255,.28);fill:none;stroke-width:2;pointer-events:none}
+.srch input{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--w);padding:.48rem 1rem .48rem 2.1rem;border-radius:7px;font-size:.78rem;font-family:inherit;width:205px;transition:border-color .2s,background .2s}
+.srch input:focus{outline:none;border-color:var(--o);background:rgba(255,107,0,.04)}
+.srch input::placeholder{color:rgba(255,255,255,.24)}
+
+/* ── GRID ── */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:.75rem}
+.pc{position:relative;aspect-ratio:2/3;border-radius:10px;overflow:hidden;cursor:pointer;border:1px solid rgba(255,255,255,.07);box-shadow:0 4px 18px rgba(0,0,0,.4);transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .35s,border-color .35s;opacity:0;animation:fin .45s forwards}
+.pc:hover{transform:translateY(-8px) scale(1.025)}
+.pc--legends:hover{box-shadow:0 20px 50px rgba(255,215,0,.28);border-color:rgba(255,215,0,.28)}
+.pc--veterans:hover{box-shadow:0 20px 50px rgba(210,210,210,.18);border-color:rgba(210,210,210,.18)}
+.pc--stars:hover{box-shadow:0 20px 50px rgba(100,140,255,.28);border-color:rgba(100,140,255,.28)}
+.pc--rising:hover{box-shadow:0 20px 50px rgba(0,200,80,.22);border-color:rgba(0,200,80,.22)}
+.pc img{width:100%;height:100%;object-fit:cover;object-position:center top;transition:transform .5s cubic-bezier(.16,1,.3,1);display:block}
+.pc:hover img{transform:scale(1.09)}
+.pc__ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.93) 0%,rgba(0,0,0,.22) 52%,transparent 76%);transition:background .3s}
+.pc:hover .pc__ov{background:linear-gradient(to top,rgba(0,0,0,.97) 0%,rgba(0,0,0,.45) 56%,rgba(0,0,0,.04) 76%)}
+.pc__num{position:absolute;top:.35rem;right:.55rem;font-family:'Bebas Neue',Impact,sans-serif;font-size:3.2rem;line-height:1;color:rgba(255,255,255,.06);user-select:none;transition:color .3s}
+.pc:hover .pc__num{color:rgba(255,255,255,.13)}
+.pc__era{position:absolute;top:.6rem;left:.6rem;font-size:.48rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:.18rem .48rem;border-radius:3px;backdrop-filter:blur(6px)}
+.et--legends{background:rgba(255,215,0,.13);color:#FFD700;border:1px solid rgba(255,215,0,.22)}
+.et--veterans{background:rgba(200,200,200,.08);color:#ccc;border:1px solid rgba(200,200,200,.14)}
+.et--stars{background:rgba(100,140,255,.13);color:#8ab0ff;border:1px solid rgba(100,140,255,.22)}
+.et--rising{background:rgba(0,200,80,.1);color:#00CC55;border:1px solid rgba(0,200,80,.18)}
+.pc__body{position:absolute;bottom:0;left:0;right:0;padding:.7rem .85rem .9rem}
+.pc__name{font-family:'Bebas Neue',Impact,sans-serif;font-size:1.05rem;line-height:1.1;margin-bottom:.18rem}
+.pc__team{font-size:.52rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.33)}
+.empty{grid-column:1/-1;text-align:center;padding:5rem 2rem;color:rgba(255,255,255,.2)}
+.empty span{font-size:2.8rem;display:block;margin-bottom:.8rem}
+.empty p{font-size:.75rem;letter-spacing:3px;text-transform:uppercase}
+
+/* ── MODAL ── */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(18px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1.5rem;opacity:0;pointer-events:none;transition:opacity .3s}
+.mo.open{opacity:1;pointer-events:auto}
+.mo__box{position:relative;display:grid;grid-template-columns:1fr 1.1fr;max-width:840px;width:100%;max-height:90vh;border-radius:20px;overflow:hidden;background:#0d0d0d;border:1px solid rgba(255,255,255,.09);transform:scale(.91) translateY(18px);transition:transform .35s cubic-bezier(.16,1,.3,1)}
+.mo.open .mo__box{transform:scale(1) translateY(0)}
+.mo__img{position:relative;overflow:hidden}
+.mo__img img{width:100%;height:100%;object-fit:cover;object-position:center top}
+.mo__img::after{content:'';position:absolute;inset:0;background:linear-gradient(to right,transparent 58%,#0d0d0d 100%)}
+.mo__body{padding:clamp(1.5rem,4vw,3rem) clamp(1.4rem,3.5vw,2.5rem);display:flex;flex-direction:column;justify-content:center;overflow-y:auto}
+.mo__era{font-size:.58rem;font-weight:700;letter-spacing:5px;text-transform:uppercase;margin-bottom:.7rem}
+.mo__num{font-family:'Bebas Neue',Impact,sans-serif;font-size:clamp(3.5rem,9vw,6.5rem);line-height:.9;color:rgba(255,255,255,.05);margin-bottom:-.8rem}
+.mo__name{font-family:'Bebas Neue',Impact,sans-serif;font-size:clamp(1.9rem,4.5vw,3rem);line-height:1.05;margin-bottom:.45rem}
+.mo__team{font-size:.62rem;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,.33);margin-bottom:1.8rem}
+.mo__div{width:34px;height:2px;background:var(--o);margin-bottom:1.4rem;border-radius:1px}
+.mo__q{font-size:.83rem;line-height:1.78;color:rgba(255,255,255,.52);font-style:italic}
+.mo__x{position:absolute;top:1.2rem;right:1.2rem;width:33px;height:33px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:var(--w);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.95rem;transition:background .2s;z-index:5;line-height:1}
+.mo__x:hover{background:rgba(255,255,255,.16)}
+
+/* ── FOOTER ── */
+.foot{border-top:1px solid rgba(255,255,255,.05);padding:2rem clamp(1rem,4vw,3rem);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;max-width:1600px;margin:0 auto}
+.foot__logo{font-family:'Bebas Neue',Impact,sans-serif;font-size:1.5rem;letter-spacing:2px}
+.foot__logo span{color:var(--o)}
+.foot__txt{font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.16)}
+.foot__ball{width:38px;height:38px;object-fit:cover;border-radius:50%;opacity:.18}
+
+/* ── ANIMATIONS ── */
+@keyframes up{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fin{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .feat__grid{grid-template-columns:1fr 1fr;height:auto}
+  .fc:first-child{grid-column:1/-1;height:300px}
+  .fc{height:210px}
+}
+@media(max-width:600px){
+  .feat__grid{grid-template-columns:1fr;height:auto}
+  .fc:first-child{grid-column:auto;height:260px}
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .mo__box{grid-template-columns:1fr}
+  .mo__img{height:240px}
+  .mo__img::after{background:linear-gradient(to bottom,transparent 50%,#0d0d0d 100%)}
+  .ctrl{gap:.5rem}
+  .srch input{width:100%}
+  .srch{width:100%}
+  .cbadge{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero__bg"></div>
+  <div class="hero__grid"></div>
+  <div class="hero__glow"></div>
+  <img class="hero__ball" src="WILSON.jpg" alt="" aria-hidden="true">
+  <div class="hero__c">
+    <p class="hero__eye">Est. 1946 &nbsp;·&nbsp; The Association &nbsp;·&nbsp; 30 Teams · 82 Games</p>
+    <h1 class="hero__t">
+      <span class="hero__nba">NBA</span>
+      <span class="hero__elit">ELITE</span>
+    </h1>
+    <p class="hero__sub">The Wall of Legends &amp; Stars</p>
+    <div class="hero__stats">
+      <div><span class="sn" id="ctr-players">0</span><span class="sl">Players</span></div>
+      <div><span class="sn">4</span><span class="sl">Eras</span></div>
+      <div><span class="sn">&#8734;</span><span class="sl">Legacy</span></div>
+    </div>
+  </div>
+  <div class="hero__scroll">
+    <div class="hero__scroll-ln"></div>
+    <span>Explore</span>
+  </div>
+</section>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- Featured Trio -->
+  <section class="feat">
+    <div class="sh">
+      <div class="sh__l sh__ll"></div>
+      <span class="sh__txt">The Triumvirate</span>
+      <div class="sh__l sh__lr"></div>
+    </div>
+    <div class="feat__grid" id="featGrid"></div>
+  </section>
+
+  <!-- Controls -->
+  <div class="ctrl">
+    <div class="tabs" role="tablist">
+      <button class="tab on" data-era="all" onclick="setFilter('all',this)">All</button>
+      <button class="tab" data-era="legends" onclick="setFilter('legends',this)">Legends</button>
+      <button class="tab" data-era="veterans" onclick="setFilter('veterans',this)">Veterans</button>
+      <button class="tab" data-era="stars" onclick="setFilter('stars',this)">Stars</button>
+      <button class="tab" data-era="rising" onclick="setFilter('rising',this)">Rising</button>
+    </div>
+    <span class="cbadge" id="cbadge"></span>
+    <div class="srch">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
+      <input type="search" placeholder="Search player or team…" oninput="setSearch(this.value)" autocomplete="off">
+    </div>
+  </div>
+
+  <!-- Grid -->
+  <div class="grid" id="grid" role="list"></div>
+
+</main>
+
+<!-- Modal -->
+<div class="mo" id="mo" onclick="moOverlay(event)">
+  <div class="mo__box" role="dialog" aria-modal="true">
+    <button class="mo__x" onclick="closeMo()" aria-label="Close">&#x2715;</button>
+    <div class="mo__img"><img id="moImg" src="" alt=""></div>
+    <div class="mo__body">
+      <div class="mo__era" id="moEra"></div>
+      <div class="mo__num" id="moNum"></div>
+      <div class="mo__name" id="moName"></div>
+      <div class="mo__team" id="moTeam"></div>
+      <div class="mo__div"></div>
+      <p class="mo__q" id="moQ"></p>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="foot">
+  <div class="foot__logo">NBA <span>ELITE</span></div>
+  <img class="foot__ball" src="WILSON.jpg" alt="NBA Wilson Ball">
+  <p class="foot__txt">All images belong to their respective owners · For showcase purposes only</p>
+</footer>
+
+<script>
+const EC={legends:'#FFD700',veterans:'#C8C8C8',stars:'#8aabff',rising:'#00CC55'};
+const EL={legends:'Legend',veterans:'Veteran',stars:'Star',rising:'Rising'};
+
+const featured=[
+  {file:'mj.jpg',name:'Michael Jordan',disp:'Michael<br>Jordan',meta:'#23 · Chicago Bulls · 6× Champion',era:'legends',num:'23',bdg:'The GOAT',bdgCls:'goat',q:'Six championships. Six Finals MVPs. Five season MVPs. The man who defined what it means to be an NBA champion. His Airness will never be duplicated.'},
+  {file:'KOBE.jpg',name:'Kobe Bryant',disp:'Kobe<br>Bryant',meta:'#24 · LA Lakers · 5× Champion',era:'legends',num:'24',bdg:'Legend',bdgCls:'leg',q:'The Black Mamba. Five championships, two Finals MVPs. His relentless Mamba Mentality will inspire athletes across every sport for generations to come.'},
+  {file:'LBJ23.jpg',name:'LeBron James',disp:'LeBron<br>James',meta:'#23 · LA Lakers · 4× Champion',era:'veterans',num:'23',bdg:'The King',bdgCls:'leg',q:'Four championships with four different teams. Four Finals MVPs. The most complete player the game has ever seen — and his legacy is still being written.'},
+];
+
+const players=[
+  // LEGENDS
+  {n:'Michael Jordan',   f:'mj.jpg',              num:'23',t:'Chicago Bulls',          era:'legends',q:'Six championships, six Finals MVPs. His Airness defined what it means to be an NBA champion. The greatest to ever lace them up.'},
+  {n:'Kobe Bryant',      f:'KOBE.jpg',            num:'24',t:'LA Lakers',              era:'legends',q:'The Black Mamba. Five championships, two Finals MVPs. His relentless Mamba Mentality will inspire generations forever.'},
+  {n:'Shaquille O\'Neal',f:'SHAQ.jpg',            num:'34',t:'LA Lakers',              era:'legends',q:'The most dominant big man in NBA history. When Shaq was healthy and locked in, he was a completely unstoppable force of nature.'},
+  {n:'Kevin Garnett',    f:'KG.jpg',              num:'5', t:'Boston Celtics',         era:'legends',q:'"Anything is possible!" The Big Ticket brought an intensity and emotional investment to every game unlike anyone before or since.'},
+  {n:'Dirk Nowitzki',    f:'dirk.webp',           num:'41',t:'Dallas Mavericks',       era:'legends',q:'The greatest European player the NBA has ever seen. His one-legged fadeaway was the most unstoppable shot of his era. MVP. Champion. Icon.'},
+  {n:'Reggie Miller',    f:'REGGIE MILLER.webp',  num:'31',t:'Indiana Pacers',         era:'legends',q:'The greatest clutch shooter of his era. Made Madison Square Garden his personal stage and that Knicks rivalry? Unforgettable television.'},
+  {n:'Ray Allen',        f:'RAY.webp',            num:'20',t:'Boston Celtics',         era:'legends',q:'The purest shooter in NBA history. That corner three in the 2013 Finals saved a dynasty and remains one of the most iconic shots ever made.'},
+  {n:'Derrick Rose',     f:'DERRICK.jpg',         num:'1', t:'Chicago Bulls',          era:'legends',q:'The youngest MVP in NBA history. At his peak in 2011 he was the most electrifying player in the league. A true Chicago legend forever.'},
+  {n:'Blake Griffin',    f:'BLAKE.webp',          num:'32',t:'LA Clippers',            era:'legends',q:'The most explosive dunker of his generation. His athleticism redefined the power forward position and created moments that will never be forgotten.'},
+  {n:'Chris Paul',       f:'PAUL.jpg',            num:'3', t:'Phoenix Suns',           era:'legends',q:'The Point God. The most cerebral point guard to ever play the game. His pick-and-roll mastery and court vision set the gold standard.'},
+  {n:'Andre Iguodala',   f:'IGGY.jpg',            num:'9', t:'Golden State Warriors',  era:'legends',q:'2015 Finals MVP. The ultimate team player who proved winning is all that matters. His defensive brilliance anchored a Warriors dynasty.'},
+  // VETERANS
+  {n:'LeBron James',     f:'LBJ23.jpg',           num:'23',t:'LA Lakers',              era:'veterans',q:'The King. Four championships, four Finals MVPs. The most complete player the game has ever seen is still going strong two decades in.'},
+  {n:'Stephen Curry',    f:'SC30.jpg',            num:'30',t:'Golden State Warriors',  era:'veterans',q:'The greatest shooter of all time — it is not close. He permanently expanded what was considered an acceptable shot in basketball.'},
+  {n:'Kevin Durant',     f:'KD.jpg',              num:'35',t:'Phoenix Suns',           era:'veterans',q:'Seven feet tall with the handles of a guard and the jump shot of a wing. Arguably the most unguardable scorer in basketball history.'},
+  {n:'Kyrie Irving',     f:'KYRIE.jpg',           num:'11',t:'Dallas Mavericks',       era:'veterans',q:'The most skilled ball-handler in NBA history. His dribbling is supernatural. That 2016 Game 7 three in Cleveland remains an all-time clutch moment.'},
+  {n:'James Harden',     f:'JAMES HARDEN.jpg',    num:'1', t:'LA Clippers',            era:'veterans',q:'The step-back king. Led the league in scoring multiple times. His offensive arsenal — step-back, euro-step, free throw artistry — is genuinely unprecedented.'},
+  {n:'Kawhi Leonard',    f:'KAWAII.jpg',          num:'2', t:'LA Clippers',            era:'veterans',q:'The Klaw. Two titles with two different franchises. A two-way force of nature whose quiet demeanor hides a savage competitive streak.'},
+  {n:'Jimmy Butler',     f:'JIMMY BUTLER.jpg',    num:'22',t:'Miami Heat',             era:'veterans',q:'Jimmy Buckets. The most mentally tough player in modern basketball. Made four Finals appearances — including one of the greatest individual playoff runs ever.'},
+  {n:'Russell Westbrook',f:'RUSS.jpg',            num:'0', t:'OKC Thunder',            era:'veterans',q:'The most explosive point guard of his era. Three-time scoring champion and the all-time leader in triple-doubles. Pure, unfiltered aggression every night.'},
+  {n:'Klay Thompson',    f:'KLAY.webp',           num:'11',t:'Dallas Mavericks',       era:'veterans',q:'The Splash Brother. Can erupt for 37 points in a single quarter — the all-time record. Off the dribble or off the catch: absolutely automatic.'},
+  {n:'Andrew Wiggins',   f:'WIGGINS.webp',        num:'22',t:'Golden State Warriors',  era:'veterans',q:'Maple Jordan. Found his championship identity in Golden State. His athleticism and two-way play were essential to the Warriors\' 2022 championship run.'},
+  {n:'Draymond Green',   f:'drymond.jpg',         num:'23',t:'Golden State Warriors',  era:'veterans',q:'The engine of the Warriors dynasty. A defensive genius who redefined the modern big man role. Four rings. Countless arguments. Zero regrets.'},
+  {n:'DeMar DeRozan',    f:'DEMAR.webp',          num:'10',t:'Sacramento Kings',       era:'veterans',q:'The mid-range maestro. An ice-cold closer who gets to the elbow and that is simply the end of the conversation. Elite in the paint.'},
+  {n:'Rudy Gobert',      f:'RUDY.jpeg',           num:'27',t:'Minnesota Timberwolves', era:'veterans',q:'The Stifle Tower. Four-time Defensive Player of the Year. His rim protection is historically elite — one of the greatest shot-blockers who has ever played.'},
+  // STARS
+  {n:'Giannis Antetokounmpo',f:'GIANNIS.jpg',     num:'34',t:'Milwaukee Bucks',        era:'stars',q:'The Greek Freak. Two MVPs, one Finals MVP, one championship. A combination of size, speed, and athleticism the sport had genuinely never seen before.'},
+  {n:'Nikola Jokic',     f:'NIKOLA.webp',         num:'15',t:'Denver Nuggets',         era:'stars',q:'The Joker. Three MVPs. 2023 champion and Finals MVP. His basketball IQ is off the charts — the greatest passing big man of all time.'},
+  {n:'Luka Doncic',      f:'LUKA.jpg',            num:'77',t:'Dallas Mavericks',       era:'stars',q:'Magic Johnson in a bigger body. Averaging 30+ points at 25 years old while controlling every facet of the game. The next global superstar.'},
+  {n:'Joel Embiid',      f:'EMBIID.webp',         num:'21',t:'Philadelphia 76ers',     era:'stars',q:'The Process. 2023 MVP. Dominant on offense and defense. His combination of skill and physicality makes him nearly impossible to guard in the post.'},
+  {n:'Damian Lillard',   f:'DAME.jpg',            num:'0', t:'Milwaukee Bucks',        era:'stars',q:'Dame Time. One of the greatest clutch performers in NBA history. His pull-up range from 35 feet out is absolutely terrifying for defenses.'},
+  {n:'Devin Booker',     f:'BOOKER.jpg',          num:'1', t:'Phoenix Suns',           era:'stars',q:'Book. Ice in his veins. Led Phoenix on a magical 2021 Finals run. Pure offensive excellence who is evolving into an elite two-way player.'},
+  {n:'Paul George',      f:'PG13.jpg',            num:'13',t:'Philadelphia 76ers',     era:'stars',q:'PG-13. Elite two-way wing who can lock down your best scorer and drop 30 on the other end. Nine All-Star selections speak for themselves.'},
+  {n:'Jayson Tatum',     f:'JT0.jpg',             num:'0', t:'Boston Celtics',         era:'stars',q:'The face of Celtics pride. 2024 champion and Finals MVP. At 26 years old he is already one of the most gifted offensive players alive.'},
+  {n:'Donovan Mitchell', f:'MITCHEL.webp',        num:'45',t:'Cleveland Cavaliers',    era:'stars',q:'Spida. A relentlessly explosive scorer who has dragged teams to deep playoff runs. In crunch time, he is one of the most reliable closers in the game.'},
+  {n:'Jalen Brunson',    f:'BRUNSON.webp',        num:'11',t:'New York Knicks',        era:'stars',q:'The heart of New York basketball. A relentless scorer who plays without a single hesitation in the biggest moments on the biggest stages.'},
+  {n:'Jamal Murray',     f:'JAMAL.jpg',           num:'27',t:'Denver Nuggets',         era:'stars',q:'Kentucky Sniper. 2023 champion whose playoff performances have been the stuff of legend. He simply catches fire when the stakes are highest.'},
+  {n:'Karl-Anthony Towns',f:'kat.avif',           num:'32',t:'New York Knicks',        era:'stars',q:'KAT. The most versatile center of his generation — blocks shots and steps back for a three. A matchup problem with no easy answer.'},
+  {n:'Anthony Davis',    f:'ANTHONY DAVIS.webp',  num:'3', t:'LA Lakers',             era:'stars',q:'The Brow. When healthy, an absolute monster on both ends. His rim protection anchors defenses and his offensive skill set is elite for his size.'},
+  {n:'Bam Adebayo',      f:'BAM.jpg',             num:'13',t:'Miami Heat',             era:'stars',q:'The anchor of Heat Culture. Versatile defender, playmaker, and the ultimate example of a player who makes every teammate around him dramatically better.'},
+  {n:'Aaron Gordon',     f:'AARON GORDON.jpg',    num:'50',t:'Denver Nuggets',         era:'stars',q:'AG. The unsung hero of the Nuggets championship. A tireless two-way player who makes all the winning plays when the spotlight is not on him.'},
+  {n:'Zach LaVine',      f:'ZACH.jpg',            num:'8', t:'Chicago Bulls',          era:'stars',q:'Two-time Slam Dunk champion with the athleticism to match. His offensive development has turned him into one of the elite scorers in the league.'},
+  {n:'LaMelo Ball',      f:'LAMELO.avif',         num:'1', t:'Charlotte Hornets',      era:'stars',q:'The most naturally creative passer of his generation. When locked in, his court vision produces passes that have no business existing at his age.'},
+  {n:'Jaylen Brown',     f:'JB.webp',             num:'7', t:'Boston Celtics',         era:'stars',q:'2024 Finals MVP. An explosive two-way wing who elevated his game to championship level at exactly the right moment. The co-star who took over.'},
+  {n:'Bradley Beal',     f:'BEAL.jpg',            num:'3', t:'Phoenix Suns',           era:'stars',q:'Smooth, reliable scorer and elite shooter. One of the most consistent offensive guards of his generation — always in attack mode, never forced.'},
+  {n:'Kevin Love',       f:'LOVE.avif',           num:'0', t:'Miami Heat',             era:'stars',q:'One of the greatest rebounders of his era and a knock-down shooter. His outlet passes and floor spacing defined championship-caliber role play.'},
+  {n:'Jordan Poole',     f:'Jordan-Poole.webp',   num:'3', t:'Washington Wizards',     era:'stars',q:'The Poole Party never stops. A quick-release shooter with infectious energy who can erupt for 40 on any given night with absolutely zero warning.'},
+  {n:'Kristaps Porzingis',f:'PORZ.jpg',           num:'8', t:'Boston Celtics',         era:'stars',q:'The Unicorn. A 7-foot-3 stretch center who can score from anywhere on the floor. His rim presence and three-point shooting make him nearly unguardable.'},
+  // RISING
+  {n:'Victor Wembanyama',f:'WEMBY.webp',          num:'1', t:'San Antonio Spurs',      era:'rising',q:'The Alien. 7\'4 with a seven-foot-plus wingspan, a three-point shot, elite handles, and the most blocks per game in NBA history. The future is already here.'},
+  {n:'Anthony Edwards',  f:'ANTMAN.webp',         num:'5', t:'Minnesota Timberwolves', era:'rising',q:'Ant-Man. The most explosive dunker in the modern game. His fearless confidence and elite athleticism signal a future MVP in the making.'},
+  {n:'Ja Morant',        f:'JA MORANT.webp',      num:'12',t:'Memphis Grizzlies',      era:'rising',q:'When he is locked in and healthy, he is a nightly highlight reel. His first step is the fastest in basketball and his explosion at the rim is unreal.'},
+  {n:'Zion Williamson',  f:'ZION.webp',           num:'1', t:'New Orleans Pelicans',   era:'rising',q:'The most physically powerful body in NBA history. When healthy, his combination of size, strength, and agility creates a matchup that simply does not exist.'},
+  {n:'Shai Gilgeous-Alexander',f:'SGA.jpg',       num:'2', t:'OKC Thunder',            era:'rising',q:'SGA. An elite scorer and lockdown defender leading the Thunder back to the top. Ice cold in the clutch, methodical in approach, and lethal every single night.'},
+  {n:'Chet Holmgren',    f:'CHET.webp',           num:'7', t:'OKC Thunder',            era:'rising',q:'A historically unique big man prospect with incredible defensive instincts. His shot-blocking and floor spacing at seven feet is unlike anything seen before.'},
+  {n:'Tyrese Maxey',     f:'MAXEY.jpg',           num:'0', t:'Philadelphia 76ers',     era:'rising',q:'Speed demon point guard with a rapidly improving all-around game. Philadelphia\'s true franchise cornerstone for the next decade. Already an All-Star talent.'},
+  {n:'Tyrese Haliburton',f:'HALI.jpeg',           num:'0', t:'Indiana Pacers',         era:'rising',q:'The most creative and efficient young point guard in the league. His ability to make everyone around him dramatically better is a rare and very special gift.'},
+  {n:'Jonathan Kuminga', f:'JK.jpg',              num:'00',t:'Golden State Warriors',  era:'rising',q:'The most athletically gifted young player on the Warriors roster. His combination of explosiveness and skill makes him a future All-Star waiting to happen.'},
+  {n:'Brandin Podziemski',f:'PODZ.webp',          num:'2', t:'Golden State Warriors',  era:'rising',q:'Podz. A fearless shooter and defender who fits the Warriors mold perfectly. His rookie season showcased a competitive savagery that delighted Golden State fans everywhere.'},
+  {n:'Trayce Jackson-Davis',f:'TJD.jpg',          num:'32',t:'Golden State Warriors',  era:'rising',q:'The engine in the paint the Warriors needed. His relentless energy, rebounding, and finishing around the rim make him an indispensable piece of the puzzle.'},
+  {n:'Naz Reid',         f:'NAZ.jpg',             num:'11',t:'Minnesota Timberwolves', era:'rising',q:'The definition of a reliable energy big. Naz brings size, shooting, and genuine toughness off the bench that most starting centers would be envious of.'},
+];
+
+let filt='all', srch='';
+
+// Build featured cards
+(function(){
+  const g=document.getElementById('featGrid');
+  featured.forEach((p,i)=>{
+    const d=document.createElement('div');
+    d.className='fc fc--'+(i===0?'goat':'leg');
+    d.innerHTML=`<img src="${p.file}" alt="${p.name}">
+      <div class="fc__ov"></div>
+      <span class="fc__bdg fc__bdg--${p.bdgCls}">${p.bdg}</span>
+      <span class="fc__num">${p.num}</span>
+      <div class="fc__body">
+        <div class="fc__name">${p.disp}</div>
+        <div class="fc__meta">${p.meta}</div>
+      </div>`;
+    d.addEventListener('click',()=>openMo(p.file,p.name,p.meta,p.era,p.num,p.q));
+    g.appendChild(d);
+  });
+})();
+
+function render(){
+  const g=document.getElementById('grid');
+  g.innerHTML='';
+  const res=players.filter(p=>{
+    const eok=filt==='all'||p.era===filt;
+    const q=srch.toLowerCase();
+    const sok=!q||p.n.toLowerCase().includes(q)||p.t.toLowerCase().includes(q)||p.num.includes(q);
+    return eok&&sok;
+  });
+  document.getElementById('cbadge').textContent=res.length+' player'+(res.length!==1?'s':'');
+  if(!res.length){
+    g.innerHTML='<div class="empty"><span>🏀</span><p>No players found</p></div>';
+    return;
+  }
+  res.forEach((p,i)=>{
+    const c=document.createElement('div');
+    c.className=`pc pc--${p.era}`;
+    c.style.animationDelay=Math.min(i*32,550)+'ms';
+    c.setAttribute('role','listitem');
+    c.innerHTML=`<img src="${p.f}" alt="${p.n}" loading="lazy">
+      <div class="pc__ov"></div>
+      <div class="pc__num">${p.num}</div>
+      <span class="pc__era et--${p.era}">${EL[p.era]}</span>
+      <div class="pc__body">
+        <div class="pc__name">${p.n}</div>
+        <div class="pc__team">${p.t}</div>
+      </div>`;
+    c.addEventListener('click',()=>openMo(p.f,p.n,`#${p.num} · ${p.t}`,p.era,p.num,p.q));
+    g.appendChild(c);
+  });
+}
+
+function setFilter(e,btn){
+  filt=e;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  render();
+}
+
+function setSearch(v){srch=v;render();}
+
+function openMo(file,name,team,era,num,q){
+  document.getElementById('moImg').src=file;
+  document.getElementById('moImg').alt=name;
+  document.getElementById('moName').textContent=name;
+  document.getElementById('moTeam').textContent=team;
+  document.getElementById('moNum').textContent='#'+num;
+  const eEl=document.getElementById('moEra');
+  eEl.textContent=EL[era];
+  eEl.style.color=EC[era];
+  document.getElementById('moQ').textContent='“'+q+'”';
+  document.getElementById('mo').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeMo(){
+  document.getElementById('mo').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function moOverlay(e){if(e.target===document.getElementById('mo'))closeMo();}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMo();});
+
+// Counter animation
+function countUp(el,target,dur){
+  let start=null;
+  function step(ts){
+    if(!start)start=ts;
+    const p=Math.min((ts-start)/dur,1);
+    el.textContent=Math.floor(p*target)+(p<1?'':'+');
+    if(p<1)requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+setTimeout(()=>countUp(document.getElementById('ctr-players'),players.length,1200),950);
+
+render();
+</script>
+</body>
+</html>

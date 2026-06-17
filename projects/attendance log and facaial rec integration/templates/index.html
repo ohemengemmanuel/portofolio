@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AttendLog</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500&family=Roboto:wght@500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link rel="stylesheet" href="../static/css/style.css" />
+</head>
+<body>
+<div class="shell">
+  <nav>
+    <div class="logo">
+      <div class="logo-mark"><span class="material-icons">assignment</span></div>
+      <div class="logo-text">
+        <span class="logo-name">Attend<span class="logo-name-accent">Log</span></span>
+        <span class="logo-tagline">Educator Dashboard</span>
+      </div>
+    </div>
+    <a onclick="showPage('registry')" id="nav-registry">Student Registry</a>
+    <a onclick="showPage('classes')"  id="nav-classes">Classes</a>
+    <div class="nav-spacer"></div>
+    <div class="nav-user">
+      <div class="nav-username"><span class="material-icons">person</span> {{ username }}</div>
+      <button class="btn-logout" onclick="doLogout()">Sign out</button>
+    </div>
+  </nav>
+  <main>
+
+    <!-- ═══ Student Registry ═══ -->
+    <div class="page" id="page-registry">
+      <h2>Student Registry</h2>
+      <div class="card">
+        <div class="card-title">Register New Student</div>
+        <div class="grid2">
+          <div class="field">
+            <label>Index Number</label>
+            <input type="text" id="reg-index" placeholder="e.g. UG/2024/001" />
+          </div>
+          <div class="field">
+            <label>Full Name</label>
+            <input type="text" id="reg-name" placeholder="e.g. Kofi Mensah" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Face Photo <span class="field-note">(required for face recognition)</span></label>
+
+          <!-- Mode toggle -->
+          <div class="photo-mode-tabs">
+            <button class="photo-mode-tab active" id="pmt-upload" onclick="setRegPhotoMode('upload')">
+              <span class="material-icons">upload_file</span> Upload File
+            </button>
+            <button class="photo-mode-tab" id="pmt-camera" onclick="setRegPhotoMode('camera')">
+              <span class="material-icons">videocam</span> Use Camera
+            </button>
+          </div>
+
+          <!-- Upload mode -->
+          <div id="reg-upload-mode">
+            <div class="photo-pick-row">
+              <div class="photo-thumb-wrap" id="reg-thumb-wrap">
+                <img id="reg-thumb" src="" alt="" style="display:none">
+                <span id="reg-thumb-placeholder">No photo</span>
+              </div>
+              <label class="btn btn-ghost" for="reg-photo" style="cursor:pointer;margin:0">
+                <span class="material-icons">photo_camera</span> Choose Photo
+              </label>
+              <input type="file" id="reg-photo" accept="image/*" style="display:none" onchange="previewRegPhoto(this)" />
+            </div>
+          </div>
+
+          <!-- Camera mode -->
+          <div id="reg-camera-mode" style="display:none">
+            <div style="position:relative;border-radius:var(--radius);overflow:hidden;background:#000;max-height:260px">
+              <video id="reg-video" class="cam-video" autoplay playsinline muted></video>
+              <img id="reg-cam-capture" class="cam-video" style="display:none" />
+            </div>
+            <div class="cam-btn-row">
+              <button class="btn btn-primary btn-sm" id="reg-capture-btn" onclick="captureRegPhoto()">
+                <span class="material-icons">camera</span> Capture
+              </button>
+              <button class="btn btn-ghost btn-sm" id="reg-retake-btn" style="display:none" onclick="retakeRegPhoto()">
+                <span class="material-icons">refresh</span> Retake
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" onclick="registerStudent()">Register Student</button>
+        <div id="reg-feedback" class="mark-feedback" style="margin-top:10px"></div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th></th><th>Index Number</th><th>Name</th><th>Registered</th><th></th></tr></thead>
+          <tbody id="registry-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══ Classes List ═══ -->
+    <div class="page" id="page-classes">
+      <h2>Classes</h2>
+      <div class="card">
+        <div class="card-title">Create New Class</div>
+        <div class="grid2">
+          <div class="field">
+            <label>Class Name</label>
+            <input type="text" id="new-class-name" placeholder="e.g. Mathematics 101" />
+          </div>
+          <div class="field">
+            <label>Description</label>
+            <input type="text" id="new-class-desc" placeholder="Optional" />
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="createClass()">Create Class</button>
+      </div>
+      <div id="classes-list"></div>
+    </div>
+
+    <!-- ═══ Class Detail ═══ -->
+    <div class="page" id="page-class">
+      <span class="back-btn" onclick="showPage('classes'); loadClasses()"><span class="material-icons">arrow_back</span> Back to Classes</span>
+      <h2 id="class-heading"></h2>
+      <div class="tabs">
+        <div class="tab active"  onclick="switchTab('enroll')">Students</div>
+        <div class="tab"         onclick="switchTab('sessions')">Sessions</div>
+        <div class="tab"         onclick="switchTab('analytics')">Analytics</div>
+      </div>
+      <div id="tab-enroll"></div>
+      <div id="tab-sessions"  style="display:none"></div>
+      <div id="tab-analytics" style="display:none"></div>
+    </div>
+
+    <!-- ═══ Attendance ═══ -->
+    <div class="page" id="page-attendance">
+      <span class="back-btn" id="att-back"><span class="material-icons">arrow_back</span> Back to Sessions</span>
+      <h2 id="att-heading"></h2>
+
+      <!-- Index-number mark box -->
+      <div class="mark-box">
+        <label>Enter student index number to mark present:</label>
+        <div class="mark-input-row">
+          <input class="mark-input" type="text" id="mark-input" placeholder="Index number..." autocomplete="off" />
+          <button class="btn btn-green" onclick="markStudent()">Mark Present</button>
+          <button class="btn btn-ghost" id="face-toggle-btn" onclick="toggleFaceRec()"><span class="material-icons">photo_camera</span> Photo Attendance</button>
+          <button class="btn btn-ghost" id="live-cam-btn"   onclick="toggleLiveCam()"><span class="material-icons">videocam</span> Live Camera</button>
+        </div>
+        <div class="mark-feedback" id="mark-feedback"></div>
+      </div>
+
+      <!-- Photo upload attendance panel -->
+      <div id="face-rec-panel" style="display:none">
+        <div class="face-rec-card">
+          <div class="face-rec-header">
+            <span><span class="material-icons">face</span> Face Recognition Attendance</span>
+            <button class="btn btn-ghost btn-sm" onclick="toggleFaceRec()">Hide</button>
+          </div>
+          <div id="face-drop-zone" class="face-drop-zone" onclick="document.getElementById('face-file').click()">
+            <input type="file" id="face-file" accept="image/*" style="display:none" />
+            <div id="face-drop-inner">
+              <div class="face-drop-icon"><span class="material-icons">add_photo_alternate</span></div>
+              <div class="face-drop-text">Click or drag &amp; drop a group photo</div>
+              <div class="face-drop-hint">Best results with a clear, well-lit photo</div>
+            </div>
+            <div id="face-preview-wrap" style="display:none;position:relative">
+              <img id="face-preview-img" style="width:100%;max-height:220px;object-fit:contain;border-radius:3px;display:block" />
+              <button onclick="event.stopPropagation();clearFacePhoto()" class="face-clear-btn"><span class="material-icons">close</span></button>
+            </div>
+          </div>
+          <button class="btn btn-primary" id="face-process-btn" onclick="processFaceAttendance()" style="margin-top:10px">Process Photo</button>
+          <div id="face-feedback" class="mark-feedback" style="margin-top:8px"></div>
+        </div>
+        <div id="face-results-panel" style="display:none">
+          <div class="face-stats-row" id="face-stats"></div>
+          <img id="face-annotated-img" class="face-annotated-img" />
+          <div style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px">Recognized Students</div>
+          <div id="face-recognized-list"></div>
+        </div>
+      </div>
+
+      <!-- Live camera attendance panel -->
+      <div id="live-cam-panel" style="display:none">
+        <div class="face-rec-card">
+          <div class="face-rec-header">
+            <span><span class="material-icons">videocam</span> Live Camera Attendance</span>
+            <button class="btn btn-ghost btn-sm" onclick="toggleLiveCam()">Hide</button>
+          </div>
+          <video id="att-video" class="cam-video" autoplay playsinline muted style="margin-bottom:10px;border-radius:var(--radius)"></video>
+          <div class="cam-btn-row">
+            <button class="btn btn-primary" onclick="scanLiveFrame()">
+              <span class="material-icons">crop_free</span> Scan Now
+            </button>
+            <label class="cam-autoscan-toggle">
+              <input type="checkbox" id="autoscan-cb" onchange="toggleAutoScan(this.checked)" />
+              Auto-scan every 3s
+            </label>
+          </div>
+          <div id="live-cam-feedback" class="mark-feedback" style="margin-top:8px"></div>
+        </div>
+        <div id="live-results-panel" style="display:none">
+          <div class="face-stats-row" id="live-face-stats"></div>
+          <div style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px">Last Scan Results</div>
+          <div id="live-recognized-list"></div>
+        </div>
+      </div>
+
+      <div class="row-between">
+        <h3>Present Today (<span id="att-count">0</span>)</h3>
+        <span style="font-size:12px;color:var(--muted)" id="att-total-enrolled"></span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Index No.</th><th>Name</th><th>Method</th><th>Time</th><th></th></tr></thead>
+          <tbody id="att-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div id="overlay" style="display:none">
+  <div id="overlay-box">
+    <div class="overlay-spinner"></div>
+    <div id="overlay-msg">Recognizing faces…</div>
+    <div id="overlay-hint" style="font-size:12px;color:#6c7086;margin-top:4px"></div>
+  </div>
+</div>
+
+<script src="../static/js/app.js"></script>
+</body>
+</html>

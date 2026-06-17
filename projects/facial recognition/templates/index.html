@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}FaceAuth — Home{% endblock %}
+
+{% block nav %}
+  <a class="btn btn-outline btn-sm" href="/login">Login</a>
+  <a class="btn btn-primary btn-sm" href="/signup">Sign Up</a>
+{% endblock %}
+
+{% block content %}
+<div class="hero">
+  <h1>Secure access with <span>your face</span></h1>
+  <p>
+    Two-step authentication — verify your credentials first,
+    then confirm your identity with facial recognition.
+  </p>
+  <div class="hero-btns">
+    <a class="btn btn-primary" href="/signup">Create Account</a>
+    <a class="btn btn-outline" href="/login">Login</a>
+  </div>
+
+  <div class="feature-row">
+    <div class="feature">
+      <div class="feature-icon">&#128100;</div>
+      <div class="feature-label">Face Enrollment</div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">&#128274;</div>
+      <div class="feature-label">2-Step Login</div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">&#9889;</div>
+      <div class="feature-label">ArcFace AI</div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">&#128203;</div>
+      <div class="feature-label">User Directory</div>
+    </div>
+  </div>
+</div>
+{% endblock %}

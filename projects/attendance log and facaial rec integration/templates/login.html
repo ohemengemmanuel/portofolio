@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AttendLog — Sign In</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500&family=Roboto:wght@500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link rel="stylesheet" href="../static/css/style.css" />
+</head>
+<body class="auth-body">
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="auth-logo-mark"><span class="material-icons">assignment</span></div>
+      <div class="auth-logo-text">
+        <div class="auth-logo-name">Attend<span class="auth-logo-accent">Log</span></div>
+        <div class="auth-logo-sub">Educator Dashboard</div>
+      </div>
+    </div>
+    <h2 class="auth-heading">Sign In</h2>
+    <div id="auth-error" class="auth-error" style="display:none"></div>
+    <div class="field">
+      <label>Username</label>
+      <input type="text" id="username" placeholder="Enter username" autocomplete="username" />
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="Enter password" autocomplete="current-password" />
+    </div>
+    <button class="btn btn-primary auth-submit-btn" onclick="doLogin()" id="login-btn">Sign In</button>
+    <div class="auth-link">Don't have an account? <a href="/signup">Create one</a></div>
+  </div>
+</div>
+<script>
+async function doLogin() {
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
+  const btn      = document.getElementById('login-btn');
+  if (!username || !password) { showErr('Please fill in all fields'); return; }
+  btn.disabled = true; btn.textContent = 'Signing in…';
+  try {
+    const res  = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      showErr(data.error || 'Login failed');
+      btn.disabled = false; btn.textContent = 'Sign In';
+      return;
+    }
+    window.location.href = '/';
+  } catch {
+    showErr('Network error — is the server running?');
+    btn.disabled = false; btn.textContent = 'Sign In';
+  }
+}
+function showErr(msg) {
+  const el = document.getElementById('auth-error');
+  el.textContent = msg; el.style.display = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+document.getElementById('username').focus();
+</script>
+</body>
+</html>

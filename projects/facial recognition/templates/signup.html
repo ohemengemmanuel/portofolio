@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% block title %}FaceAuth — Sign Up{% endblock %}
+
+{% block nav %}
+  <a class="btn btn-outline btn-sm" href="/login">Already have an account?</a>
+{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width:820px; width:100%;">
+  <div class="card-title">Create Account</div>
+  <div class="card-sub">Fill in your details, then enroll your face to complete sign up</div>
+
+  <div style="display:flex; gap:32px; flex-wrap:wrap; align-items:flex-start;">
+
+    <!-- Left: form fields -->
+    <div style="flex:1; min-width:240px;">
+      <div class="field">
+        <label for="first_name">First Name</label>
+        <input type="text" id="first_name" placeholder="e.g. Kwame" autocomplete="off" />
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Min. 6 characters" />
+      </div>
+      <div class="field">
+        <label for="confirm_password">Confirm Password</label>
+        <input type="password" id="confirm_password" placeholder="Repeat password" />
+      </div>
+
+      <div style="margin-top:10px; padding:12px; background:var(--input); border-radius:8px; font-size:0.82rem; color:var(--muted); line-height:1.6;">
+        After filling in your details, use the camera panel on the right to capture your face.
+        Make sure your face is centred and well lit.
+      </div>
+
+      <div id="alert" class="alert"></div>
+    </div>
+
+    <!-- Right: camera -->
+    <div style="flex:1; min-width:280px;">
+      <label style="margin-bottom:8px; display:block;">Face Enrollment</label>
+
+      <div class="camera-wrapper" id="camWrapper">
+        <video id="video" autoplay muted playsinline></video>
+        <canvas id="canvas" style="display:none;"></canvas>
+        <div class="face-guide"></div>
+        <div class="camera-overlay" id="camOverlay">
+          <span style="font-size:1.8rem;">&#128247;</span>
+          <span>Camera not started</span>
+          <button class="btn btn-primary btn-sm" id="startBtn" onclick="startCamera()">Open Camera</button>
+        </div>
+        <div class="camera-hint" id="hint" style="display:none;">Centre your face inside the oval</div>
+      </div>
+
+      <!-- Captured preview -->
+      <div class="preview-box" id="previewBox" style="margin-top:12px;">
+        <img id="previewImg" src="" alt="Captured face" />
+      </div>
+
+      <div class="btn-row" style="margin-top:12px;">
+        <button class="btn btn-outline" id="captureBtn" onclick="capturePhoto()" disabled>
+          &#128247; Capture Face
+        </button>
+        <button class="btn btn-ghost" id="retakeBtn" onclick="retake()" style="display:none;">
+          Retake
+        </button>
+      </div>
+
+      <div id="captureStatus" style="font-size:0.82rem; color:var(--success); margin-top:8px; display:none;">
+        &#10003; Face captured — ready to sign up
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:28px; display:flex; align-items:center; gap:14px;">
+    <button class="btn btn-primary" id="submitBtn" onclick="submitSignup()">
+      <span class="spinner" id="spinner"></span>
+      <span class="btn-label">Enroll &amp; Sign Up</span>
+    </button>
+    <a href="/" class="btn btn-ghost">Cancel</a>
+  </div>
+
+  <div class="text-sm text-center" style="margin-top:20px;">
+    Already registered? <a class="link" href="/login">Login here</a>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/camera.js') }}"></script>
+<script>
+  let cam = null;
+  let capturedImage = null;
+
+  async function startCamera() {
+    const overlay = document.getElementById("camOverlay");
+    const hint = document.getElementById("hint");
+    const captureBtn = document.getElementById("captureBtn");
+
+    try {
+      cam = new Camera(
+        document.getElementById("video"),
+        document.getElementById("canvas")
+      );
+      await cam.start();
+      overlay.style.display = "none";
+      hint.style.display = "block";
+      captureBtn.disabled = false;
+    } catch (e) {
+      overlay.querySelector("span:last-child").textContent = "Camera access denied";
+      showAlert(document.getElementById("alert"), "Camera permission denied. Please allow camera access.", "error");
+    }
+  }
+
+  function capturePhoto() {
+    if (!cam) return;
+    capturedImage = cam.capture();
+    document.getElementById("previewImg").src = capturedImage;
+    document.getElementById("previewBox").style.display = "block";
+    document.getElementById("captureStatus").style.display = "block";
+    document.getElementById("retakeBtn").style.display = "inline-flex";
+    document.getElementById("captureBtn").style.display = "none";
+  }
+
+  function retake() {
+    capturedImage = null;
+    document.getElementById("previewBox").style.display = "none";
+    document.getElementById("captureStatus").style.display = "none";
+    document.getElementById("retakeBtn").style.display = "none";
+    document.getElementById("captureBtn").style.display = "inline-flex";
+  }
+
+  async function submitSignup() {
+    const alertEl = document.getElementById("alert");
+    const btn = document.getElementById("submitBtn");
+    const spinner = document.getElementById("spinner");
+
+    if (!capturedImage) {
+      showAlert(alertEl, "Please capture your face before signing up.", "error");
+      return;
+    }
+
+    setBtn(btn, spinner, true, "Creating account…");
+
+    const data = await postJSON("/api/signup", {
+      first_name: document.getElementById("first_name").value,
+      password: document.getElementById("password").value,
+      confirm_password: document.getElementById("confirm_password").value,
+      face_image: capturedImage,
+    });
+
+    setBtn(btn, spinner, false, "Enroll & Sign Up");
+
+    if (data.success) {
+      cam && cam.stop();
+      showAlert(alertEl, data.message + " Redirecting to login…", "success");
+      setTimeout(() => (window.location.href = data.redirect), 1500);
+    } else {
+      showAlert(alertEl, data.message, "error");
+    }
+  }
+</script>
+{% endblock %}

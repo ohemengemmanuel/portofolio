@@ -1,0 +1,3636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FREQ — Concert Booking</title>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Rubik:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --black:#0a0a0a;
+  --white:#f5f5f0;
+  --acid:#E8FF00;
+  --acid-dim:#b8cc00;
+  --red:#ff2d2d;
+  --blue:#0028ff;
+  --mid:#888880;
+  --border:2px solid var(--black);
+  --font-display:'Black Han Sans',sans-serif;
+  --font-body:'Rubik',sans-serif;
+  --font-mono:'Courier New',Courier,monospace;
+}
+
+html{scroll-behavior:smooth}
+
+body{
+  background:var(--white);
+  color:var(--black);
+  font-family:var(--font-body);
+  overflow-x:hidden;
+  cursor:none;
+}
+
+/* ── CURSOR ── */
+.cur{
+  position:fixed;
+  width:12px;height:12px;
+  background:#000;
+  border-radius:0;
+  pointer-events:none;
+  z-index:9999;
+  transform:translate(-50%,-50%) rotate(45deg);
+  box-shadow:
+    0 0 0 2px #fff,
+    0 0 0 3px #000;
+  transition:
+    width .18s cubic-bezier(0.22,1,0.36,1),
+    height .18s cubic-bezier(0.22,1,0.36,1),
+    border-radius .18s,
+    box-shadow .18s;
+  mix-blend-mode:difference;
+}
+.cur.on-dark{
+  background:#fff;
+  box-shadow:
+    0 0 0 2px #000,
+    0 0 0 3px #fff;
+}
+.cur.hovering{
+  width:36px;height:36px;
+  border-radius:0;
+  box-shadow:
+    0 0 0 2px #fff,
+    0 0 0 3px #000,
+    inset 0 0 0 2px #fff;
+}
+.cur.hovering.on-dark{
+  background:#fff;
+  box-shadow:
+    0 0 0 2px #000,
+    0 0 0 3px #fff,
+    inset 0 0 0 2px #000;
+}
+/* Trailing ring */
+.cur-ring{
+  position:fixed;
+  width:36px;height:36px;
+  border:2px solid #000;
+  box-shadow:0 0 0 1px #fff;
+  border-radius:0;
+  pointer-events:none;
+  z-index:9997;
+  transform:translate(-50%,-50%);
+  transition:
+    width .35s cubic-bezier(0.22,1,0.36,1),
+    height .35s cubic-bezier(0.22,1,0.36,1),
+    border-color .2s,
+    box-shadow .2s;
+  mix-blend-mode:difference;
+}
+.cur-ring.on-dark{
+  border-color:#fff;
+  box-shadow:0 0 0 1px #000;
+}
+.cur-ring.hovering{
+  width:60px;height:60px;
+  border-color:#fff;
+  box-shadow:0 0 0 1px #000;
+}
+
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;
+  z-index:100;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:0 2rem;
+  height:56px;
+  background:var(--black);
+  border-bottom:3px solid var(--acid);
+}
+.nav-logo{
+  font-family:var(--font-display);
+  font-size:1.8rem;
+  color:var(--acid);
+  letter-spacing:0.08em;
+  text-decoration:none;
+  position:relative;
+}
+.nav-logo::after{
+  content:'◈';
+  font-size:0.5rem;
+  position:absolute;
+  top:0.3rem;right:-0.8rem;
+  color:var(--acid);
+  animation:blink 1.2s step-end infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.nav-links{
+  display:flex;gap:0;list-style:none;
+}
+.nav-links a{
+  font-family:var(--font-mono);
+  font-size:0.65rem;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  color:var(--mid);
+  text-decoration:none;
+  padding:0 1.2rem;
+  height:56px;
+  display:flex;align-items:center;
+  border-left:1px solid rgba(255,255,255,0.08);
+  transition:color .2s,background .2s;
+}
+.nav-links a:hover{color:var(--acid);background:rgba(232,255,0,0.08)}
+.nav-ticket{
+  font-family:var(--font-mono);
+  font-size:0.65rem;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  background:var(--acid);
+  color:var(--black);
+  border:none;
+  padding:0.5rem 1.2rem;
+  cursor:none;
+  font-weight:700;
+  transition:background .2s;
+}
+.nav-ticket:hover{background:var(--acid-dim)}
+.nav-ham{display:none;flex-direction:column;gap:4px;background:none;border:none;cursor:none;padding:4px}
+.nav-ham span{display:block;width:22px;height:2px;background:var(--acid)}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;
+  padding-top:56px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  position:relative;
+  overflow:hidden;
+}
+
+/* Scanline overlay */
+.hero::before{
+  content:'';
+  position:absolute;inset:0;
+  background:repeating-linear-gradient(
+    0deg,
+    transparent,transparent 3px,
+    rgba(0,0,0,0.03) 3px,rgba(0,0,0,0.03) 4px
+  );
+  pointer-events:none;z-index:3;
+}
+
+.hero-left{
+  background:var(--black);
+  display:flex;flex-direction:column;
+  justify-content:center;
+  padding:4rem 3rem 4rem 3rem;
+  position:relative;
+  z-index:2;
+  border-right:4px solid var(--acid);
+}
+.hero-eyebrow{
+  font-family:var(--font-mono);
+  font-size:0.65rem;
+  letter-spacing:0.3em;
+  text-transform:uppercase;
+  color:var(--acid);
+  margin-bottom:1.5rem;
+  display:flex;align-items:center;gap:0.8rem;
+}
+.hero-eyebrow::before{
+  content:'';display:block;
+  width:30px;height:2px;background:var(--acid);
+}
+.hero-title{
+  font-family:var(--font-display);
+  font-size:clamp(4rem,9vw,9rem);
+  line-height:0.9;
+  color:var(--white);
+  letter-spacing:-0.01em;
+}
+.hero-title .acid{color:var(--acid)}
+.hero-title .outline{
+  -webkit-text-stroke:2px var(--white);
+  color:transparent;
+}
+.hero-sub{
+  font-family:var(--font-mono);
+  font-size:0.8rem;
+  line-height:1.7;
+  color:var(--mid);
+  margin-top:2rem;
+  max-width:340px;
+  letter-spacing:0.05em;
+}
+.hero-ctas{
+  display:flex;gap:1rem;margin-top:2.5rem;
+  flex-wrap:wrap;
+}
+.btn-acid{
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  background:var(--acid);
+  color:var(--black);
+  border:2px solid var(--acid);
+  padding:0.85rem 2rem;
+  cursor:none;
+  font-weight:700;
+  text-decoration:none;
+  display:inline-flex;align-items:center;gap:0.5rem;
+  transition:background .2s,color .2s;
+}
+.btn-acid:hover{background:transparent;color:var(--acid)}
+.btn-ghost-w{
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  background:transparent;
+  color:var(--mid);
+  border:2px solid rgba(255,255,255,0.2);
+  padding:0.85rem 2rem;
+  cursor:none;
+  text-decoration:none;
+  display:inline-flex;align-items:center;gap:0.5rem;
+  transition:border-color .2s,color .2s;
+}
+.btn-ghost-w:hover{border-color:var(--acid);color:var(--acid)}
+
+/* Hero ticker */
+.hero-ticker{
+  position:absolute;bottom:0;left:0;right:0;
+  height:36px;
+  background:var(--acid);
+  display:flex;align-items:center;
+  overflow:hidden;
+  border-top:2px solid var(--black);
+  z-index:4;
+}
+.ticker-track{
+  display:flex;
+  animation:ticker 18s linear infinite;
+  white-space:nowrap;
+}
+.ticker-item{
+  font-family:var(--font-mono);
+  font-size:0.65rem;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  color:var(--black);
+  font-weight:700;
+  padding:0 2.5rem;
+}
+.ticker-dot{color:var(--black);font-size:0.5rem}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* Hero right — oscilloscope */
+.hero-right{
+  position:relative;
+  background:var(--white);
+  display:flex;flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  padding:4rem 2rem;
+  z-index:2;
+  overflow:hidden;
+}
+.scope-wrap{
+  width:100%;max-width:500px;
+  border:3px solid var(--black);
+  background:var(--black);
+  padding:1.5rem;
+  position:relative;
+}
+.scope-wrap::before{
+  content:'FREQ.OSC — LIVE';
+  position:absolute;top:-1px;left:1rem;
+  font-family:var(--font-mono);
+  font-size:0.55rem;
+  letter-spacing:0.2em;
+  background:var(--acid);
+  color:var(--black);
+  padding:0.15rem 0.5rem;
+  font-weight:700;
+}
+.scope-svg{width:100%;display:block}
+
+/* Upcoming badge */
+.hero-badge{
+  position:absolute;top:3rem;right:2rem;
+  width:110px;height:110px;
+  background:var(--acid);
+  border:3px solid var(--black);
+  border-radius:50%;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;
+  animation:spin-badge 12s linear infinite;
+  cursor:none;
+}
+.hero-badge-inner{
+  animation:spin-badge-rev 12s linear infinite;
+  display:flex;flex-direction:column;align-items:center;
+}
+@keyframes spin-badge{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes spin-badge-rev{from{transform:rotate(0)}to{transform:rotate(-360deg)}}
+.badge-num{
+  font-family:var(--font-display);
+  font-size:2rem;line-height:1;
+}
+.badge-label{
+  font-family:var(--font-mono);
+  font-size:0.45rem;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  font-weight:700;
+}
+
+/* Grid texture background on hero-right */
+.hero-right::after{
+  content:'';
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(0,0,0,0.06) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,0,0,0.06) 1px,transparent 1px);
+  background-size:40px 40px;
+  pointer-events:none;z-index:0;
+}
+
+/* ── SHOWS SECTION ── */
+.shows-section{
+  padding:0;
+  border-top:4px solid var(--black);
+}
+.shows-header{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:2rem;
+  padding:2rem 2.5rem;
+  border-bottom:2px solid var(--black);
+  background:var(--white);
+}
+.shows-title-block{
+  display:flex;align-items:baseline;gap:1.5rem;
+}
+.shows-big-title{
+  font-family:var(--font-display);
+  font-size:clamp(2.5rem,5vw,5rem);
+  line-height:1;
+  letter-spacing:-0.02em;
+}
+.shows-count{
+  font-family:var(--font-mono);
+  font-size:0.65rem;
+  letter-spacing:0.2em;
+  color:var(--mid);
+  text-transform:uppercase;
+}
+.shows-filter{
+  display:flex;gap:0;
+  border:2px solid var(--black);
+}
+.filter-btn{
+  font-family:var(--font-mono);
+  font-size:0.6rem;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  background:var(--white);
+  border:none;
+  border-right:2px solid var(--black);
+  padding:0.6rem 1rem;
+  cursor:none;
+  transition:background .2s,color .2s;
+  color:var(--mid);
+}
+.filter-btn:last-child{border-right:none}
+.filter-btn.active,.filter-btn:hover{background:var(--black);color:var(--acid)}
+
+/* Show list */
+.show-list{display:flex;flex-direction:column}
+.show-row{
+  display:grid;
+  grid-template-columns:80px 1fr 1fr 120px 140px;
+  align-items:center;
+  padding:0 2.5rem;
+  height:90px;
+  border-bottom:2px solid var(--black);
+  position:relative;
+  transition:background .25s;
+  cursor:none;
+  overflow:hidden;
+}
+.show-row::before{
+  content:'';
+  position:absolute;left:0;top:0;bottom:0;width:0;
+  background:var(--acid);
+  transition:width .3s cubic-bezier(0.77,0,0.18,1);
+  z-index:0;
+}
+.show-row:hover::before{width:100%}
+.show-row:hover .show-date,
+.show-row:hover .show-artist,
+.show-row:hover .show-venue,
+.show-row:hover .show-genre,
+.show-row:hover .show-price{color:var(--black)}
+.show-row > *{position:relative;z-index:1}
+
+.show-date{
+  font-family:var(--font-mono);
+  font-size:0.65rem;
+  letter-spacing:0.1em;
+  color:var(--mid);
+  text-transform:uppercase;
+  line-height:1.4;
+}
+.show-date strong{
+  display:block;
+  font-size:1.5rem;
+  font-family:var(--font-display);
+  color:var(--black);
+  letter-spacing:0;
+  line-height:1;
+  transition:color .25s;
+}
+.show-artist{
+  font-family:var(--font-display);
+  font-size:clamp(1.2rem,2.5vw,2rem);
+  letter-spacing:-0.01em;
+  transition:color .25s;
+}
+.show-venue{
+  font-family:var(--font-mono);
+  font-size:0.65rem;
+  letter-spacing:0.08em;
+  color:var(--mid);
+  text-transform:uppercase;
+  transition:color .25s;
+}
+.show-genre{
+  display:inline-block;
+  font-family:var(--font-mono);
+  font-size:0.55rem;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  border:1.5px solid var(--black);
+  padding:0.3rem 0.7rem;
+  color:var(--black);
+  justify-self:center;
+  transition:border-color .25s,color .25s;
+  white-space:nowrap;
+}
+.show-genre.acid-tag{background:var(--acid);border-color:var(--acid)}
+.show-price{
+  text-align:right;
+  font-family:var(--font-display);
+  font-size:1.4rem;
+  letter-spacing:-0.01em;
+  transition:color .25s;
+}
+.show-price span{
+  font-family:var(--font-mono);
+  font-size:0.6rem;
+  color:var(--mid);
+  letter-spacing:0.1em;
+  display:block;
+  transition:color .25s;
+}
+
+/* SOLD OUT row */
+.show-row.sold-out{opacity:0.5}
+.show-row.sold-out::before{display:none}
+.sold-stamp{
+  font-family:var(--font-display);
+  font-size:0.8rem;
+  letter-spacing:0.1em;
+  color:var(--red);
+  border:2px solid var(--red);
+  padding:0.2rem 0.5rem;
+  justify-self:center;
+}
+
+/* ── FEATURE / SPLIT ── */
+.feature-split{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  border-top:4px solid var(--black);
+  min-height:70vh;
+}
+.feature-left{
+  background:var(--acid);
+  padding:5rem 3rem;
+  display:flex;flex-direction:column;
+  justify-content:space-between;
+  border-right:4px solid var(--black);
+  position:relative;
+  overflow:hidden;
+}
+.feature-left::before{
+  content:'HEADLINER';
+  position:absolute;
+  font-family:var(--font-display);
+  font-size:9rem;
+  color:rgba(0,0,0,0.06);
+  top:50%;left:50%;
+  transform:translate(-50%,-50%) rotate(-15deg);
+  pointer-events:none;
+  white-space:nowrap;
+}
+.feature-tag{
+  font-family:var(--font-mono);
+  font-size:0.65rem;
+  letter-spacing:0.3em;
+  text-transform:uppercase;
+  color:var(--black);
+  font-weight:700;
+}
+.feature-artist-name{
+  font-family:var(--font-display);
+  font-size:clamp(3rem,7vw,7.5rem);
+  line-height:0.88;
+  letter-spacing:-0.02em;
+  color:var(--black);
+}
+.feature-meta{
+  display:flex;gap:2rem;align-items:flex-end;flex-wrap:wrap;
+}
+.feature-meta-item{
+  font-family:var(--font-mono);
+  font-size:0.65rem;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:rgba(0,0,0,0.6);
+  line-height:1.5;
+}
+.feature-meta-item strong{
+  display:block;
+  font-family:var(--font-display);
+  font-size:1.8rem;
+  color:var(--black);
+  letter-spacing:0;
+}
+.btn-dark{
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  background:var(--black);
+  color:var(--acid);
+  border:2px solid var(--black);
+  padding:0.85rem 2rem;
+  cursor:none;
+  font-weight:700;
+  text-decoration:none;
+  display:inline-flex;align-items:center;gap:0.5rem;
+  transition:background .2s,color .2s;
+  align-self:flex-start;
+}
+.btn-dark:hover{background:var(--white);color:var(--black)}
+
+.feature-right{
+  background:var(--white);
+  padding:5rem 3rem;
+  display:flex;flex-direction:column;
+  justify-content:center;
+  gap:3rem;
+}
+.lineup-label{
+  font-family:var(--font-mono);
+  font-size:0.6rem;
+  letter-spacing:0.3em;
+  text-transform:uppercase;
+  color:var(--mid);
+  margin-bottom:1.5rem;
+}
+.lineup-list{display:flex;flex-direction:column;gap:0}
+.lineup-item{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1rem 0;
+  border-bottom:1.5px solid rgba(0,0,0,0.1);
+  transition:padding .2s;
+  cursor:none;
+}
+.lineup-item:hover{padding-left:0.5rem}
+.lineup-item:hover .lineup-name{color:var(--blue)}
+.lineup-name{
+  font-family:var(--font-display);
+  font-size:1.5rem;
+  letter-spacing:-0.01em;
+  transition:color .2s;
+}
+.lineup-time{
+  font-family:var(--font-mono);
+  font-size:0.6rem;
+  letter-spacing:0.15em;
+  color:var(--mid);
+  text-transform:uppercase;
+}
+
+/* ── VENUES ── */
+.venues-section{
+  padding:5rem 2.5rem;
+  border-top:4px solid var(--black);
+  background:var(--black);
+}
+.venues-heading{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  margin-bottom:3rem;
+}
+.venues-title{
+  font-family:var(--font-display);
+  font-size:clamp(2.5rem,5vw,5rem);
+  color:var(--white);
+  line-height:0.9;
+}
+.venues-title span{color:var(--acid)}
+.venues-see-all{
+  font-family:var(--font-mono);
+  font-size:0.65rem;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  color:var(--mid);
+  text-decoration:none;
+  transition:color .2s;
+}
+.venues-see-all:hover{color:var(--acid)}
+.venues-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:3px;
+  background:var(--acid);
+}
+.venue-card{
+  background:var(--black);
+  padding:2.5rem 2rem;
+  border:none;
+  position:relative;
+  overflow:hidden;
+  cursor:none;
+  transition:background .3s;
+  min-height:280px;
+  display:flex;flex-direction:column;
+  justify-content:space-between;
+}
+.venue-card:hover{background:#111}
+.venue-card::after{
+  content:attr(data-cap);
+  position:absolute;
+  font-family:var(--font-display);
+  font-size:7rem;
+  color:rgba(232,255,0,0.04);
+  bottom:-1rem;right:-0.5rem;
+  line-height:1;
+  pointer-events:none;
+}
+.venue-num{
+  font-family:var(--font-mono);
+  font-size:0.55rem;
+  letter-spacing:0.3em;
+  color:rgba(232,255,0,0.4);
+  text-transform:uppercase;
+  margin-bottom:1.5rem;
+}
+.venue-name{
+  font-family:var(--font-display);
+  font-size:2rem;
+  color:var(--white);
+  line-height:1;
+  margin-bottom:0.5rem;
+}
+.venue-city{
+  font-family:var(--font-mono);
+  font-size:0.6rem;
+  letter-spacing:0.2em;
+  color:var(--mid);
+  text-transform:uppercase;
+  margin-bottom:1.5rem;
+}
+.venue-cap-row{
+  display:flex;justify-content:space-between;align-items:flex-end;
+}
+.venue-cap-label{
+  font-family:var(--font-mono);
+  font-size:0.55rem;
+  letter-spacing:0.15em;
+  color:rgba(232,255,0,0.4);
+  text-transform:uppercase;
+  margin-bottom:0.2rem;
+}
+.venue-cap-num{
+  font-family:var(--font-display);
+  font-size:2.5rem;
+  color:var(--acid);
+  line-height:1;
+}
+.venue-arrow{
+  width:36px;height:36px;
+  border:1.5px solid rgba(232,255,0,0.2);
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s,border-color .2s;
+}
+.venue-card:hover .venue-arrow{background:var(--acid);border-color:var(--acid)}
+.venue-card:hover .venue-arrow svg path{stroke:#000}
+
+/* ── WAVEFORM DIVIDER ── */
+.wave-divider{
+  height:120px;
+  background:var(--white);
+  border-top:4px solid var(--black);
+  border-bottom:4px solid var(--black);
+  position:relative;
+  overflow:hidden;
+  display:flex;align-items:center;
+}
+.wave-divider canvas{
+  width:100%;height:100%;
+  display:block;
+}
+
+/* ── GENRES ── */
+.genres-section{
+  padding:5rem 2.5rem;
+  border-top:4px solid var(--black);
+}
+.genres-top{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  margin-bottom:3rem;
+}
+.genres-title{
+  font-family:var(--font-display);
+  font-size:clamp(2.5rem,5vw,5rem);
+  line-height:0.9;
+}
+.genres-grid{
+  display:flex;flex-wrap:wrap;gap:3px;
+}
+.genre-pill{
+  font-family:var(--font-display);
+  font-size:clamp(1.5rem,3vw,2.8rem);
+  padding:0.6rem 1.5rem;
+  border:2.5px solid var(--black);
+  cursor:none;
+  transition:background .2s,color .2s,border-color .2s;
+  letter-spacing:-0.01em;
+  line-height:1.1;
+  user-select:none;
+}
+.genre-pill:hover,.genre-pill.active-genre{background:var(--black);color:var(--acid)}
+.genre-pill.acid-fill{background:var(--acid);border-color:var(--acid);color:var(--black)}
+.genre-pill.acid-fill:hover{background:var(--black);border-color:var(--black);color:var(--acid)}
+
+/* ── HOW IT WORKS ── */
+.how-section{
+  padding:5rem 2.5rem;
+  background:var(--black);
+  border-top:4px solid var(--acid);
+}
+.how-title{
+  font-family:var(--font-display);
+  font-size:clamp(2.5rem,5vw,5rem);
+  color:var(--white);
+  margin-bottom:3rem;
+  line-height:0.9;
+}
+.how-title span{color:var(--acid)}
+.how-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:3px;
+  background:var(--acid);
+}
+.how-card{
+  background:var(--black);
+  padding:2.5rem 1.8rem;
+  position:relative;
+}
+.how-step{
+  font-family:var(--font-display);
+  font-size:5rem;
+  color:rgba(232,255,0,0.08);
+  line-height:1;
+  position:absolute;top:1rem;right:1rem;
+}
+.how-icon{
+  margin-bottom:1.5rem;
+}
+.how-name{
+  font-family:var(--font-display);
+  font-size:1.6rem;
+  color:var(--white);
+  margin-bottom:0.8rem;
+  line-height:1;
+}
+.how-desc{
+  font-family:var(--font-mono);
+  font-size:0.65rem;
+  letter-spacing:0.06em;
+  line-height:1.8;
+  color:var(--mid);
+}
+
+/* ── TESTIMONIALS ── */
+.testi-section{
+  border-top:4px solid var(--black);
+  padding:5rem 2.5rem;
+  background:var(--white);
+  position:relative;
+  overflow:hidden;
+}
+.testi-section::before{
+  content:'"';
+  font-family:var(--font-display);
+  font-size:30rem;
+  color:rgba(0,0,0,0.04);
+  position:absolute;
+  top:-5rem;left:-2rem;
+  line-height:1;
+  pointer-events:none;
+}
+.testi-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:3px;
+  background:var(--black);
+}
+.testi-card{
+  background:var(--white);
+  padding:2.5rem 2rem;
+  cursor:none;
+  transition:background .3s;
+}
+.testi-card:hover{background:var(--acid)}
+.testi-stars{
+  font-size:0.7rem;
+  letter-spacing:0.15em;
+  color:var(--black);
+  margin-bottom:1rem;
+}
+.testi-quote{
+  font-family:var(--font-body);
+  font-size:1rem;
+  font-weight:300;
+  line-height:1.7;
+  margin-bottom:1.5rem;
+  color:var(--black);
+}
+.testi-author{
+  font-family:var(--font-mono);
+  font-size:0.6rem;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  color:var(--mid);
+}
+.testi-card:hover .testi-author{color:rgba(0,0,0,0.6)}
+
+/* ── NEWSLETTER ── */
+.newsletter-section{
+  background:var(--acid);
+  border-top:4px solid var(--black);
+  padding:5rem 2.5rem;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:4rem;
+  align-items:center;
+}
+.nl-title{
+  font-family:var(--font-display);
+  font-size:clamp(2.5rem,5vw,5rem);
+  line-height:0.9;
+  color:var(--black);
+}
+.nl-form{
+  display:flex;flex-direction:column;gap:1rem;
+}
+.nl-row{display:flex;gap:0}
+.nl-input{
+  flex:1;
+  background:var(--black);
+  border:2px solid var(--black);
+  color:var(--acid);
+  font-family:var(--font-mono);
+  font-size:0.8rem;
+  padding:1rem 1.2rem;
+  letter-spacing:0.05em;
+  outline:none;
+}
+.nl-input::placeholder{color:rgba(232,255,0,0.3)}
+.nl-submit{
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  background:var(--white);
+  color:var(--black);
+  border:2px solid var(--black);
+  padding:1rem 1.5rem;
+  cursor:none;
+  font-weight:700;
+  white-space:nowrap;
+  transition:background .2s,color .2s;
+}
+.nl-submit:hover{background:var(--black);color:var(--acid)}
+.nl-note{
+  font-family:var(--font-mono);
+  font-size:0.55rem;
+  letter-spacing:0.15em;
+  color:rgba(0,0,0,0.5);
+  text-transform:uppercase;
+}
+.nl-checkboxes{
+  display:flex;gap:1.5rem;flex-wrap:wrap;
+}
+.nl-check{
+  display:flex;align-items:center;gap:0.4rem;
+  font-family:var(--font-mono);
+  font-size:0.6rem;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  cursor:pointer;
+  color:rgba(0,0,0,0.7);
+}
+.nl-check input{accent-color:var(--black);cursor:pointer}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--black);
+  border-top:4px solid var(--acid);
+  padding:4rem 2.5rem 2rem;
+}
+.footer-top{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr 1fr;
+  gap:3rem;
+  margin-bottom:4rem;
+}
+.footer-logo{
+  font-family:var(--font-display);
+  font-size:4rem;
+  color:var(--acid);
+  letter-spacing:0.05em;
+  line-height:1;
+  margin-bottom:1rem;
+}
+.footer-tagline{
+  font-family:var(--font-mono);
+  font-size:0.65rem;
+  letter-spacing:0.1em;
+  color:var(--mid);
+  line-height:1.8;
+  max-width:260px;
+}
+.footer-col-title{
+  font-family:var(--font-mono);
+  font-size:0.55rem;
+  letter-spacing:0.3em;
+  text-transform:uppercase;
+  color:var(--acid);
+  margin-bottom:1.5rem;
+  display:flex;align-items:center;gap:0.5rem;
+}
+.footer-col-title::before{content:'▸';font-size:0.5rem}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:0.7rem}
+.footer-links a{
+  font-family:var(--font-mono);
+  font-size:0.65rem;
+  letter-spacing:0.08em;
+  color:var(--mid);
+  text-decoration:none;
+  transition:color .2s;
+  display:flex;align-items:center;gap:0.4rem;
+}
+.footer-links a:hover{color:var(--acid)}
+.footer-links a::before{content:'—';font-size:0.4rem;opacity:0.4}
+.footer-bottom{
+  border-top:1px solid rgba(255,255,255,0.08);
+  padding-top:2rem;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:1rem;
+}
+.footer-copy{
+  font-family:var(--font-mono);
+  font-size:0.55rem;
+  letter-spacing:0.15em;
+  color:rgba(255,255,255,0.2);
+  text-transform:uppercase;
+}
+.footer-social{display:flex;gap:1rem}
+.footer-social a{
+  font-family:var(--font-mono);
+  font-size:0.55rem;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  color:var(--mid);
+  text-decoration:none;
+  transition:color .2s;
+}
+.footer-social a:hover{color:var(--acid)}
+
+/* ── FLOATING TICKET ── */
+.float-ticket{
+  position:fixed;
+  bottom:2rem;right:2rem;
+  z-index:90;
+  opacity:0;transform:translateY(20px);
+  transition:opacity .4s,transform .4s;
+}
+.float-ticket.show{opacity:1;transform:translateY(0)}
+.float-ticket-btn{
+  display:flex;align-items:center;gap:0.6rem;
+  background:var(--black);
+  color:var(--acid);
+  border:2px solid var(--acid);
+  padding:0.9rem 1.5rem;
+  font-family:var(--font-mono);
+  font-size:0.65rem;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  text-decoration:none;
+  font-weight:700;
+  cursor:none;
+  transition:background .2s,color .2s;
+}
+.float-ticket-btn:hover{background:var(--acid);color:var(--black)}
+
+/* ── BOOKING MODAL ── */
+.modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(10,10,10,0.92);
+  z-index:500;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity .3s;
+  padding:1rem;
+}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{
+  background:var(--white);
+  border:3px solid var(--black);
+  max-width:700px;width:100%;
+  max-height:90vh;
+  overflow-y:auto;
+  position:relative;
+  transform:translateY(20px);
+  transition:transform .3s;
+}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal-header{
+  background:var(--black);
+  padding:1.5rem 2rem;
+  display:flex;justify-content:space-between;align-items:center;
+  border-bottom:3px solid var(--acid);
+  position:sticky;top:0;z-index:2;
+}
+.modal-title{
+  font-family:var(--font-display);
+  font-size:1.8rem;
+  color:var(--acid);
+  letter-spacing:0.05em;
+}
+.modal-close{
+  background:none;border:none;
+  color:var(--mid);
+  font-family:var(--font-mono);
+  font-size:0.65rem;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  cursor:none;
+  padding:0.4rem 0.8rem;
+  border:1px solid rgba(255,255,255,0.15);
+  transition:color .2s,border-color .2s;
+}
+.modal-close:hover{color:var(--acid);border-color:var(--acid)}
+.modal-body{padding:2rem}
+.modal-show-info{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1rem;
+  margin-bottom:2rem;
+  padding-bottom:2rem;
+  border-bottom:2px solid var(--black);
+}
+.modal-info-block{}
+.modal-info-label{
+  font-family:var(--font-mono);
+  font-size:0.55rem;
+  letter-spacing:0.25em;
+  text-transform:uppercase;
+  color:var(--mid);
+  margin-bottom:0.3rem;
+}
+.modal-info-val{
+  font-family:var(--font-display);
+  font-size:1.4rem;
+  letter-spacing:-0.01em;
+}
+.ticket-types{
+  display:flex;flex-direction:column;gap:3px;
+  margin-bottom:1.5rem;
+}
+.ticket-type{
+  display:grid;
+  grid-template-columns:auto 1fr auto auto;
+  align-items:center;
+  gap:1rem;
+  padding:1rem;
+  border:2px solid rgba(0,0,0,0.12);
+  cursor:none;
+  transition:border-color .2s,background .2s;
+}
+.ticket-type:hover,.ticket-type.selected{border-color:var(--black);background:rgba(0,0,0,0.03)}
+.ticket-type.selected{border-color:var(--acid);background:rgba(232,255,0,0.08)}
+.tt-radio{
+  width:16px;height:16px;
+  border:2px solid var(--black);
+  border-radius:0;
+  flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.tt-radio.checked{background:var(--acid)}
+.tt-radio.checked::after{content:'✓';font-size:0.6rem;color:var(--black);font-weight:700}
+.tt-name{
+  font-family:var(--font-display);
+  font-size:1.1rem;
+  letter-spacing:-0.01em;
+}
+.tt-desc{
+  font-family:var(--font-mono);
+  font-size:0.55rem;
+  color:var(--mid);
+  letter-spacing:0.08em;
+}
+.tt-qty{
+  display:flex;align-items:center;gap:0;
+}
+.qty-btn{
+  width:30px;height:30px;
+  background:var(--black);
+  color:var(--acid);
+  border:none;
+  font-family:var(--font-mono);
+  font-size:1rem;
+  cursor:none;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s;
+  flex-shrink:0;
+}
+.qty-btn:hover{background:#333}
+.qty-num{
+  width:32px;text-align:center;
+  font-family:var(--font-display);
+  font-size:1.1rem;
+  border-top:2px solid var(--black);
+  border-bottom:2px solid var(--black);
+  height:30px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.tt-price{
+  font-family:var(--font-display);
+  font-size:1.3rem;
+  min-width:80px;
+  text-align:right;
+}
+.modal-total{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1rem 0;
+  border-top:2px solid var(--black);
+  margin-bottom:1.5rem;
+}
+.modal-total-label{
+  font-family:var(--font-mono);
+  font-size:0.65rem;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+}
+.modal-total-val{
+  font-family:var(--font-display);
+  font-size:2.5rem;
+  letter-spacing:-0.02em;
+}
+.btn-buy{
+  width:100%;
+  background:var(--black);
+  color:var(--acid);
+  border:2px solid var(--black);
+  padding:1.2rem;
+  font-family:var(--font-display);
+  font-size:1.5rem;
+  letter-spacing:0.05em;
+  cursor:none;
+  transition:background .2s,color .2s;
+  display:flex;align-items:center;justify-content:center;gap:0.8rem;
+}
+.btn-buy:hover{background:var(--acid);color:var(--black)}
+
+/* ── MOBILE OVERLAY ── */
+.mob-overlay{
+  position:fixed;inset:0;
+  background:var(--black);
+  z-index:200;
+  transform:translateX(100%);
+  transition:transform .4s cubic-bezier(0.77,0,0.18,1);
+  display:flex;flex-direction:column;
+}
+.mob-overlay.open{transform:translateX(0)}
+.mob-menu{
+  display:flex;flex-direction:column;
+  height:100%;
+  padding:0;
+}
+.mob-menu-top{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1rem 1.5rem;
+  border-bottom:2px solid rgba(232,255,0,0.15);
+  background:var(--black);
+}
+.mob-logo{
+  font-family:var(--font-display);
+  font-size:2rem;color:var(--acid);letter-spacing:0.08em;
+}
+.mob-close{
+  background:none;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  padding:0.4rem;
+}
+.mob-links{
+  list-style:none;
+  flex:1;
+  display:flex;flex-direction:column;
+  padding:1rem 0;
+}
+.mob-links a{
+  display:block;
+  font-family:var(--font-display);
+  font-size:2.2rem;
+  color:var(--white);
+  text-decoration:none;
+  padding:0.5rem 1.5rem;
+  letter-spacing:0.02em;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  transition:color .2s,padding .2s;
+}
+.mob-links a:hover{color:var(--acid);padding-left:2rem}
+.mob-bottom{
+  padding:1.5rem;
+  border-top:2px solid rgba(232,255,0,0.15);
+}
+
+/* ── LIVE STATS BAR ── */
+.live-stats-bar{
+  background:var(--black);
+  border-top:3px solid var(--acid);
+  border-bottom:3px solid var(--black);
+  padding:1.2rem 2.5rem;
+  display:flex;
+  align-items:center;
+  gap:2rem;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.live-stats-bar::-webkit-scrollbar{display:none}
+.live-dot-wrap{
+  display:flex;align-items:center;gap:0.5rem;
+  flex-shrink:0;
+}
+.live-dot{
+  width:8px;height:8px;
+  background:#ff2d2d;
+  border-radius:50%;
+  animation:livepulse 1.4s ease infinite;
+}
+@keyframes livepulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+.stat-pill{
+  display:flex;flex-direction:column;
+  flex-shrink:0;
+}
+.stat-pill-num{
+  font-family:var(--font-display);
+  font-size:1.6rem;
+  color:var(--acid);
+  line-height:1;
+  letter-spacing:-0.01em;
+}
+.stat-pill-label{
+  font-family:var(--font-mono);
+  font-size:0.55rem;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  color:var(--mid);
+  margin-top:0.1rem;
+}
+.stat-sep{
+  font-size:0.5rem;
+  color:rgba(232,255,0,0.2);
+  flex-shrink:0;
+}
+
+/* ── SPOTLIGHT ── */
+.spotlight-section{
+  border-top:4px solid var(--black);
+  background:var(--black);
+}
+.spotlight-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  padding:3rem 2.5rem 2rem;
+  border-bottom:2px solid rgba(255,255,255,0.06);
+  flex-wrap:wrap;
+  gap:1.5rem;
+}
+.spot-tag{
+  font-family:var(--font-mono);
+  font-size:0.6rem;
+  letter-spacing:0.3em;
+  text-transform:uppercase;
+  color:var(--acid);
+  margin-bottom:0.5rem;
+}
+.spot-title{
+  font-family:var(--font-display);
+  font-size:clamp(2.5rem,5vw,4.5rem);
+  color:var(--white);
+  line-height:0.9;
+}
+.spot-tabs{
+  display:flex;gap:0;
+  border:2px solid rgba(232,255,0,0.2);
+  flex-wrap:wrap;
+}
+.spot-tab{
+  font-family:var(--font-mono);
+  font-size:0.6rem;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  background:none;
+  border:none;
+  border-right:1px solid rgba(232,255,0,0.15);
+  color:var(--mid);
+  padding:0.7rem 1.2rem;
+  cursor:none;
+  transition:background .2s,color .2s;
+  white-space:nowrap;
+}
+.spot-tab:last-child{border-right:none}
+.spot-tab.active,.spot-tab:hover{background:var(--acid);color:var(--black)}
+.spotlight-body{position:relative}
+.spot-artist{
+  display:none;
+  grid-template-columns:320px 1fr;
+}
+.spot-artist.active{display:grid}
+.spot-left{}
+.spot-art{
+  position:relative;
+  height:100%;
+  min-height:400px;
+  overflow:hidden;
+}
+.spot-art svg{
+  width:100%;height:100%;
+  display:block;
+  object-fit:cover;
+}
+.spot-alert-btn{
+  position:absolute;
+  top:1rem;right:1rem;
+  background:var(--black);
+  border:1.5px solid rgba(232,255,0,0.3);
+  color:var(--mid);
+  font-family:var(--font-mono);
+  font-size:0.55rem;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  padding:0.4rem 0.8rem;
+  cursor:none;
+  display:flex;align-items:center;gap:0.4rem;
+  transition:background .2s,color .2s,border-color .2s;
+}
+.spot-alert-btn:hover,.spot-alert-btn.alerted{
+  background:var(--acid);color:var(--black);border-color:var(--acid);
+}
+.spot-right{
+  padding:2.5rem;
+  display:flex;flex-direction:column;gap:1.5rem;
+  background:var(--black);
+}
+.spot-bio-top{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  gap:1rem;flex-wrap:wrap;
+}
+.spot-artist-name{
+  font-family:var(--font-display);
+  font-size:2.5rem;
+  color:var(--white);
+  line-height:1;
+  margin-bottom:0.3rem;
+}
+.spot-artist-meta{
+  font-family:var(--font-mono);
+  font-size:0.6rem;
+  letter-spacing:0.1em;
+  color:var(--mid);
+  text-transform:uppercase;
+}
+.spot-stats-mini{
+  display:flex;gap:2rem;flex-shrink:0;
+}
+.spot-stats-mini > div{text-align:right}
+.spot-stat-num{
+  display:block;
+  font-family:var(--font-display);
+  font-size:1.5rem;
+  color:var(--acid);
+  line-height:1;
+}
+.spot-stat-l{
+  font-family:var(--font-mono);
+  font-size:0.55rem;
+  letter-spacing:0.1em;
+  color:var(--mid);
+  text-transform:uppercase;
+}
+.spot-bio-text{
+  font-family:var(--font-body);
+  font-size:0.9rem;
+  line-height:1.75;
+  color:rgba(245,245,240,0.6);
+  font-weight:300;
+}
+.spot-upcoming-label,.spot-tracks-label{
+  font-family:var(--font-mono);
+  font-size:0.55rem;
+  letter-spacing:0.3em;
+  text-transform:uppercase;
+  color:var(--acid);
+  opacity:0.6;
+  margin-bottom:-0.5rem;
+}
+.spot-show-list{display:flex;flex-direction:column}
+.spot-show-row{
+  display:grid;
+  grid-template-columns:60px 1fr auto auto;
+  align-items:center;
+  padding:0.8rem 0;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  cursor:none;
+  gap:1rem;
+  transition:padding-left .2s;
+}
+.spot-show-row:not(.sold-out-row):hover{padding-left:0.5rem}
+.sold-out-row{opacity:0.5;cursor:default}
+.spot-show-date{
+  font-family:var(--font-mono);
+  font-size:0.6rem;
+  letter-spacing:0.1em;
+  color:var(--mid);
+}
+.spot-show-venue{
+  font-family:var(--font-body);
+  font-size:0.9rem;
+  color:var(--white);
+  font-weight:300;
+}
+.spot-show-price{
+  font-family:var(--font-display);
+  font-size:1rem;
+  color:var(--acid);
+}
+.spot-show-arrow{
+  font-size:0.8rem;
+  color:var(--mid);
+  transition:color .2s;
+}
+.spot-show-row:hover .spot-show-arrow{color:var(--acid)}
+/* Track list */
+.spot-tracks{display:flex;flex-direction:column}
+.spot-track{
+  display:grid;
+  grid-template-columns:24px 32px 1fr auto;
+  align-items:center;
+  gap:0.8rem;
+  padding:0.7rem 0;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  cursor:none;
+  transition:background .2s;
+}
+.spot-track:hover{background:rgba(255,255,255,0.03);padding-left:0.5rem}
+.track-num{
+  font-family:var(--font-mono);
+  font-size:0.55rem;
+  color:rgba(255,255,255,0.2);
+  letter-spacing:0.1em;
+}
+.track-bars{
+  display:flex;align-items:flex-end;gap:2px;
+  height:18px;
+}
+.track-bars span{
+  display:block;
+  width:3px;
+  background:var(--mid);
+  border-radius:1px;
+  height:6px;
+  transition:height .1s;
+}
+.track-bars.playing span:nth-child(1){animation:bar1 .6s ease infinite alternate}
+.track-bars.playing span:nth-child(2){animation:bar2 .5s ease infinite alternate}
+.track-bars.playing span:nth-child(3){animation:bar3 .7s ease infinite alternate}
+.track-bars.playing span:nth-child(4){animation:bar4 .45s ease infinite alternate}
+.track-bars.playing span:nth-child(5){animation:bar5 .65s ease infinite alternate}
+.track-bars.playing span{background:var(--acid)}
+@keyframes bar1{from{height:4px}to{height:14px}}
+@keyframes bar2{from{height:8px}to{height:18px}}
+@keyframes bar3{from{height:5px}to{height:12px}}
+@keyframes bar4{from{height:10px}to{height:16px}}
+@keyframes bar5{from{height:3px}to{height:10px}}
+.track-info{overflow:hidden}
+.track-name{
+  font-family:var(--font-body);
+  font-size:0.85rem;
+  color:var(--white);
+  font-weight:400;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.track-feat{
+  font-family:var(--font-mono);
+  font-size:0.55rem;
+  color:var(--mid);
+  letter-spacing:0.05em;
+}
+.track-dur{
+  font-family:var(--font-mono);
+  font-size:0.6rem;
+  color:var(--mid);
+  letter-spacing:0.1em;
+  flex-shrink:0;
+}
+
+/* ── MY TICKETS ── */
+.tickets-panel-section{
+  border-top:4px solid var(--black);
+  background:var(--white);
+  padding:5rem 2.5rem;
+}
+.tickets-panel-inner{
+  max-width:1300px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:1fr 1.6fr;
+  gap:5rem;
+  align-items:start;
+}
+.tp-tag{
+  font-family:var(--font-mono);
+  font-size:0.6rem;
+  letter-spacing:0.3em;
+  text-transform:uppercase;
+  color:var(--mid);
+  margin-bottom:0.8rem;
+}
+.tp-title{
+  font-family:var(--font-display);
+  font-size:clamp(3rem,6vw,5rem);
+  line-height:0.9;
+  margin-bottom:1.5rem;
+}
+.tp-desc{
+  font-family:var(--font-body);
+  font-size:0.95rem;
+  line-height:1.75;
+  color:var(--mid);
+  font-weight:300;
+  margin-bottom:2rem;
+}
+.tp-actions{display:flex;gap:1rem;flex-wrap:wrap}
+.tickets-panel-right{
+  display:flex;flex-direction:column;gap:3px;
+  background:var(--black);
+  padding:3px;
+}
+.my-ticket-card{
+  display:grid;
+  grid-template-columns:70px 1fr auto;
+  align-items:center;
+  gap:1.2rem;
+  padding:1.2rem 1.5rem;
+  background:var(--white);
+  border-left:4px solid var(--black);
+  transition:border-color .25s,background .25s;
+  cursor:none;
+}
+.my-ticket-card:hover{border-color:var(--acid);background:#f0f0e8}
+.my-ticket-card.past{opacity:0.5;border-left-color:var(--mid)}
+.mtc-left{}
+.mtc-date-block{text-align:center}
+.mtc-month{
+  font-family:var(--font-mono);
+  font-size:0.55rem;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  color:var(--mid);
+}
+.mtc-day{
+  font-family:var(--font-display);
+  font-size:2.2rem;
+  line-height:1;
+}
+.mtc-artist{
+  font-family:var(--font-display);
+  font-size:1.3rem;
+  line-height:1;
+  margin-bottom:0.2rem;
+}
+.mtc-venue{
+  font-family:var(--font-mono);
+  font-size:0.6rem;
+  letter-spacing:0.08em;
+  color:var(--mid);
+  text-transform:uppercase;
+  margin-bottom:0.2rem;
+}
+.mtc-type{
+  font-family:var(--font-mono);
+  font-size:0.55rem;
+  letter-spacing:0.1em;
+  color:var(--black);
+  text-transform:uppercase;
+}
+.mtc-right{
+  display:flex;flex-direction:column;align-items:center;gap:0.5rem;
+}
+.mtc-qr{
+  border:1.5px solid rgba(0,0,0,0.15);
+  padding:0.4rem;
+}
+.mtc-status{
+  font-family:var(--font-mono);
+  font-size:0.5rem;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  padding:0.2rem 0.5rem;
+}
+.mtc-status.upcoming{background:var(--acid);color:var(--black)}
+.mtc-status.past{background:rgba(0,0,0,0.1);color:var(--mid)}
+.tp-login-cta{
+  background:var(--black);
+  padding:1rem 1.5rem;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:1rem;flex-wrap:wrap;
+}
+
+/* ── PROMOTER ── */
+.promoter-section{
+  border-top:4px solid var(--acid);
+  background:var(--black);
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  min-height:70vh;
+}
+.promoter-left{
+  padding:5rem 3.5rem;
+  border-right:3px solid rgba(232,255,0,0.15);
+  display:flex;flex-direction:column;
+  justify-content:center;
+}
+.pro-tag{
+  font-family:var(--font-mono);
+  font-size:0.6rem;
+  letter-spacing:0.3em;
+  text-transform:uppercase;
+  color:var(--acid);
+  margin-bottom:1rem;
+}
+.pro-title{
+  font-family:var(--font-display);
+  font-size:clamp(3rem,5.5vw,5.5rem);
+  color:var(--white);
+  line-height:0.88;
+  margin-bottom:1.5rem;
+}
+.pro-title span{color:var(--acid)}
+.pro-desc{
+  font-family:var(--font-body);
+  font-size:0.95rem;
+  line-height:1.75;
+  color:var(--mid);
+  font-weight:300;
+  max-width:400px;
+  margin-bottom:2rem;
+}
+.pro-perks{display:flex;flex-direction:column;gap:1.2rem}
+.pro-perk{
+  display:flex;align-items:flex-start;gap:1rem;
+  padding:1rem;
+  border:1px solid rgba(232,255,0,0.08);
+  transition:border-color .3s,background .3s;
+  cursor:default;
+}
+.pro-perk:hover{border-color:rgba(232,255,0,0.25);background:rgba(232,255,0,0.03)}
+.pro-perk-icon{flex-shrink:0;padding-top:0.2rem}
+.pro-perk-title{
+  font-family:var(--font-display);
+  font-size:1rem;
+  color:var(--white);
+  margin-bottom:0.2rem;
+}
+.pro-perk-sub{
+  font-family:var(--font-mono);
+  font-size:0.6rem;
+  letter-spacing:0.06em;
+  color:var(--mid);
+  line-height:1.6;
+}
+.promoter-right{
+  padding:3rem 2.5rem;
+  display:flex;align-items:center;justify-content:center;
+  background:#060606;
+}
+.pro-dashboard{
+  width:100%;max-width:460px;
+  background:#0f0f0f;
+  border:1.5px solid rgba(232,255,0,0.15);
+  overflow:hidden;
+}
+.pro-dash-header{
+  background:#000;
+  border-bottom:1.5px solid rgba(232,255,0,0.1);
+  padding:0.8rem 1.2rem;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.pro-dash-logo{
+  font-family:var(--font-display);
+  font-size:0.9rem;
+  letter-spacing:0.1em;
+  color:var(--white);
+}
+.pro-dash-status{
+  font-family:var(--font-mono);
+  font-size:0.55rem;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  color:#22c55e;
+  display:flex;align-items:center;
+}
+.pro-dash-event{
+  padding:1.2rem;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.pro-dash-stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.pro-ds{
+  padding:1rem 1.2rem;
+  border-right:1px solid rgba(255,255,255,0.05);
+}
+.pro-ds:last-child{border-right:none}
+.pro-ds-num{
+  font-family:var(--font-display);
+  font-size:1.6rem;
+  color:var(--white);
+  line-height:1;
+  margin-bottom:0.2rem;
+}
+.pro-ds-label{
+  font-family:var(--font-mono);
+  font-size:0.5rem;
+  letter-spacing:0.1em;
+  color:var(--mid);
+  text-transform:uppercase;
+}
+.pro-chart{
+  padding:0.8rem 1.2rem 0.2rem;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.pro-dash-payout{
+  padding:1rem 1.2rem;
+}
+
+/* ── FAQ ── */
+.freq-faq-section{
+  border-top:4px solid var(--black);
+  background:var(--white);
+  padding:5rem 2.5rem;
+}
+.freq-faq-inner{
+  max-width:1300px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:280px 1fr;
+  gap:6rem;
+  align-items:start;
+}
+.freq-faq-head{position:sticky;top:5rem}
+.freq-faq-title{
+  font-family:var(--font-display);
+  font-size:clamp(3rem,5vw,4.5rem);
+  line-height:0.9;
+  margin-top:0.5rem;
+}
+.freq-faq-list{display:flex;flex-direction:column}
+.fq-item{border-bottom:2px solid var(--black)}
+.fq-q{
+  width:100%;background:none;border:none;
+  text-align:left;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:1rem;
+  padding:1.3rem 0;
+  font-family:var(--font-body);
+  font-size:1rem;
+  font-weight:500;
+  color:var(--black);
+  cursor:none;
+  transition:color .2s;
+}
+.fq-q:hover{color:var(--blue)}
+.fq-icon{
+  font-family:var(--font-mono);
+  font-size:1.2rem;
+  font-weight:300;
+  color:var(--mid);
+  flex-shrink:0;
+  width:24px;text-align:center;
+  transition:transform .3s,color .2s;
+}
+.fq-item.open .fq-icon{transform:rotate(45deg);color:var(--black)}
+.fq-a{
+  font-family:var(--font-body);
+  font-size:0.9rem;
+  line-height:1.8;
+  color:var(--mid);
+  font-weight:300;
+  max-height:0;overflow:hidden;
+  transition:max-height .4s ease,padding .3s;
+}
+.fq-item.open .fq-a{max-height:200px;padding-bottom:1.2rem}
+
+/* Mobile additions */
+@media(max-width:900px){
+  .spotlight-section .spot-artist.active{grid-template-columns:1fr}
+  .spot-left{display:none}
+  .promoter-section{grid-template-columns:1fr}
+  .promoter-right{display:none}
+  .tickets-panel-inner{grid-template-columns:1fr}
+  .freq-faq-inner{grid-template-columns:1fr;gap:2rem}
+  .freq-faq-head{position:static}
+  .live-stats-bar{gap:1.2rem;padding:1rem 1.5rem}
+}
+@media(max-width:600px){
+  .spotlight-header{flex-direction:column;align-items:flex-start}
+  .spot-bio-top{flex-direction:column}
+  .spot-stats-mini{flex-direction:row;gap:1.5rem}
+  .spot-stats-mini > div{text-align:left}
+  .my-ticket-card{grid-template-columns:55px 1fr}
+  .mtc-right{display:none}
+  .promoter-left{padding:3rem 1.5rem}
+  .freq-faq-section{padding:3rem 1.5rem}
+  .tickets-panel-section{padding:3rem 1.5rem}
+}
+
+/* ── 
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr}
+  .hero-right{display:none}
+  .feature-split{grid-template-columns:1fr}
+  .feature-left{min-height:60vw}
+  .show-row{grid-template-columns:60px 1fr auto;height:auto;padding:1rem 1.2rem;gap:0.5rem}
+  .show-venue,.show-genre{display:none}
+  .venues-grid{grid-template-columns:1fr}
+  .how-grid{grid-template-columns:1fr 1fr}
+  .testi-grid{grid-template-columns:1fr}
+  .newsletter-section{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr 1fr}
+  .footer-bottom{flex-direction:column;text-align:center}
+  .shows-header{grid-template-columns:1fr;gap:1rem}
+  .shows-filter{flex-wrap:wrap}
+  .genres-grid{gap:2px}
+  .modal-show-info{grid-template-columns:1fr}
+  body{cursor:auto}
+  .cur,.cur-ring{display:none}
+}
+@media(max-width:600px){
+  .nav-links{display:none}
+  .nav-ham{display:flex}
+  .how-grid{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr}
+  .nl-row{flex-direction:column}
+  .ticket-type{grid-template-columns:auto 1fr;gap:0.5rem}
+  .tt-qty,.tt-price{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cur" id="cur"></div>
+<div class="cur-ring" id="cur-ring"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">FREQ</a>
+  <ul class="nav-links">
+    <li><a href="#shows">Shows</a></li>
+    <li><a href="#artist-spotlight">Artists</a></li>
+    <li><a href="#venues">Venues</a></li>
+    <li><a href="#genres">Genres</a></li>
+    <li><a href="#promoter">Promoters</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:0.5rem">
+    <button class="nav-ticket" onclick="openModal('ARTIST NAME','The Warehouse, Accra','Jun 12','GHS 120')">Get Tickets</button>
+    <button class="nav-ham" id="nav-ham" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- MOBILE MENU OVERLAY -->
+<div class="mob-overlay" id="mob-overlay">
+  <div class="mob-menu">
+    <div class="mob-menu-top">
+      <span class="mob-logo">FREQ</span>
+      <button class="mob-close" id="mob-close">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 3l16 16M19 3L3 19" stroke="#E8FF00" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <ul class="mob-links">
+      <li><a href="#shows">Shows</a></li>
+      <li><a href="#artist-spotlight">Artists</a></li>
+      <li><a href="#venues">Venues</a></li>
+      <li><a href="#genres">Genres</a></li>
+      <li><a href="#promoter">Promoters</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <div class="mob-bottom">
+      <button class="btn-acid" style="width:100%;justify-content:center" onclick="openModal('ARTIST NAME','The Warehouse, Accra','Jun 12','GHS 120');closeMobMenu()">
+        Get Tickets
+      </button>
+      <div style="font-family:var(--font-mono);font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(232,255,0,0.3);text-align:center;margin-top:1rem">FREQ © 2025 · Accra, Ghana</div>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">2025 Season — Now Live</p>
+    <h1 class="hero-title">
+      FEEL<br>
+      THE<br>
+      <span class="acid">FREQ</span><br>
+      <span class="outline">UENCY</span>
+    </h1>
+    <p class="hero-sub">Ghana's most electric concert platform. Discover, book, and feel live music from the underground to the arena. No bots. No hidden fees. Just the music.</p>
+    <div class="hero-ctas">
+      <a href="#shows" class="btn-acid">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Browse Shows
+      </a>
+      <a href="#about" class="btn-ghost-w">How It Works</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <!-- Oscilloscope -->
+    <div class="scope-wrap">
+      <svg class="scope-svg" viewBox="0 0 460 200" xmlns="http://www.w3.org/2000/svg">
+        <rect width="460" height="200" fill="#0a0a0a"/>
+        <!-- Grid -->
+        <line x1="0" y1="50" x2="460" y2="50" stroke="#1a1a1a" stroke-width="1"/>
+        <line x1="0" y1="100" x2="460" y2="100" stroke="#222" stroke-width="1"/>
+        <line x1="0" y1="150" x2="460" y2="150" stroke="#1a1a1a" stroke-width="1"/>
+        <line x1="115" y1="0" x2="115" y2="200" stroke="#1a1a1a" stroke-width="1"/>
+        <line x1="230" y1="0" x2="230" y2="200" stroke="#1a1a1a" stroke-width="1"/>
+        <line x1="345" y1="0" x2="345" y2="200" stroke="#1a1a1a" stroke-width="1"/>
+        <!-- Waveform - compound wave -->
+        <polyline id="scope-wave"
+          points="0,100 8,85 16,62 24,48 32,52 40,72 48,92 56,100 64,95 72,75 80,55 88,45 96,50 104,68 112,88 120,100 128,88 136,68 144,50 152,45 160,55 168,75 176,95 184,100 192,92 200,72 208,52 216,48 224,62 232,85 240,100 248,108 256,122 264,138 272,148 280,145 288,130 296,112 304,100 312,95 320,82 328,70 336,68 344,75 352,88 360,100 368,105 376,112 384,115 392,108 400,98 408,92 416,88 424,90 432,96 440,100 448,102 460,100"
+          fill="none" stroke="#E8FF00" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- Glow layer -->
+        <polyline
+          points="0,100 8,85 16,62 24,48 32,52 40,72 48,92 56,100 64,95 72,75 80,55 88,45 96,50 104,68 112,88 120,100 128,88 136,68 144,50 152,45 160,55 168,75 176,95 184,100 192,92 200,72 208,52 216,48 224,62 232,85 240,100 248,108 256,122 264,138 272,148 280,145 288,130 296,112 304,100 312,95 320,82 328,70 336,68 344,75 352,88 360,100 368,105 376,112 384,115 392,108 400,98 408,92 416,88 424,90 432,96 440,100 448,102 460,100"
+          fill="none" stroke="#E8FF00" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.12"/>
+        <!-- Playhead -->
+        <line id="playhead" x1="0" y1="0" x2="0" y2="200" stroke="#E8FF00" stroke-width="1.5" opacity="0.6"/>
+        <!-- Labels -->
+        <text x="8" y="14" font-family="Courier New" font-size="9" fill="#E8FF00" opacity="0.5" letter-spacing="2">CH1</text>
+        <text x="380" y="14" font-family="Courier New" font-size="9" fill="#E8FF00" opacity="0.5" letter-spacing="2">LIVE</text>
+        <circle cx="446" cy="10" r="4" fill="#E8FF00" opacity="0.8">
+          <animate attributeName="opacity" values="0.8;0.1;0.8" dur="1.2s" repeatCount="indefinite"/>
+        </circle>
+      </svg>
+    </div>
+
+    <!-- Featured show card -->
+    <div style="width:100%;max-width:500px;margin-top:1.5rem;border:2px solid var(--black);background:var(--white);position:relative;z-index:1">
+      <div style="background:var(--black);padding:0.6rem 1rem;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-family:var(--font-mono);font-size:0.55rem;letter-spacing:0.2em;color:var(--acid);text-transform:uppercase">◈ Tonight's Pick</span>
+        <span style="font-family:var(--font-mono);font-size:0.55rem;letter-spacing:0.15em;color:var(--mid);text-transform:uppercase">Doors 8PM</span>
+      </div>
+      <div style="padding:1.2rem 1.2rem;display:grid;grid-template-columns:1fr auto;align-items:center;gap:1rem">
+        <div>
+          <div style="font-family:var(--font-display);font-size:1.8rem;line-height:1;margin-bottom:0.3rem">SEFA</div>
+          <div style="font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.15em;color:var(--mid);text-transform:uppercase">Afropop · Alliance Française, Accra</div>
+        </div>
+        <button class="btn-acid" style="font-size:0.6rem;padding:0.7rem 1rem;white-space:nowrap" onclick="openModal('SEFA','Alliance Française, Accra','Tonight','GHS 150')">
+          Book Now
+        </button>
+      </div>
+    </div>
+
+    <!-- Spinning badge -->
+    <div class="hero-badge" style="z-index:1">
+      <div class="hero-badge-inner">
+        <div class="badge-num">47</div>
+        <div class="badge-label">Shows<br>This Month</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ticker -->
+  <div class="hero-ticker">
+    <div class="ticker-track">
+      <span class="ticker-item">Stonebwoy <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Amaarae <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Black Sherif <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Sarkodie <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Gyakie <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">KiDi <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Ayra Starr <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Burna Boy <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Tems <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Stonebwoy <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Amaarae <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Black Sherif <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Sarkodie <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Gyakie <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">KiDi <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Ayra Starr <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Burna Boy <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Tems <span class="ticker-dot">◆</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- SHOWS -->
+<section id="shows" class="shows-section">
+  <div class="shows-header">
+    <div class="shows-title-block">
+      <h2 class="shows-big-title">UPCOMING</h2>
+      <span class="shows-count">47 shows</span>
+    </div>
+    <div style="flex:1"></div>
+    <div class="shows-filter">
+      <button class="filter-btn active" onclick="filterShows(this,'all')">All</button>
+      <button class="filter-btn" onclick="filterShows(this,'afro')">Afrobeats</button>
+      <button class="filter-btn" onclick="filterShows(this,'hiphop')">Hip-Hop</button>
+      <button class="filter-btn" onclick="filterShows(this,'alt')">Alt / Indie</button>
+      <button class="filter-btn" onclick="filterShows(this,'jazz')">Jazz</button>
+      <button class="filter-btn" onclick="filterShows(this,'electronic')">Electronic</button>
+    </div>
+  </div>
+
+  <div class="show-list" id="show-list">
+    <!-- Row 1 -->
+    <div class="show-row" data-genre="afro" onclick="openModal('Stonebwoy','Accra Sports Stadium','Jun 14','GHS 250')">
+      <div class="show-date"><strong>14</strong>JUN</div>
+      <div class="show-artist">Stonebwoy</div>
+      <div class="show-venue">Accra Sports Stadium</div>
+      <div class="show-genre acid-tag">Afrobeats</div>
+      <div class="show-price">GHS 250<span>from</span></div>
+    </div>
+    <div class="show-row" data-genre="hiphop" onclick="openModal('Sarkodie','Accra International Conference Centre','Jun 20','GHS 180')">
+      <div class="show-date"><strong>20</strong>JUN</div>
+      <div class="show-artist">Sarkodie</div>
+      <div class="show-venue">Accra Int'l Conference Centre</div>
+      <div class="show-genre">Hip-Hop</div>
+      <div class="show-price">GHS 180<span>from</span></div>
+    </div>
+    <div class="show-row" data-genre="alt" onclick="openModal('Amaarae','Alliance Française','Jun 22','GHS 120')">
+      <div class="show-date"><strong>22</strong>JUN</div>
+      <div class="show-artist">Amaarae</div>
+      <div class="show-venue">Alliance Française, Accra</div>
+      <div class="show-genre">Alt / Indie</div>
+      <div class="show-price">GHS 120<span>from</span></div>
+    </div>
+    <div class="show-row sold-out" data-genre="afro">
+      <div class="show-date"><strong>28</strong>JUN</div>
+      <div class="show-artist">Black Sherif</div>
+      <div class="show-venue">Fantasy Dome, Accra</div>
+      <div class="sold-stamp">SOLD OUT</div>
+      <div class="show-price">GHS 200<span>from</span></div>
+    </div>
+    <div class="show-row" data-genre="jazz" onclick="openModal('Worlasi + Friends','National Theatre','Jul 3','GHS 90')">
+      <div class="show-date"><strong>03</strong>JUL</div>
+      <div class="show-artist">Worlasi + Friends</div>
+      <div class="show-venue">National Theatre, Accra</div>
+      <div class="show-genre">Jazz / Folk</div>
+      <div class="show-price">GHS 90<span>from</span></div>
+    </div>
+    <div class="show-row" data-genre="electronic" onclick="openModal('Afrobeats Rave Night','The Warehouse','Jul 5','GHS 80')">
+      <div class="show-date"><strong>05</strong>JUL</div>
+      <div class="show-artist">Afrobeats Rave Night</div>
+      <div class="show-venue">The Warehouse, Accra</div>
+      <div class="show-genre">Electronic</div>
+      <div class="show-price">GHS 80<span>from</span></div>
+    </div>
+    <div class="show-row" data-genre="afro" onclick="openModal('Gyakie','Kempinski Hotel','Jul 10','GHS 200')">
+      <div class="show-date"><strong>10</strong>JUL</div>
+      <div class="show-artist">Gyakie</div>
+      <div class="show-venue">Kempinski Hotel, Accra</div>
+      <div class="show-genre">Afrobeats</div>
+      <div class="show-price">GHS 200<span>from</span></div>
+    </div>
+    <div class="show-row" data-genre="hiphop" onclick="openModal('KiDi','Silver Star Tower','Jul 15','GHS 160')">
+      <div class="show-date"><strong>15</strong>JUL</div>
+      <div class="show-artist">KiDi</div>
+      <div class="show-venue">Silver Star Tower Events</div>
+      <div class="show-genre">Afropop</div>
+      <div class="show-price">GHS 160<span>from</span></div>
+    </div>
+    <div class="show-row" data-genre="electronic" onclick="openModal('Subground Festival','Labadi Beach','Jul 19','GHS 100')">
+      <div class="show-date"><strong>19</strong>JUL</div>
+      <div class="show-artist">Subground Festival</div>
+      <div class="show-venue">Labadi Beach, Accra</div>
+      <div class="show-genre">Electronic</div>
+      <div class="show-price">GHS 100<span>from</span></div>
+    </div>
+    <div class="show-row" data-genre="alt" onclick="openModal('Ria Boss','Skybar 25','Aug 2','GHS 140')">
+      <div class="show-date"><strong>02</strong>AUG</div>
+      <div class="show-artist">Ria Boss</div>
+      <div class="show-venue">Skybar 25, Accra</div>
+      <div class="show-genre">Alt / R&B</div>
+      <div class="show-price">GHS 140<span>from</span></div>
+    </div>
+  </div>
+
+  <div style="padding:1.5rem 2.5rem;border-top:2px solid var(--black);display:flex;justify-content:center">
+    <a href="#" class="btn-acid" style="background:transparent;color:var(--black);border-color:var(--black)">
+      Load All 47 Shows
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- FEATURE / HEADLINER -->
+<div class="feature-split">
+  <div class="feature-left">
+    <div>
+      <div class="feature-tag">◈ Festival Headliner — August 2025</div>
+    </div>
+    <div class="feature-artist-name">
+      BURNA<br>BOY
+    </div>
+    <div class="feature-meta">
+      <div class="feature-meta-item">
+        Date<strong>AUG 23</strong>
+      </div>
+      <div class="feature-meta-item">
+        Venue<strong>Sports Stadium</strong>
+      </div>
+      <div class="feature-meta-item">
+        Capacity<strong>40,000</strong>
+      </div>
+    </div>
+    <button class="btn-dark" onclick="openModal('Burna Boy','Accra Sports Stadium','Aug 23','GHS 350')">
+      Get Festival Tickets
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+  <div class="feature-right">
+    <div>
+      <div class="lineup-label">Also on the bill</div>
+      <div class="lineup-list">
+        <div class="lineup-item">
+          <div class="lineup-name">Stonebwoy</div>
+          <div class="lineup-time">Stage 1 · 7:00 PM</div>
+        </div>
+        <div class="lineup-item">
+          <div class="lineup-name">Black Sherif</div>
+          <div class="lineup-time">Stage 2 · 7:45 PM</div>
+        </div>
+        <div class="lineup-item">
+          <div class="lineup-name">Amaarae</div>
+          <div class="lineup-time">Stage 1 · 8:30 PM</div>
+        </div>
+        <div class="lineup-item">
+          <div class="lineup-name">Ayra Starr</div>
+          <div class="lineup-time">Stage 2 · 9:15 PM</div>
+        </div>
+        <div class="lineup-item">
+          <div class="lineup-name">Burna Boy</div>
+          <div class="lineup-time" style="color:var(--blue);font-weight:700">HEADLINER · 10:30 PM</div>
+        </div>
+      </div>
+    </div>
+    <div style="padding:1.5rem;background:rgba(0,0,0,0.04);border:2px solid rgba(0,0,0,0.08)">
+      <div style="font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);margin-bottom:0.8rem">Tickets selling fast</div>
+      <div style="display:flex;gap:0;height:8px;margin-bottom:0.5rem">
+        <div style="flex:0.72;background:var(--black)"></div>
+        <div style="flex:0.28;background:rgba(0,0,0,0.1)"></div>
+      </div>
+      <div style="font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.1em;color:var(--mid)">72% sold · 11,200 remaining</div>
+    </div>
+  </div>
+</div>
+
+<!-- WAVEFORM DIVIDER -->
+<div class="wave-divider">
+  <canvas id="wave-canvas"></canvas>
+</div>
+
+<!-- VENUES -->
+<section id="venues" class="venues-section">
+  <div class="venues-heading">
+    <h2 class="venues-title">VENUES<br><span>IN ACCRA</span></h2>
+    <a href="#" class="venues-see-all">View All Cities ▸</a>
+  </div>
+  <div class="venues-grid">
+    <div class="venue-card" data-cap="40K">
+      <div>
+        <div class="venue-num">01 / 06</div>
+        <div class="venue-name">Accra Sports Stadium</div>
+        <div class="venue-city">Accra, Greater Accra</div>
+      </div>
+      <div class="venue-cap-row">
+        <div>
+          <div class="venue-cap-label">Capacity</div>
+          <div class="venue-cap-num">40K</div>
+        </div>
+        <div class="venue-arrow">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#E8FF00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="venue-card" data-cap="5K">
+      <div>
+        <div class="venue-num">02 / 06</div>
+        <div class="venue-name">Fantasy Dome</div>
+        <div class="venue-city">Trade Fair, Accra</div>
+      </div>
+      <div class="venue-cap-row">
+        <div>
+          <div class="venue-cap-label">Capacity</div>
+          <div class="venue-cap-num">5K</div>
+        </div>
+        <div class="venue-arrow">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#E8FF00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="venue-card" data-cap="1.2K">
+      <div>
+        <div class="venue-num">03 / 06</div>
+        <div class="venue-name">Alliance Française</div>
+        <div class="venue-city">Roman Ridge, Accra</div>
+      </div>
+      <div class="venue-cap-row">
+        <div>
+          <div class="venue-cap-label">Capacity</div>
+          <div class="venue-cap-num">1.2K</div>
+        </div>
+        <div class="venue-arrow">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#E8FF00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="venue-card" data-cap="800">
+      <div>
+        <div class="venue-num">04 / 06</div>
+        <div class="venue-name">National Theatre</div>
+        <div class="venue-city">Accra, Greater Accra</div>
+      </div>
+      <div class="venue-cap-row">
+        <div>
+          <div class="venue-cap-label">Capacity</div>
+          <div class="venue-cap-num">800</div>
+        </div>
+        <div class="venue-arrow">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#E8FF00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="venue-card" data-cap="3K">
+      <div>
+        <div class="venue-num">05 / 06</div>
+        <div class="venue-name">The Warehouse</div>
+        <div class="venue-city">Tema, Greater Accra</div>
+      </div>
+      <div class="venue-cap-row">
+        <div>
+          <div class="venue-cap-label">Capacity</div>
+          <div class="venue-cap-num">3K</div>
+        </div>
+        <div class="venue-arrow">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#E8FF00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="venue-card" data-cap="∞">
+      <div>
+        <div class="venue-num">06 / 06</div>
+        <div class="venue-name">Labadi Beach</div>
+        <div class="venue-city">La, Accra</div>
+      </div>
+      <div class="venue-cap-row">
+        <div>
+          <div class="venue-cap-label">Capacity</div>
+          <div class="venue-cap-num">∞</div>
+        </div>
+        <div class="venue-arrow">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#E8FF00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GENRES -->
+<section id="genres" class="genres-section">
+  <div class="genres-top">
+    <h2 class="genres-title">BROWSE<br>BY SOUND</h2>
+  </div>
+  <div class="genres-grid">
+    <div class="genre-pill acid-fill">Afrobeats</div>
+    <div class="genre-pill">Hip-Hop</div>
+    <div class="genre-pill">Highlife</div>
+    <div class="genre-pill">Afropop</div>
+    <div class="genre-pill">Electronic</div>
+    <div class="genre-pill">Gospel</div>
+    <div class="genre-pill">Jazz</div>
+    <div class="genre-pill">Reggae</div>
+    <div class="genre-pill">Dancehall</div>
+    <div class="genre-pill">R&amp;B / Soul</div>
+    <div class="genre-pill">Indie</div>
+    <div class="genre-pill">Spoken Word</div>
+    <div class="genre-pill">Drill</div>
+    <div class="genre-pill">Amapiano</div>
+  </div>
+</section>
+
+<!-- WAVEFORM DIVIDER 2 -->
+<div class="wave-divider" style="background:var(--black);border-color:var(--acid)">
+  <canvas id="wave-canvas-2"></canvas>
+</div>
+
+<!-- HOW IT WORKS -->
+<section id="about" class="how-section">
+  <h2 class="how-title">HOW<br><span>FREQ</span><br>WORKS</h2>
+  <div class="how-grid">
+    <div class="how-card">
+      <div class="how-step">01</div>
+      <div class="how-icon">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="4" y="8" width="32" height="24" rx="2" stroke="#E8FF00" stroke-width="1.5"/><circle cx="20" cy="20" r="6" stroke="#E8FF00" stroke-width="1.5"/><line x1="4" y1="14" x2="36" y2="14" stroke="#E8FF00" stroke-width="1"/></svg>
+      </div>
+      <div class="how-name">Discover</div>
+      <div class="how-desc">Browse 47+ shows across Accra, Kumasi, Takoradi, and beyond. Filter by genre, venue, date, or price. No account needed to browse.</div>
+    </div>
+    <div class="how-card">
+      <div class="how-step">02</div>
+      <div class="how-icon">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="8" y="4" width="24" height="32" rx="2" stroke="#E8FF00" stroke-width="1.5"/><line x1="14" y1="12" x2="26" y2="12" stroke="#E8FF00" stroke-width="1.5"/><line x1="14" y1="18" x2="26" y2="18" stroke="#E8FF00" stroke-width="1.5"/><line x1="14" y1="24" x2="20" y2="24" stroke="#E8FF00" stroke-width="1.5"/></svg>
+      </div>
+      <div class="how-name">Select</div>
+      <div class="how-desc">Pick your show, choose your ticket tier — General Admission, VIP, or Table. See exactly what's left in real time.</div>
+    </div>
+    <div class="how-card">
+      <div class="how-step">03</div>
+      <div class="how-icon">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="6" y="10" width="28" height="20" rx="2" stroke="#E8FF00" stroke-width="1.5"/><line x1="6" y1="16" x2="34" y2="16" stroke="#E8FF00" stroke-width="1.5"/><line x1="14" y1="22" x2="18" y2="22" stroke="#E8FF00" stroke-width="1.5"/><rect x="22" y="20" width="6" height="4" rx="1" stroke="#E8FF00" stroke-width="1"/></svg>
+      </div>
+      <div class="how-name">Pay</div>
+      <div class="how-desc">Checkout with Mobile Money, card, or bank transfer. No hidden booking fees. The price you see is the price you pay.</div>
+    </div>
+    <div class="how-card">
+      <div class="how-step">04</div>
+      <div class="how-icon">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="8" y="8" width="24" height="24" rx="2" stroke="#E8FF00" stroke-width="1.5"/><path d="M14 20l4 4 8-8" stroke="#E8FF00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="how-name">Go</div>
+      <div class="how-desc">Your QR ticket arrives instantly by SMS and WhatsApp. Scan at the gate. No print required. No queues.</div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testi-section">
+  <h2 style="font-family:var(--font-display);font-size:clamp(2.5rem,5vw,5rem);line-height:0.9;margin-bottom:3rem;position:relative;z-index:1">WHAT PEOPLE<br>ARE SAYING</h2>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-quote">"Bought my Stonebwoy tickets in under 2 minutes. QR code came on WhatsApp immediately. Scanned at the gate in 10 seconds. FREQ is the move."</div>
+      <div class="testi-author">Kwame A. — Accra</div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-quote">"Finally a Ghanaian ticketing platform that doesn't feel like it was built in 2009. The design is mad, the experience is smooth."</div>
+      <div class="testi-author">Abena M. — Kumasi</div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★☆</div>
+      <div class="testi-quote">"Bought a VIP table for my girlfriend's birthday. Staff at the venue already had our names. Zero stress. Would be 5 stars if they added Tamale shows."</div>
+      <div class="testi-author">Ibrahim D. — Tamale</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- LIVE PLATFORM STATS BAR -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="live-stats-bar" id="live-stats">
+  <div class="live-dot-wrap">
+    <span class="live-dot"></span>
+    <span style="font-family:var(--font-mono);font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--acid)">LIVE</span>
+  </div>
+  <div class="stat-pill">
+    <span class="stat-pill-num" id="s-tickets">12,847</span>
+    <span class="stat-pill-label">Tickets Sold Today</span>
+  </div>
+  <div class="stat-sep">◆</div>
+  <div class="stat-pill">
+    <span class="stat-pill-num" id="s-shows">47</span>
+    <span class="stat-pill-label">Active Shows</span>
+  </div>
+  <div class="stat-sep">◆</div>
+  <div class="stat-pill">
+    <span class="stat-pill-num" id="s-artists">184</span>
+    <span class="stat-pill-label">Artists on Platform</span>
+  </div>
+  <div class="stat-sep">◆</div>
+  <div class="stat-pill">
+    <span class="stat-pill-num" id="s-fans">68,200</span>
+    <span class="stat-pill-label">Registered Fans</span>
+  </div>
+  <div class="stat-sep">◆</div>
+  <div class="stat-pill">
+    <span class="stat-pill-num" id="s-venues">23</span>
+    <span class="stat-pill-label">Partner Venues</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- ARTIST SPOTLIGHT -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="artist-spotlight" class="spotlight-section">
+  <div class="spotlight-header">
+    <div>
+      <div class="spot-tag">◈ Artist Spotlight</div>
+      <h2 class="spot-title">IN THE<br>ROTATION</h2>
+    </div>
+    <div class="spot-tabs" id="spot-tabs">
+      <button class="spot-tab active" data-artist="0">Stonebwoy</button>
+      <button class="spot-tab" data-artist="1">Amaarae</button>
+      <button class="spot-tab" data-artist="2">Black Sherif</button>
+      <button class="spot-tab" data-artist="3">Gyakie</button>
+    </div>
+  </div>
+
+  <div class="spotlight-body" id="spotlight-body">
+    <!-- Artist 0: Stonebwoy -->
+    <div class="spot-artist active" data-id="0">
+      <div class="spot-left">
+        <div class="spot-art">
+          <svg viewBox="0 0 420 480" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <rect width="420" height="480" fill="#0a0a0a"/>
+            <!-- Abstract figure silhouette -->
+            <ellipse cx="210" cy="110" rx="55" ry="55" fill="#1a1a1a"/>
+            <rect x="155" y="160" width="110" height="180" rx="8" fill="#1a1a1a"/>
+            <!-- Acid accent lines -->
+            <line x1="0" y1="340" x2="420" y2="340" stroke="#E8FF00" stroke-width="2" opacity="0.3"/>
+            <line x1="0" y1="360" x2="420" y2="360" stroke="#E8FF00" stroke-width="1" opacity="0.15"/>
+            <!-- Grid background -->
+            <line x1="0" y1="100" x2="420" y2="100" stroke="#1a1a1a" stroke-width="1"/>
+            <line x1="0" y1="200" x2="420" y2="200" stroke="#1a1a1a" stroke-width="1"/>
+            <line x1="0" y1="300" x2="420" y2="300" stroke="#1a1a1a" stroke-width="1"/>
+            <line x1="140" y1="0" x2="140" y2="480" stroke="#1a1a1a" stroke-width="1"/>
+            <line x1="280" y1="0" x2="280" y2="480" stroke="#1a1a1a" stroke-width="1"/>
+            <!-- Name stamp -->
+            <rect x="0" y="380" width="420" height="60" fill="#E8FF00"/>
+            <text x="16" y="422" font-family="'Black Han Sans',sans-serif" font-size="42" fill="#0a0a0a" letter-spacing="2">STONEBWOY</text>
+            <!-- Genre tag -->
+            <rect x="16" y="350" width="110" height="24" fill="#E8FF00" opacity="0.15"/>
+            <text x="22" y="366" font-family="Courier New" font-size="10" fill="#E8FF00" letter-spacing="3">DANCEHALL</text>
+            <!-- Waveform bands -->
+            <rect x="16" y="450" width="30" height="6" fill="#0a0a0a" opacity="0.4"/>
+            <rect x="52" y="447" width="30" height="9" fill="#0a0a0a" opacity="0.4"/>
+            <rect x="88" y="444" width="30" height="12" fill="#0a0a0a" opacity="0.5"/>
+            <rect x="124" y="440" width="30" height="16" fill="#0a0a0a" opacity="0.6"/>
+          </svg>
+          <div class="spot-alert-btn" id="alert-0" onclick="toggleAlert(0)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1a4 4 0 014 4c0 3 1 4 1 4H2s1-1 1-4a4 4 0 014-4zM5.5 9a1.5 1.5 0 003 0" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            Set Alert
+          </div>
+        </div>
+      </div>
+      <div class="spot-right">
+        <div class="spot-bio-top">
+          <div>
+            <div class="spot-artist-name">Stonebwoy</div>
+            <div class="spot-artist-meta">Afrobeats · Dancehall · Reggae &nbsp;·&nbsp; Ashaiman, Ghana</div>
+          </div>
+          <div class="spot-stats-mini">
+            <div><span class="spot-stat-num">3.2M</span><span class="spot-stat-l">Monthly Listeners</span></div>
+            <div><span class="spot-stat-num">14</span><span class="spot-stat-l">Ghana shows in 2025</span></div>
+          </div>
+        </div>
+        <p class="spot-bio-text">Burniton Music Group founder and multiple VGMA Artist of the Year. Stonebwoy has redefined Ghanaian dancehall on the global stage, blending Ewe rhythms, reggae energy, and trap production. His 2025 Accra stadium run is the most anticipated in years.</p>
+
+        <div class="spot-upcoming-label">Upcoming Shows</div>
+        <div class="spot-show-list">
+          <div class="spot-show-row" onclick="openModal('Stonebwoy','Accra Sports Stadium','Jun 14','GHS 250')">
+            <div class="spot-show-date">JUN 14</div>
+            <div class="spot-show-venue">Accra Sports Stadium</div>
+            <div class="spot-show-price">GHS 250</div>
+            <div class="spot-show-arrow">▸</div>
+          </div>
+          <div class="spot-show-row" onclick="openModal('Stonebwoy','Fantasy Dome, Accra','Jul 26','GHS 200')">
+            <div class="spot-show-date">JUL 26</div>
+            <div class="spot-show-venue">Fantasy Dome, Accra</div>
+            <div class="spot-show-price">GHS 200</div>
+            <div class="spot-show-arrow">▸</div>
+          </div>
+          <div class="spot-show-row" onclick="openModal('Stonebwoy','KNUST Great Hall, Kumasi','Aug 9','GHS 180')">
+            <div class="spot-show-date">AUG 09</div>
+            <div class="spot-show-venue">KNUST Great Hall, Kumasi</div>
+            <div class="spot-show-price">GHS 180</div>
+            <div class="spot-show-arrow">▸</div>
+          </div>
+        </div>
+
+        <div class="spot-tracks-label">Top Tracks</div>
+        <div class="spot-tracks">
+          <div class="spot-track" onclick="playTrack(this)">
+            <div class="track-num">01</div>
+            <div class="track-bars" data-playing="false">
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <div class="track-info"><div class="track-name">Activate</div><div class="track-feat">ft. Mugeez</div></div>
+            <div class="track-dur">3:42</div>
+          </div>
+          <div class="spot-track" onclick="playTrack(this)">
+            <div class="track-num">02</div>
+            <div class="track-bars" data-playing="false">
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <div class="track-info"><div class="track-name">Sobolo</div><div class="track-feat">ft. Koffee</div></div>
+            <div class="track-dur">4:01</div>
+          </div>
+          <div class="spot-track" onclick="playTrack(this)">
+            <div class="track-num">03</div>
+            <div class="track-bars" data-playing="false">
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <div class="track-info"><div class="track-name">Le Gbo</div><div class="track-feat"></div></div>
+            <div class="track-dur">3:28</div>
+          </div>
+          <div class="spot-track" onclick="playTrack(this)">
+            <div class="track-num">04</div>
+            <div class="track-bars" data-playing="false">
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <div class="track-info"><div class="track-name">People Dey</div><div class="track-feat">ft. Keri Hilson</div></div>
+            <div class="track-dur">3:55</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Artist 1: Amaarae -->
+    <div class="spot-artist" data-id="1">
+      <div class="spot-left">
+        <div class="spot-art" style="--art-bg:#0a0a0a;--art-accent:#0028ff">
+          <svg viewBox="0 0 420 480" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <rect width="420" height="480" fill="#050510"/>
+            <circle cx="210" cy="180" r="130" fill="none" stroke="#0028ff" stroke-width="60" opacity="0.06"/>
+            <circle cx="210" cy="180" r="80" fill="none" stroke="#0028ff" stroke-width="2" opacity="0.3"/>
+            <ellipse cx="210" cy="110" rx="50" ry="50" fill="#111120"/>
+            <rect x="160" y="155" width="100" height="170" rx="8" fill="#111120"/>
+            <line x1="0" y1="330" x2="420" y2="330" stroke="#0028ff" stroke-width="2" opacity="0.4"/>
+            <rect x="0" y="380" width="420" height="60" fill="#0028ff"/>
+            <text x="16" y="422" font-family="'Black Han Sans',sans-serif" font-size="52" fill="#f5f5f0" letter-spacing="1">AMAARAE</text>
+            <rect x="16" y="350" width="90" height="24" fill="#0028ff" opacity="0.3"/>
+            <text x="22" y="366" font-family="Courier New" font-size="10" fill="#0028ff" letter-spacing="3">ALT-POP</text>
+          </svg>
+          <div class="spot-alert-btn" id="alert-1" onclick="toggleAlert(1)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1a4 4 0 014 4c0 3 1 4 1 4H2s1-1 1-4a4 4 0 014-4zM5.5 9a1.5 1.5 0 003 0" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            Set Alert
+          </div>
+        </div>
+      </div>
+      <div class="spot-right">
+        <div class="spot-bio-top">
+          <div>
+            <div class="spot-artist-name">Amaarae</div>
+            <div class="spot-artist-meta">Alt-Pop · R&B · Electronic &nbsp;·&nbsp; Accra / New York</div>
+          </div>
+          <div class="spot-stats-mini">
+            <div><span class="spot-stat-num">1.8M</span><span class="spot-stat-l">Monthly Listeners</span></div>
+            <div><span class="spot-stat-num">6</span><span class="spot-stat-l">Ghana shows in 2025</span></div>
+          </div>
+        </div>
+        <p class="spot-bio-text">Avant-garde Ghanaian-American artist whose falsetto and futurist production have made her an indie darling worldwide. Her 2024 album <em>"Fountain Baby"</em> landed on dozens of year-end lists. Intimate, cinematic live shows — always a unique experience.</p>
+        <div class="spot-upcoming-label">Upcoming Shows</div>
+        <div class="spot-show-list">
+          <div class="spot-show-row" onclick="openModal('Amaarae','Alliance Française, Accra','Jun 22','GHS 120')">
+            <div class="spot-show-date">JUN 22</div>
+            <div class="spot-show-venue">Alliance Française, Accra</div>
+            <div class="spot-show-price">GHS 120</div>
+            <div class="spot-show-arrow">▸</div>
+          </div>
+          <div class="spot-show-row" onclick="openModal('Amaarae','Skybar 25, Accra','Jul 14','GHS 150')">
+            <div class="spot-show-date">JUL 14</div>
+            <div class="spot-show-venue">Skybar 25, Accra</div>
+            <div class="spot-show-price">GHS 150</div>
+            <div class="spot-show-arrow">▸</div>
+          </div>
+        </div>
+        <div class="spot-tracks-label">Top Tracks</div>
+        <div class="spot-tracks">
+          <div class="spot-track" onclick="playTrack(this)"><div class="track-num">01</div><div class="track-bars" data-playing="false"><span></span><span></span><span></span><span></span><span></span></div><div class="track-info"><div class="track-name">SAD GIRLZ LUV MONEY</div><div class="track-feat">ft. Kali Uchis</div></div><div class="track-dur">3:07</div></div>
+          <div class="spot-track" onclick="playTrack(this)"><div class="track-num">02</div><div class="track-bars" data-playing="false"><span></span><span></span><span></span><span></span><span></span></div><div class="track-info"><div class="track-name">Angels in Tibet</div><div class="track-feat"></div></div><div class="track-dur">2:58</div></div>
+          <div class="spot-track" onclick="playTrack(this)"><div class="track-num">03</div><div class="track-bars" data-playing="false"><span></span><span></span><span></span><span></span><span></span></div><div class="track-info"><div class="track-name">Disguise</div><div class="track-feat"></div></div><div class="track-dur">3:22</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Artist 2: Black Sherif -->
+    <div class="spot-artist" data-id="2">
+      <div class="spot-left">
+        <div class="spot-art">
+          <svg viewBox="0 0 420 480" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <rect width="420" height="480" fill="#0a0a0a"/>
+            <rect x="0" y="0" width="420" height="480" fill="url(#rg2)"/>
+            <defs><radialGradient id="rg2" cx="50%" cy="40%" r="50%"><stop offset="0%" stop-color="#ff2d2d" stop-opacity="0.1"/><stop offset="100%" stop-color="#0a0a0a" stop-opacity="0"/></radialGradient></defs>
+            <ellipse cx="210" cy="110" rx="52" ry="52" fill="#1a0a0a"/>
+            <rect x="158" y="158" width="104" height="175" rx="8" fill="#1a0a0a"/>
+            <line x1="0" y1="335" x2="420" y2="335" stroke="#ff2d2d" stroke-width="2" opacity="0.5"/>
+            <rect x="0" y="380" width="420" height="60" fill="#ff2d2d"/>
+            <text x="10" y="422" font-family="'Black Han Sans',sans-serif" font-size="34" fill="#f5f5f0" letter-spacing="1">BLACK SHERIF</text>
+            <rect x="16" y="350" width="120" height="24" fill="#ff2d2d" opacity="0.25"/>
+            <text x="22" y="366" font-family="Courier New" font-size="10" fill="#ff2d2d" letter-spacing="3">AFRO-DRILL</text>
+          </svg>
+          <div class="spot-alert-btn" id="alert-2" onclick="toggleAlert(2)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1a4 4 0 014 4c0 3 1 4 1 4H2s1-1 1-4a4 4 0 014-4zM5.5 9a1.5 1.5 0 003 0" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            Set Alert
+          </div>
+        </div>
+      </div>
+      <div class="spot-right">
+        <div class="spot-bio-top">
+          <div>
+            <div class="spot-artist-name">Black Sherif</div>
+            <div class="spot-artist-meta">Afro-Drill · Hip-Hop · Highlife &nbsp;·&nbsp; Konongo, Ghana</div>
+          </div>
+          <div class="spot-stats-mini">
+            <div><span class="spot-stat-num">4.1M</span><span class="spot-stat-l">Monthly Listeners</span></div>
+            <div><span class="spot-stat-num">8</span><span class="spot-stat-l">Ghana shows in 2025</span></div>
+          </div>
+        </div>
+        <p class="spot-bio-text">From Konongo to the world — Black Sherif's raw, emotional drill-meets-highlife sound has made him Ghana's most-streamed artist under 25. His sold-out Fantasy Dome shows are legendary for their energy. Next show is already sold out — join the waitlist.</p>
+        <div class="spot-upcoming-label">Upcoming Shows</div>
+        <div class="spot-show-list">
+          <div class="spot-show-row sold-out-row">
+            <div class="spot-show-date">JUN 28</div>
+            <div class="spot-show-venue">Fantasy Dome, Accra</div>
+            <div class="spot-show-price" style="color:var(--red)">SOLD OUT</div>
+            <div class="spot-show-arrow" style="color:var(--red)">!</div>
+          </div>
+          <div class="spot-show-row" onclick="openModal('Black Sherif','KNUST Great Hall, Kumasi','Aug 3','GHS 180')">
+            <div class="spot-show-date">AUG 03</div>
+            <div class="spot-show-venue">KNUST Great Hall, Kumasi</div>
+            <div class="spot-show-price">GHS 180</div>
+            <div class="spot-show-arrow">▸</div>
+          </div>
+        </div>
+        <div class="spot-tracks-label">Top Tracks</div>
+        <div class="spot-tracks">
+          <div class="spot-track" onclick="playTrack(this)"><div class="track-num">01</div><div class="track-bars" data-playing="false"><span></span><span></span><span></span><span></span><span></span></div><div class="track-info"><div class="track-name">Second Sermon</div><div class="track-feat"></div></div><div class="track-dur">2:54</div></div>
+          <div class="spot-track" onclick="playTrack(this)"><div class="track-num">02</div><div class="track-bars" data-playing="false"><span></span><span></span><span></span><span></span><span></span></div><div class="track-info"><div class="track-name">Kwaku the Traveller</div><div class="track-feat"></div></div><div class="track-dur">3:18</div></div>
+          <div class="spot-track" onclick="playTrack(this)"><div class="track-num">03</div><div class="track-bars" data-playing="false"><span></span><span></span><span></span><span></span><span></span></div><div class="track-info"><div class="track-name">Oil in My Head</div><div class="track-feat"></div></div><div class="track-dur">3:41</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Artist 3: Gyakie -->
+    <div class="spot-artist" data-id="3">
+      <div class="spot-left">
+        <div class="spot-art">
+          <svg viewBox="0 0 420 480" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <rect width="420" height="480" fill="#0a0a0a"/>
+            <circle cx="210" cy="200" r="160" fill="none" stroke="#E8FF00" stroke-width="1" opacity="0.08"/>
+            <circle cx="210" cy="200" r="110" fill="none" stroke="#E8FF00" stroke-width="1" opacity="0.06"/>
+            <ellipse cx="210" cy="110" rx="52" ry="52" fill="#111108"/>
+            <rect x="158" y="158" width="104" height="175" rx="8" fill="#111108"/>
+            <line x1="0" y1="335" x2="420" y2="335" stroke="#E8FF00" stroke-width="1.5" opacity="0.4"/>
+            <rect x="0" y="380" width="420" height="60" fill="#E8FF00"/>
+            <text x="16" y="422" font-family="'Black Han Sans',sans-serif" font-size="60" fill="#0a0a0a" letter-spacing="2">GYAKIE</text>
+            <rect x="16" y="350" width="100" height="24" fill="#E8FF00" opacity="0.15"/>
+            <text x="22" y="366" font-family="Courier New" font-size="10" fill="#E8FF00" letter-spacing="3">AFROPOP</text>
+          </svg>
+          <div class="spot-alert-btn" id="alert-3" onclick="toggleAlert(3)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1a4 4 0 014 4c0 3 1 4 1 4H2s1-1 1-4a4 4 0 014-4zM5.5 9a1.5 1.5 0 003 0" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            Set Alert
+          </div>
+        </div>
+      </div>
+      <div class="spot-right">
+        <div class="spot-bio-top">
+          <div>
+            <div class="spot-artist-name">Gyakie</div>
+            <div class="spot-artist-meta">Afropop · Soul · R&B &nbsp;·&nbsp; Kumasi, Ghana</div>
+          </div>
+          <div class="spot-stats-mini">
+            <div><span class="spot-stat-num">2.4M</span><span class="spot-stat-l">Monthly Listeners</span></div>
+            <div><span class="spot-stat-num">9</span><span class="spot-stat-l">Ghana shows in 2025</span></div>
+          </div>
+        </div>
+        <p class="spot-bio-text">Daughter of highlife legend Nana Acheampong, Gyakie brings soulful vocals and precise songwriting to Afropop. Her breakout "Forever" remix with Omah Lay cemented her place as one of Ghana's most essential voices. Live shows are known for raw emotion and audience connection.</p>
+        <div class="spot-upcoming-label">Upcoming Shows</div>
+        <div class="spot-show-list">
+          <div class="spot-show-row" onclick="openModal('Gyakie','Kempinski Hotel, Accra','Jul 10','GHS 200')"><div class="spot-show-date">JUL 10</div><div class="spot-show-venue">Kempinski Hotel, Accra</div><div class="spot-show-price">GHS 200</div><div class="spot-show-arrow">▸</div></div>
+          <div class="spot-show-row" onclick="openModal('Gyakie','Alliance Française, Accra','Aug 15','GHS 140')"><div class="spot-show-date">AUG 15</div><div class="spot-show-venue">Alliance Française, Accra</div><div class="spot-show-price">GHS 140</div><div class="spot-show-arrow">▸</div></div>
+        </div>
+        <div class="spot-tracks-label">Top Tracks</div>
+        <div class="spot-tracks">
+          <div class="spot-track" onclick="playTrack(this)"><div class="track-num">01</div><div class="track-bars" data-playing="false"><span></span><span></span><span></span><span></span><span></span></div><div class="track-info"><div class="track-name">Forever</div><div class="track-feat">ft. Omah Lay</div></div><div class="track-dur">3:44</div></div>
+          <div class="spot-track" onclick="playTrack(this)"><div class="track-num">02</div><div class="track-bars" data-playing="false"><span></span><span></span><span></span><span></span><span></span></div><div class="track-info"><div class="track-name">Rent Free</div><div class="track-feat"></div></div><div class="track-dur">3:12</div></div>
+          <div class="spot-track" onclick="playTrack(this)"><div class="track-num">03</div><div class="track-bars" data-playing="false"><span></span><span></span><span></span><span></span><span></span></div><div class="track-info"><div class="track-name">Need Me</div><div class="track-feat"></div></div><div class="track-dur">3:29</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- MY TICKETS PANEL -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="my-tickets" class="tickets-panel-section">
+  <div class="tickets-panel-inner">
+    <div class="tickets-panel-left">
+      <div class="tp-tag">◈ Your Account</div>
+      <h2 class="tp-title">MY<br>TICKETS</h2>
+      <p class="tp-desc">All your upcoming shows in one place. Download QR codes, share with friends, or transfer to someone else — all from here.</p>
+      <div class="tp-actions">
+        <button class="btn-acid" style="font-size:0.65rem">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v8M2 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="11" x2="11" y2="11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Download All QR
+        </button>
+      </div>
+    </div>
+    <div class="tickets-panel-right">
+      <div class="my-ticket-card" data-upcoming="true">
+        <div class="mtc-left">
+          <div class="mtc-date-block">
+            <div class="mtc-month">JUN</div>
+            <div class="mtc-day">14</div>
+          </div>
+        </div>
+        <div class="mtc-mid">
+          <div class="mtc-artist">Stonebwoy</div>
+          <div class="mtc-venue">Accra Sports Stadium</div>
+          <div class="mtc-type">General Admission · x2</div>
+        </div>
+        <div class="mtc-right">
+          <div class="mtc-qr">
+            <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="4" y="4" width="20" height="20" rx="1" fill="none" stroke="currentColor" stroke-width="2"/>
+              <rect x="9" y="9" width="10" height="10" fill="currentColor"/>
+              <rect x="32" y="4" width="20" height="20" rx="1" fill="none" stroke="currentColor" stroke-width="2"/>
+              <rect x="37" y="9" width="10" height="10" fill="currentColor"/>
+              <rect x="4" y="32" width="20" height="20" rx="1" fill="none" stroke="currentColor" stroke-width="2"/>
+              <rect x="9" y="37" width="10" height="10" fill="currentColor"/>
+              <rect x="32" y="32" width="6" height="6" fill="currentColor"/>
+              <rect x="42" y="32" width="6" height="6" fill="currentColor"/>
+              <rect x="32" y="42" width="6" height="6" fill="currentColor"/>
+              <rect x="42" y="46" width="6" height="6" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="mtc-status upcoming">Upcoming</div>
+        </div>
+      </div>
+      <div class="my-ticket-card">
+        <div class="mtc-left">
+          <div class="mtc-date-block">
+            <div class="mtc-month">JUL</div>
+            <div class="mtc-day">10</div>
+          </div>
+        </div>
+        <div class="mtc-mid">
+          <div class="mtc-artist">Gyakie</div>
+          <div class="mtc-venue">Kempinski Hotel, Accra</div>
+          <div class="mtc-type">VIP · x1</div>
+        </div>
+        <div class="mtc-right">
+          <div class="mtc-qr">
+            <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="4" y="4" width="20" height="20" rx="1" fill="none" stroke="currentColor" stroke-width="2"/>
+              <rect x="9" y="9" width="10" height="10" fill="currentColor"/>
+              <rect x="32" y="4" width="20" height="20" rx="1" fill="none" stroke="currentColor" stroke-width="2"/>
+              <rect x="37" y="9" width="10" height="10" fill="currentColor"/>
+              <rect x="4" y="32" width="20" height="20" rx="1" fill="none" stroke="currentColor" stroke-width="2"/>
+              <rect x="9" y="37" width="10" height="10" fill="currentColor"/>
+              <rect x="44" y="32" width="4" height="4" fill="currentColor"/>
+              <rect x="36" y="36" width="4" height="4" fill="currentColor"/>
+              <rect x="44" y="40" width="4" height="4" fill="currentColor"/>
+              <rect x="36" y="44" width="8" height="4" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="mtc-status upcoming">Upcoming</div>
+        </div>
+      </div>
+      <div class="my-ticket-card past">
+        <div class="mtc-left">
+          <div class="mtc-date-block">
+            <div class="mtc-month">MAY</div>
+            <div class="mtc-day">03</div>
+          </div>
+        </div>
+        <div class="mtc-mid">
+          <div class="mtc-artist">Sarkodie</div>
+          <div class="mtc-venue">Accra Int'l Conf. Centre</div>
+          <div class="mtc-type">VIP Table · x4</div>
+        </div>
+        <div class="mtc-right">
+          <div class="mtc-qr" style="opacity:0.3">
+            <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="4" y="4" width="20" height="20" rx="1" fill="none" stroke="currentColor" stroke-width="2"/>
+              <rect x="9" y="9" width="10" height="10" fill="currentColor"/>
+              <rect x="32" y="4" width="20" height="20" rx="1" fill="none" stroke="currentColor" stroke-width="2"/>
+              <rect x="37" y="9" width="10" height="10" fill="currentColor"/>
+              <rect x="4" y="32" width="20" height="20" rx="1" fill="none" stroke="currentColor" stroke-width="2"/>
+              <rect x="9" y="37" width="10" height="10" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="mtc-status past">Attended</div>
+        </div>
+      </div>
+      <div class="tp-login-cta">
+        <span style="font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.1em;color:var(--mid)">Not your tickets?</span>
+        <button class="btn-acid" style="font-size:0.6rem;padding:0.5rem 1rem">Sign In / Register</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- PROMOTER / LIST YOUR EVENT -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="promoter" class="promoter-section">
+  <div class="promoter-left">
+    <div class="pro-tag">◈ For Promoters &amp; Artists</div>
+    <h2 class="pro-title">LIST YOUR<br><span>EVENT</span><br>ON FREQ</h2>
+    <p class="pro-desc">Reach Ghana's largest concert-going audience. Set up your event page in minutes, sell tickets with zero monthly fees, and get paid directly to your MoMo or bank account.</p>
+    <div class="pro-perks">
+      <div class="pro-perk">
+        <div class="pro-perk-icon">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="11" stroke="#E8FF00" stroke-width="1.5"/><path d="M9 14l3.5 3.5L19 10" stroke="#E8FF00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div><div class="pro-perk-title">Zero Monthly Fees</div><div class="pro-perk-sub">Pay only a 4% platform fee per ticket sold. No subscriptions.</div></div>
+      </div>
+      <div class="pro-perk">
+        <div class="pro-perk-icon">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="4" y="6" width="20" height="16" rx="2" stroke="#E8FF00" stroke-width="1.5"/><path d="M4 11h20" stroke="#E8FF00" stroke-width="1.5"/><circle cx="9" cy="17" r="2" stroke="#E8FF00" stroke-width="1"/></svg>
+        </div>
+        <div><div class="pro-perk-title">Instant Payouts</div><div class="pro-perk-sub">Get paid to MoMo or bank within 24 hours of each sale.</div></div>
+      </div>
+      <div class="pro-perk">
+        <div class="pro-perk-icon">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M4 20l6-6 4 4 8-10" stroke="#E8FF00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div><div class="pro-perk-title">Real-Time Analytics</div><div class="pro-perk-sub">Live sales dashboard, audience demographics, and revenue tracking.</div></div>
+      </div>
+      <div class="pro-perk">
+        <div class="pro-perk-icon">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M14 4l2 6h6l-5 4 2 6-5-4-5 4 2-6-5-4h6z" stroke="#E8FF00" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </div>
+        <div><div class="pro-perk-title">Featured Placement</div><div class="pro-perk-sub">Top promoters get homepage placement and newsletter features.</div></div>
+      </div>
+    </div>
+    <a href="#" class="btn-acid" style="margin-top:2rem;display:inline-flex">
+      Start Listing — It's Free
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+  <div class="promoter-right">
+    <!-- Mock dashboard card -->
+    <div class="pro-dashboard">
+      <div class="pro-dash-header">
+        <span class="pro-dash-logo">FREQ <span style="color:var(--acid)">PROMOTER</span></span>
+        <span class="pro-dash-status">
+          <span style="display:inline-block;width:7px;height:7px;background:#22c55e;border-radius:50%;margin-right:4px"></span>
+          Live
+        </span>
+      </div>
+      <div class="pro-dash-event">
+        <div style="font-family:var(--font-mono);font-size:0.55rem;letter-spacing:0.2em;color:rgba(232,255,0,0.5);text-transform:uppercase;margin-bottom:0.3rem">Your Event</div>
+        <div style="font-family:var(--font-display);font-size:1.5rem;color:var(--white);line-height:1">SUBGROUND FESTIVAL</div>
+        <div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--mid);letter-spacing:0.1em;margin-top:0.2rem">Labadi Beach · Jul 19, 2025</div>
+      </div>
+      <div class="pro-dash-stats">
+        <div class="pro-ds">
+          <div class="pro-ds-num">847</div>
+          <div class="pro-ds-label">Tickets Sold</div>
+        </div>
+        <div class="pro-ds">
+          <div class="pro-ds-num">153</div>
+          <div class="pro-ds-label">Remaining</div>
+        </div>
+        <div class="pro-ds">
+          <div class="pro-ds-num" style="color:var(--acid)">GHS 84.7k</div>
+          <div class="pro-ds-label">Revenue</div>
+        </div>
+      </div>
+      <!-- Progress bar -->
+      <div style="margin:1rem 0 0.4rem">
+        <div style="height:6px;background:rgba(255,255,255,0.08);position:relative">
+          <div style="height:100%;width:85%;background:var(--acid);transition:width 1s ease"></div>
+        </div>
+      </div>
+      <div style="font-family:var(--font-mono);font-size:0.55rem;letter-spacing:0.1em;color:var(--mid)">85% sold · 6 days remaining</div>
+      <!-- Mini chart -->
+      <div class="pro-chart">
+        <svg viewBox="0 0 280 60" xmlns="http://www.w3.org/2000/svg" width="100%" height="60">
+          <polyline points="0,50 35,42 70,38 105,30 140,22 175,18 210,12 245,8 280,5" fill="none" stroke="#E8FF00" stroke-width="2" stroke-linecap="round"/>
+          <polyline points="0,50 35,42 70,38 105,30 140,22 175,18 210,12 245,8 280,5 280,60 0,60" fill="#E8FF00" fill-opacity="0.06"/>
+          <line x1="0" y1="55" x2="280" y2="55" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+        </svg>
+        <div style="font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.1em;color:rgba(232,255,0,0.4);margin-top:0.3rem">SALES LAST 7 DAYS</div>
+      </div>
+      <div class="pro-dash-payout">
+        <div style="font-family:var(--font-mono);font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(232,255,0,0.4)">Next Payout</div>
+        <div style="font-family:var(--font-display);font-size:1.8rem;color:var(--acid)">GHS 12,400</div>
+        <div style="font-family:var(--font-mono);font-size:0.55rem;color:var(--mid);letter-spacing:0.1em">→ MoMo ending 8821 · Tomorrow</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- FAQ -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="faq" class="freq-faq-section">
+  <div class="freq-faq-inner">
+    <div class="freq-faq-head">
+      <div class="spot-tag" style="color:var(--acid)">◈ FAQ</div>
+      <h2 class="freq-faq-title">GOT<br>QUESTIONS?</h2>
+    </div>
+    <div class="freq-faq-list">
+      <div class="fq-item">
+        <button class="fq-q">How do I receive my tickets after purchase?<span class="fq-icon">+</span></button>
+        <div class="fq-a">Your QR tickets are sent instantly to your WhatsApp number and email address. No app download required. Just screenshot or open the message at the gate.</div>
+      </div>
+      <div class="fq-item">
+        <button class="fq-q">Can I get a refund if a show is cancelled?<span class="fq-icon">+</span></button>
+        <div class="fq-a">Yes — if a show is cancelled by the organiser, you'll receive a full automatic refund to your original payment method within 5 working days. For postponed shows, you can choose to keep your ticket valid for the new date or request a refund within 48 hours.</div>
+      </div>
+      <div class="fq-item">
+        <button class="fq-q">What payment methods are accepted?<span class="fq-icon">+</span></button>
+        <div class="fq-a">We accept MTN Mobile Money, AirtelTigo Money, Vodafone Cash, all major debit/credit cards (Visa, Mastercard), and direct bank transfer. Payment is processed securely through our licensed payment partner.</div>
+      </div>
+      <div class="fq-item">
+        <button class="fq-q">Can I transfer my ticket to someone else?<span class="fq-icon">+</span></button>
+        <div class="fq-a">Yes. From your account's "My Tickets" page, tap the transfer button on any ticket and enter the recipient's phone number or email. They'll receive the QR code directly. Transfers are instant and free.</div>
+      </div>
+      <div class="fq-item">
+        <button class="fq-q">Are there booking fees on top of the ticket price?<span class="fq-icon">+</span></button>
+        <div class="fq-a">No hidden fees. The price you see is the price you pay. FREQ charges a small platform fee that is already included in the displayed ticket price — we believe in transparent pricing.</div>
+      </div>
+      <div class="fq-item">
+        <button class="fq-q">How do I list my event as a promoter?<span class="fq-icon">+</span></button>
+        <div class="fq-a">Click "Start Listing" in the Promoters section above or visit freq.gh/promoters. Create your free account, fill in your event details, set your ticket types and prices, and go live in under 10 minutes. Our team reviews and approves listings within 2 hours during business hours.</div>
+      </div>
+      <div class="fq-item">
+        <button class="fq-q">What if my QR code doesn't scan at the gate?<span class="fq-icon">+</span></button>
+        <div class="fq-a">Show the gate staff your FREQ order confirmation — either the WhatsApp message or your email. They can verify your purchase using your name or order ID. You can also call our live support line which is active 2 hours before every show.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter-section">
+  <div>
+    <h2 class="nl-title">NEVER<br>MISS A<br>SHOW</h2>
+  </div>
+  <div class="nl-form">
+    <div style="font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(0,0,0,0.6)">Drop your details. We'll handle the rest.</div>
+    <div class="nl-row">
+      <input class="nl-input" type="email" placeholder="your@email.com"/>
+      <button class="nl-submit">Subscribe ▸</button>
+    </div>
+    <div class="nl-checkboxes">
+      <label class="nl-check"><input type="checkbox" checked/> Afrobeats</label>
+      <label class="nl-check"><input type="checkbox" checked/> Hip-Hop</label>
+      <label class="nl-check"><input type="checkbox"/> Electronic</label>
+      <label class="nl-check"><input type="checkbox"/> Jazz</label>
+      <label class="nl-check"><input type="checkbox"/> Gospel</label>
+    </div>
+    <div class="nl-note">No spam. Unsubscribe any time. We send max 2 emails/week.</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-logo">FREQ</div>
+      <div class="footer-tagline">Ghana's live music booking platform. Connecting artists, venues, and fans — no middlemen, no markup, no drama.</div>
+    </div>
+    <div>
+      <div class="footer-col-title">Discover</div>
+      <ul class="footer-links">
+        <li><a href="#">Browse All Shows</a></li>
+        <li><a href="#">Artists A–Z</a></li>
+        <li><a href="#">Venues</a></li>
+        <li><a href="#">Festivals</a></li>
+        <li><a href="#">New This Week</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Help</div>
+      <ul class="footer-links">
+        <li><a href="#">How It Works</a></li>
+        <li><a href="#">Refund Policy</a></li>
+        <li><a href="#">Contact Support</a></li>
+        <li><a href="#">List Your Event</a></li>
+        <li><a href="#">Venue Partners</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Company</div>
+      <ul class="footer-links">
+        <li><a href="#">About FREQ</a></li>
+        <li><a href="#">Press Kit</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 FREQ Technologies Ltd. Accra, Ghana. All rights reserved.</span>
+    <div class="footer-social">
+      <a href="#">Instagram</a>
+      <a href="#">Twitter / X</a>
+      <a href="#">TikTok</a>
+      <a href="#">WhatsApp</a>
+    </div>
+  </div>
+</footer>
+
+<!-- FLOATING TICKET -->
+<div class="float-ticket" id="float-ticket">
+  <a href="#shows" class="float-ticket-btn">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="4" width="12" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M4 4V3a1 1 0 012 0v1M8 4V3a1 1 0 012 0v1M4 10v1a1 1 0 002 0v-1M8 10v1a1 1 0 002 0v-1" stroke="currentColor" stroke-width="1"/></svg>
+    Get Tickets
+  </a>
+</div>
+
+<!-- BOOKING MODAL -->
+<div class="modal-overlay" id="modal" onclick="handleOverlayClick(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">BOOK TICKETS</div>
+      <button class="modal-close" onclick="closeModal()">✕ Close</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-show-info">
+        <div class="modal-info-block">
+          <div class="modal-info-label">Artist</div>
+          <div class="modal-info-val" id="m-artist">—</div>
+        </div>
+        <div class="modal-info-block">
+          <div class="modal-info-label">Venue</div>
+          <div class="modal-info-val" id="m-venue" style="font-size:1rem;font-family:var(--font-mono);letter-spacing:0.05em">—</div>
+        </div>
+        <div class="modal-info-block">
+          <div class="modal-info-label">Date</div>
+          <div class="modal-info-val" id="m-date">—</div>
+        </div>
+        <div class="modal-info-block">
+          <div class="modal-info-label">Status</div>
+          <div class="modal-info-val" style="color:#22c55e;font-size:0.9rem;font-family:var(--font-mono);letter-spacing:0.1em">◉ ON SALE</div>
+        </div>
+      </div>
+
+      <div style="font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;margin-bottom:1rem;color:var(--mid)">Select Ticket Type</div>
+      <div class="ticket-types">
+        <div class="ticket-type selected" onclick="selectTicket(this,'General Admission',0)">
+          <div class="tt-radio checked" id="radio-0"></div>
+          <div><div class="tt-name">General Admission</div><div class="tt-desc">Standing area · Main floor</div></div>
+          <div class="tt-qty">
+            <button class="qty-btn" onclick="changeQty(event,0,-1)">−</button>
+            <div class="qty-num" id="qty-0">1</div>
+            <button class="qty-btn" onclick="changeQty(event,0,1)">+</button>
+          </div>
+          <div class="tt-price" id="base-price-0">GHS —</div>
+        </div>
+        <div class="ticket-type" onclick="selectTicket(this,'VIP',1)">
+          <div class="tt-radio" id="radio-1"></div>
+          <div><div class="tt-name">VIP</div><div class="tt-desc">Front section · Complimentary drink</div></div>
+          <div class="tt-qty">
+            <button class="qty-btn" onclick="changeQty(event,1,-1)">−</button>
+            <div class="qty-num" id="qty-1">1</div>
+            <button class="qty-btn" onclick="changeQty(event,1,1)">+</button>
+          </div>
+          <div class="tt-price" id="base-price-1">GHS —</div>
+        </div>
+        <div class="ticket-type" onclick="selectTicket(this,'Table / Booth',2)">
+          <div class="tt-radio" id="radio-2"></div>
+          <div><div class="tt-name">Table / Booth</div><div class="tt-desc">Reserved table for 4 · Bottle service</div></div>
+          <div class="tt-qty">
+            <button class="qty-btn" onclick="changeQty(event,2,-1)">−</button>
+            <div class="qty-num" id="qty-2">1</div>
+            <button class="qty-btn" onclick="changeQty(event,2,1)">+</button>
+          </div>
+          <div class="tt-price" id="base-price-2">GHS —</div>
+        </div>
+      </div>
+
+      <div class="modal-total">
+        <div class="modal-total-label">Total</div>
+        <div class="modal-total-val" id="modal-total">GHS 0</div>
+      </div>
+
+      <div id="buy-area">
+        <button class="btn-buy" onclick="completePurchase()">
+          Confirm &amp; Pay
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 9h10M10 5l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div style="margin-top:0.8rem;text-align:center;font-family:var(--font-mono);font-size:0.55rem;letter-spacing:0.15em;color:var(--mid);text-transform:uppercase">MoMo · Card · Bank Transfer · No Hidden Fees</div>
+      </div>
+      <div id="success-area" style="display:none;text-align:center;padding:2rem 0">
+        <svg width="56" height="56" viewBox="0 0 56 56" fill="none" style="margin-bottom:1rem"><rect width="56" height="56" fill="#E8FF00"/><path d="M16 28l8 8 16-16" stroke="#0a0a0a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div style="font-family:var(--font-display);font-size:2rem;margin-bottom:0.5rem">TICKETS CONFIRMED</div>
+        <div style="font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.1em;color:var(--mid)">QR code sent to your WhatsApp &amp; email.<br>See you at the show.</div>
+        <button onclick="closeModal()" style="margin-top:1.5rem;font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;background:var(--black);color:var(--acid);border:none;padding:0.8rem 1.5rem;cursor:pointer">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CURSOR ──
+const cur = document.getElementById('cur');
+const curRing = document.getElementById('cur-ring');
+let cx=0, cy=0, rx=0, ry=0;
+let isHovering = false;
+
+// Sections that are dark-background — cursor should show white
+// We detect this by checking the element under the cursor's computed background
+function isDarkZone(x, y) {
+  const el = document.elementFromPoint(x, y);
+  if (!el) return false;
+  // Walk up the DOM to find a background colour
+  let node = el;
+  for (let i = 0; i < 8; i++) {
+    if (!node || node === document.body) break;
+    const bg = getComputedStyle(node).backgroundColor;
+    if (!bg || bg === 'transparent' || bg === 'rgba(0, 0, 0, 0)') { node = node.parentElement; continue; }
+    // Parse rgb
+    const m = bg.match(/\d+/g);
+    if (!m) { node = node.parentElement; continue; }
+    const [r, g, b] = m.map(Number);
+    // Luminance check — below 0.18 = dark
+    const lum = (0.299*r + 0.587*g + 0.114*b) / 255;
+    return lum < 0.35;
+  }
+  return false;
+}
+
+document.addEventListener('mousemove', e => {
+  cx = e.clientX; cy = e.clientY;
+  cur.style.left = cx + 'px';
+  cur.style.top  = cy + 'px';
+
+  // Dark zone detection — throttled via requestAnimationFrame
+  const dark = isDarkZone(cx, cy);
+  cur.classList.toggle('on-dark', dark);
+  curRing.classList.toggle('on-dark', dark);
+});
+
+// Lagging ring follows with smooth interpolation
+function animRing() {
+  rx += (cx - rx) * 0.11;
+  ry += (cy - ry) * 0.11;
+  curRing.style.left = rx + 'px';
+  curRing.style.top  = ry + 'px';
+  requestAnimationFrame(animRing);
+}
+animRing();
+
+// Interactive targets — scale up + ring expands
+function refreshCursorTargets() {
+  document.querySelectorAll('a, button, .show-row, .venue-card, .genre-pill, .ticket-type, .lineup-item, .spot-show-row, .spot-track, .my-ticket-card, .pro-perk, .fq-q, .testi-card, .dining-card, .filter-btn, .spot-tab, .booking-tab').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      isHovering = true;
+      cur.classList.add('hovering');
+      curRing.classList.add('hovering');
+    });
+    el.addEventListener('mouseleave', () => {
+      isHovering = false;
+      cur.classList.remove('hovering');
+      curRing.classList.remove('hovering');
+    });
+  });
+}
+refreshCursorTargets();
+
+// Hide cursor when leaving window, show on re-enter
+document.addEventListener('mouseleave', () => { cur.style.opacity='0'; curRing.style.opacity='0'; });
+document.addEventListener('mouseenter', () => { cur.style.opacity='1'; curRing.style.opacity='1'; });
+
+// Click pulse — squish the ring
+document.addEventListener('mousedown', () => {
+  cur.style.transform = 'translate(-50%,-50%) rotate(45deg) scale(0.7)';
+});
+document.addEventListener('mouseup', () => {
+  cur.style.transform = 'translate(-50%,-50%) rotate(45deg) scale(1)';
+});
+
+// ── OSCILLOSCOPE PLAYHEAD ──
+const ph = document.getElementById('playhead');
+if(ph){let px=0;function animPH(){px=(px+1.8)%460;ph.setAttribute('x1',px);ph.setAttribute('x2',px);requestAnimationFrame(animPH);}animPH();}
+
+// ── WAVEFORM CANVAS ──
+function drawWave(id,bg,col,speed){
+  const canvas=document.getElementById(id);
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  let t=0;
+  function resize(){canvas.width=canvas.parentElement.offsetWidth;canvas.height=canvas.parentElement.offsetHeight;}
+  resize();window.addEventListener('resize',resize);
+  function frame(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle=bg;ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.beginPath();ctx.strokeStyle=col;ctx.lineWidth=2.5;
+    const h=canvas.height/2,w=canvas.width;
+    for(let x=0;x<=w;x++){
+      const y=h+Math.sin(x*0.012+t)*22+Math.sin(x*0.025+t*1.3)*12+Math.sin(x*0.05+t*0.7)*6+Math.sin(x*0.004+t*0.4)*30;
+      x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+    ctx.beginPath();ctx.strokeStyle=col;ctx.globalAlpha=0.12;ctx.lineWidth=8;
+    for(let x=0;x<=w;x++){
+      const y=h+Math.sin(x*0.012+t)*22+Math.sin(x*0.025+t*1.3)*12+Math.sin(x*0.05+t*0.7)*6+Math.sin(x*0.004+t*0.4)*30;
+      x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.stroke();ctx.globalAlpha=1;t+=speed;requestAnimationFrame(frame);
+  }
+  frame();
+}
+drawWave('wave-canvas','#f5f5f0','#E8FF00',0.022);
+drawWave('wave-canvas-2','#0a0a0a','#E8FF00',0.018);
+
+// ── FILTER SHOWS ──
+function filterShows(btn,genre){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.show-row').forEach(row=>{
+    row.style.display=(genre==='all'||row.dataset.genre===genre)?'grid':'none';
+  });
+}
+
+// ── MODAL STATE ──
+let basePrice=0,quantities=[1,1,1],selectedType=0;
+function openModal(artist,venue,date,priceStr){
+  const p=parseInt(priceStr.replace(/[^0-9]/g,''))||100;
+  basePrice=p;quantities=[1,1,1];selectedType=0;
+  document.getElementById('m-artist').textContent=artist;
+  document.getElementById('m-venue').textContent=venue;
+  document.getElementById('m-date').textContent=date;
+  document.getElementById('modal-title').textContent='BOOK — '+artist.toUpperCase();
+  document.getElementById('base-price-0').textContent='GHS '+p;
+  document.getElementById('base-price-1').textContent='GHS '+(p*1.8|0);
+  document.getElementById('base-price-2').textContent='GHS '+(p*4|0);
+  [0,1,2].forEach(i=>{document.getElementById('qty-'+i).textContent='1';});
+  document.querySelectorAll('.tt-radio').forEach(r=>r.classList.remove('checked'));
+  document.querySelectorAll('.ticket-type').forEach(t=>t.classList.remove('selected'));
+  document.getElementById('radio-0').classList.add('checked');
+  document.querySelectorAll('.ticket-type')[0].classList.add('selected');
+  document.getElementById('buy-area').style.display='block';
+  document.getElementById('success-area').style.display='none';
+  calcTotal();
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){document.getElementById('modal').classList.remove('open');document.body.style.overflow='';}
+function handleOverlayClick(e){if(e.target===document.getElementById('modal'))closeModal();}
+function selectTicket(el,name,idx){
+  event.stopPropagation();selectedType=idx;
+  document.querySelectorAll('.tt-radio').forEach(r=>r.classList.remove('checked'));
+  document.querySelectorAll('.ticket-type').forEach(t=>t.classList.remove('selected'));
+  el.classList.add('selected');document.getElementById('radio-'+idx).classList.add('checked');calcTotal();
+}
+function changeQty(e,idx,delta){
+  e.stopPropagation();quantities[idx]=Math.max(1,Math.min(10,quantities[idx]+delta));
+  document.getElementById('qty-'+idx).textContent=quantities[idx];calcTotal();
+}
+function calcTotal(){
+  const m=[1,1.8,4],price=Math.round(basePrice*m[selectedType]);
+  document.getElementById('modal-total').textContent='GHS '+(price*quantities[selectedType]).toLocaleString();
+}
+function completePurchase(){
+  const btn=document.querySelector('.btn-buy');btn.textContent='Processing…';btn.disabled=true;
+  setTimeout(()=>{document.getElementById('buy-area').style.display='none';document.getElementById('success-area').style.display='block';},1400);
+}
+
+// ── FLOATING TICKET ──
+const ft=document.getElementById('float-ticket');
+const heroSection=document.querySelector('.hero');
+new IntersectionObserver(([e])=>{ft.classList.toggle('show',!e.isIntersecting);},{threshold:0}).observe(heroSection);
+
+// ── SCROLL REVEAL ──
+const revEls=document.querySelectorAll('.venue-card,.how-card,.testi-card,.genre-pill,.lineup-item,.show-row,.pro-perk,.my-ticket-card,.stat-pill,.fq-item');
+const revObs=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>{e.target.style.opacity='1';e.target.style.transform='translateY(0)';},i*50);revObs.unobserve(e.target);}});
+},{threshold:0.05});
+revEls.forEach(el=>{el.style.opacity='0';el.style.transform='translateY(16px)';el.style.transition='opacity .5s ease,transform .5s ease';revObs.observe(el);});
+
+// ── GENRE PILLS ──
+document.querySelectorAll('.genre-pill').forEach(p=>{p.addEventListener('click',()=>p.classList.toggle('active-genre'));});
+
+// ── MOBILE MENU ──
+const mobOverlay=document.getElementById('mob-overlay');
+const navHam=document.getElementById('nav-ham');
+const mobClose=document.getElementById('mob-close');
+function openMobMenu(){mobOverlay.classList.add('open');document.body.style.overflow='hidden';}
+function closeMobMenu(){mobOverlay.classList.remove('open');document.body.style.overflow='';}
+navHam.addEventListener('click',openMobMenu);
+mobClose.addEventListener('click',closeMobMenu);
+mobOverlay.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeMobMenu));
+
+// ── ARTIST SPOTLIGHT TABS ──
+document.querySelectorAll('.spot-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    const id=tab.dataset.artist;
+    document.querySelectorAll('.spot-tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelectorAll('.spot-artist').forEach(a=>{
+      a.classList.toggle('active',a.dataset.id===id);
+    });
+    // Stop any playing tracks
+    document.querySelectorAll('.track-bars.playing').forEach(b=>{b.classList.remove('playing');b.dataset.playing='false';});
+  });
+});
+
+// ── TRACK PLAYER (mock) ──
+let currentTrack=null;
+function playTrack(row){
+  const bars=row.querySelector('.track-bars');
+  if(bars.dataset.playing==='true'){
+    bars.classList.remove('playing');bars.dataset.playing='false';currentTrack=null;return;
+  }
+  if(currentTrack)currentTrack.classList.remove('playing');
+  bars.classList.add('playing');bars.dataset.playing='true';currentTrack=bars;
+}
+
+// ── SET ALERT TOGGLE ──
+function toggleAlert(id){
+  const btn=document.getElementById('alert-'+id);
+  const alerted=btn.classList.toggle('alerted');
+  btn.innerHTML=alerted
+    ?'<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1a4 4 0 014 4c0 3 1 4 1 4H2s1-1 1-4a4 4 0 014-4zM5.5 9a1.5 1.5 0 003 0" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg> Alert Set ✓'
+    :'<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1a4 4 0 014 4c0 3 1 4 1 4H2s1-1 1-4a4 4 0 014-4zM5.5 9a1.5 1.5 0 003 0" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg> Set Alert';
+}
+
+// ── FAQ ACCORDION ──
+document.querySelectorAll('.fq-q').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const item=btn.closest('.fq-item');
+    const isOpen=item.classList.contains('open');
+    document.querySelectorAll('.fq-item.open').forEach(i=>i.classList.remove('open'));
+    if(!isOpen)item.classList.add('open');
+  });
+});
+
+// ── LIVE STATS COUNTER ANIMATION ──
+const statTargets={
+  's-tickets':{val:12847,rate:1,fmt:n=>n.toLocaleString()},
+  's-shows':{val:47,rate:0,fmt:n=>n},
+  's-artists':{val:184,rate:0,fmt:n=>n},
+  's-fans':{val:68200,rate:2,fmt:n=>n.toLocaleString()},
+  's-venues':{val:23,rate:0,fmt:n=>n}
+};
+// Tick random increment on live stats
+setInterval(()=>{
+  Object.entries(statTargets).forEach(([id,cfg])=>{
+    if(cfg.rate>0){
+      cfg.val+=Math.floor(Math.random()*cfg.rate+0.5);
+      const el=document.getElementById(id);
+      if(el)el.textContent=cfg.fmt(cfg.val);
+    }
+  });
+},3500);
+// Animate count-up on enter
+const statsBar=document.getElementById('live-stats');
+const statsObs=new IntersectionObserver(([e])=>{
+  if(e.isIntersecting){
+    Object.entries(statTargets).forEach(([id,cfg])=>{
+      const el=document.getElementById(id);if(!el)return;
+      let start=0,end=cfg.val,dur=1200,step=end/60;
+      const timer=setInterval(()=>{
+        start=Math.min(start+step,end);
+        el.textContent=cfg.fmt(Math.floor(start));
+        if(start>=end)clearInterval(timer);
+      },dur/60);
+    });
+    statsObs.unobserve(statsBar);
+  }
+},{threshold:0.3});
+if(statsBar)statsObs.observe(statsBar);
+
+// ── OSCILLOSCOPE PLAYHEAD ──
+const ph = document.getElementById('playhead');
+if(ph){
+  let px=0;
+  function animPH(){
+    px=(px+1.8)%460;
+    ph.setAttribute('x1',px);ph.setAttribute('x2',px);
+    requestAnimationFrame(animPH);
+  }
+  animPH();
+}
+
+// ── WAVEFORM CANVAS ──
+function drawWave(id, bg, col, speed){
+  const canvas=document.getElementById(id);
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  let t=0;
+  function resize(){
+    canvas.width=canvas.parentElement.offsetWidth;
+    canvas.height=canvas.parentElement.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize',resize);
+  function frame(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle=bg;
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.beginPath();
+    ctx.strokeStyle=col;
+    ctx.lineWidth=2.5;
+    const h=canvas.height/2;
+    const w=canvas.width;
+    ctx.moveTo(0,h);
+    for(let x=0;x<=w;x++){
+      const y=h
+        +Math.sin(x*0.012+t)*22
+        +Math.sin(x*0.025+t*1.3)*12
+        +Math.sin(x*0.05+t*0.7)*6
+        +Math.sin(x*0.004+t*0.4)*30;
+      if(x===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+    // Ghost wave
+    ctx.beginPath();
+    ctx.strokeStyle=col;
+    ctx.globalAlpha=0.12;
+    ctx.lineWidth=8;
+    for(let x=0;x<=w;x++){
+      const y=h
+        +Math.sin(x*0.012+t)*22
+        +Math.sin(x*0.025+t*1.3)*12
+        +Math.sin(x*0.05+t*0.7)*6
+        +Math.sin(x*0.004+t*0.4)*30;
+      if(x===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+    ctx.globalAlpha=1;
+    t+=speed;
+    requestAnimationFrame(frame);
+  }
+  frame();
+}
+drawWave('wave-canvas','#f5f5f0','#E8FF00',0.022);
+drawWave('wave-canvas-2','#0a0a0a','#E8FF00',0.018);
+
+// ── FILTER SHOWS ──
+function filterShows(btn,genre){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.show-row').forEach(row=>{
+    if(genre==='all'||row.dataset.genre===genre){
+      row.style.display='grid';
+    }else{
+      row.style.display='none';
+    }
+  });
+}
+
+// ── MODAL STATE ──
+let basePrice=0;
+let quantities=[1,1,1];
+let selectedType=0;
+
+function openModal(artist,venue,date,priceStr){
+  const p=parseInt(priceStr.replace(/[^0-9]/g,''))||100;
+  basePrice=p;
+  quantities=[1,1,1];
+  selectedType=0;
+  document.getElementById('m-artist').textContent=artist;
+  document.getElementById('m-venue').textContent=venue;
+  document.getElementById('m-date').textContent=date;
+  document.getElementById('modal-title').textContent='BOOK — '+artist.toUpperCase();
+  // Prices
+  document.getElementById('base-price-0').textContent='GHS '+p;
+  document.getElementById('base-price-1').textContent='GHS '+(p*1.8|0);
+  document.getElementById('base-price-2').textContent='GHS '+(p*4|0);
+  // Reset qty
+  [0,1,2].forEach(i=>{document.getElementById('qty-'+i).textContent='1';});
+  // Reset radio
+  document.querySelectorAll('.tt-radio').forEach(r=>{r.classList.remove('checked');});
+  document.querySelectorAll('.ticket-type').forEach(t=>{t.classList.remove('selected');});
+  document.getElementById('radio-0').classList.add('checked');
+  document.querySelectorAll('.ticket-type')[0].classList.add('selected');
+  // Reset success
+  document.getElementById('buy-area').style.display='block';
+  document.getElementById('success-area').style.display='none';
+  calcTotal();
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow='';
+}
+function handleOverlayClick(e){
+  if(e.target===document.getElementById('modal'))closeModal();
+}
+function selectTicket(el,name,idx){
+  event.stopPropagation();
+  selectedType=idx;
+  document.querySelectorAll('.tt-radio').forEach(r=>r.classList.remove('checked'));
+  document.querySelectorAll('.ticket-type').forEach(t=>t.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('radio-'+idx).classList.add('checked');
+  calcTotal();
+}
+function changeQty(e,idx,delta){
+  e.stopPropagation();
+  quantities[idx]=Math.max(1,Math.min(10,quantities[idx]+delta));
+  document.getElementById('qty-'+idx).textContent=quantities[idx];
+  calcTotal();
+}
+function calcTotal(){
+  const multipliers=[1,1.8,4];
+  const price=Math.round(basePrice*multipliers[selectedType]);
+  const total=price*quantities[selectedType];
+  document.getElementById('modal-total').textContent='GHS '+total.toLocaleString();
+}
+function completePurchase(){
+  const btn=document.querySelector('.btn-buy');
+  btn.textContent='Processing…';
+  btn.disabled=true;
+  setTimeout(()=>{
+    document.getElementById('buy-area').style.display='none';
+    document.getElementById('success-area').style.display='block';
+  },1400);
+}
+
+// ── FLOATING TICKET ──
+const ft=document.getElementById('float-ticket');
+const heroSection=document.querySelector('.hero');
+const obs=new IntersectionObserver(([e])=>{
+  ft.classList.toggle('show',!e.isIntersecting);
+},{threshold:0});
+obs.observe(heroSection);
+
+// ── SCROLL REVEAL ──
+const revEls=document.querySelectorAll('.venue-card,.how-card,.testi-card,.genre-pill,.lineup-item,.show-row');
+const revObs=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){
+      setTimeout(()=>{
+        e.target.style.opacity='1';
+        e.target.style.transform='translateY(0)';
+      },i*50);
+      revObs.unobserve(e.target);
+    }
+  });
+},{threshold:0.05});
+revEls.forEach(el=>{
+  el.style.opacity='0';
+  el.style.transform='translateY(16px)';
+  el.style.transition='opacity .5s ease,transform .5s ease';
+  revObs.observe(el);
+});
+
+// ── GENRE PILLS TOGGLE ──
+document.querySelectorAll('.genre-pill').forEach(p=>{
+  p.addEventListener('click',()=>{
+    p.classList.toggle('active-genre');
+  });
+});
+</script>
+</body>
+</html>

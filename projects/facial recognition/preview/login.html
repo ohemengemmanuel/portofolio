@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FaceAuth — Login</title>
+  <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+  <nav>
+    <a class="nav-brand" href="index.html">&#9632; FaceAuth</a>
+    <div class="nav-links">
+      <a class="btn btn-outline btn-sm" href="signup.html">Create Account</a>
+    </div>
+  </nav>
+  <main class="page">
+    <div class="card">
+      <div class="card-title">Login</div>
+      <div class="card-sub">Step 1 of 2 — verify your credentials</div>
+
+      <div class="field">
+        <label for="first_name">First Name</label>
+        <input type="text" id="first_name" placeholder="Your registered first name" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Your password">
+      </div>
+
+      <div style="margin-top:24px; display:flex; align-items:center; gap:14px;">
+        <button class="btn btn-primary">
+          <span class="btn-label">Continue to Face Verification</span>
+        </button>
+      </div>
+
+      <div class="text-sm text-center" style="margin-top:20px;">
+        No account? <a class="link" href="signup.html">Sign up here</a>
+      </div>
+
+      <div style="margin-top:28px; padding:14px; background:var(--input); border-radius:8px; font-size:0.82rem; color:var(--muted); line-height:1.6;">
+        <strong style="color:var(--text);">&#128274; Two-step authentication</strong><br>
+        Your password is verified first. If it matches, you will be directed to the face verification
+        step — only your face is checked, not the entire database.
+      </div>
+    </div>
+  </main>
+</body>
+</html>

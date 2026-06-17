@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% block title %}FaceAuth — Face Verification{% endblock %}
+
+{% block nav %}
+  <span style="font-size:0.85rem; color:var(--muted);">Verifying identity for <strong style="color:var(--text);">{{ username | title }}</strong></span>
+{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width:780px; width:100%;">
+  <div class="card-title">Face Verification</div>
+  <div class="card-sub">Step 2 of 2 — confirm your identity with your face</div>
+
+  <div class="verify-layout">
+
+    <!-- Camera -->
+    <div class="verify-cam">
+      <label style="margin-bottom:8px; display:block;">Live Camera</label>
+      <div class="camera-wrapper" id="camWrapper">
+        <video id="video" autoplay muted playsinline></video>
+        <canvas id="canvas" style="display:none;"></canvas>
+        <div class="face-guide"></div>
+        <div class="camera-overlay" id="camOverlay">
+          <span style="font-size:1.8rem;">&#128247;</span>
+          <span>Starting camera…</span>
+        </div>
+        <div class="camera-hint" id="hint" style="display:none;">Look straight at the camera</div>
+      </div>
+
+      <!-- Scan status bar -->
+      <div style="margin-top:12px; background:var(--input); border-radius:8px; padding:10px 14px;
+                  display:flex; align-items:center; justify-content:space-between;">
+        <span id="scanStatus" style="font-size:0.85rem; color:var(--muted);">Waiting for camera…</span>
+        <span id="attemptCount" style="font-size:0.78rem; color:var(--muted);"></span>
+      </div>
+
+      <button class="btn btn-ghost btn-full btn-sm" id="pauseBtn" onclick="togglePause()"
+              style="margin-top:8px;" disabled>
+        &#9646;&#9646; Pause Auto-Scan
+      </button>
+
+      <div id="alert" class="alert" style="margin-top:12px;"></div>
+    </div>
+
+    <!-- Steps info -->
+    <div class="verify-info">
+      <div style="font-size:0.85rem; color:var(--muted); margin-bottom:20px;">
+        Checking identity for account:
+        <strong style="color:var(--accent);">{{ username | title }}</strong>
+      </div>
+
+      <div class="step">
+        <div class="step-num done">&#10003;</div>
+        <div class="step-text">
+          <strong>Credentials verified</strong>
+          Name and password matched successfully
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num" id="step2Num">2</div>
+        <div class="step-text">
+          <strong>Face verification</strong>
+          Scanning automatically every 2 seconds
+        </div>
+      </div>
+
+      <div style="margin-top:24px; padding:14px; background:var(--input); border-radius:8px; font-size:0.82rem; color:var(--muted); line-height:1.7;">
+        <strong style="color:var(--text);">Tips for best results</strong><br/>
+        &#9679; Good lighting — face the light source<br/>
+        &#9679; Look straight at the camera<br/>
+        &#9679; Remove sunglasses if wearing any<br/>
+        &#9679; Keep a neutral expression
+      </div>
+
+      <a href="/login" class="btn btn-ghost btn-sm" style="margin-top:20px; display:inline-flex;">
+        &#8592; Back to Login
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/camera.js') }}"></script>
+<script>
+  let cam = null;
+  let scanInterval = null;
+  let scanning = false;
+  let paused = false;
+  let attempts = 0;
+
+  const statusEl   = document.getElementById("scanStatus");
+  const countEl    = document.getElementById("attemptCount");
+  const alertEl    = document.getElementById("alert");
+  const pauseBtn   = document.getElementById("pauseBtn");
+  const step2      = document.getElementById("step2Num");
+
+  (async function initCamera() {
+    const overlay = document.getElementById("camOverlay");
+    const hint    = document.getElementById("hint");
+    try {
+      cam = new Camera(
+        document.getElementById("video"),
+        document.getElementById("canvas")
+      );
+      await cam.start();
+      overlay.style.display = "none";
+      hint.style.display = "block";
+      pauseBtn.disabled = false;
+      startAutoScan();
+    } catch (e) {
+      overlay.innerHTML = '<span style="font-size:1.5rem;">&#10060;</span><span>Camera access denied</span>';
+      showAlert(alertEl, "Please allow camera access and refresh the page.", "error");
+    }
+  })();
+
+  function startAutoScan() {
+    scanInterval = setInterval(doScan, 2000);
+    statusEl.textContent = "Scanning…";
+    statusEl.style.color = "var(--warning)";
+  }
+
+  function togglePause() {
+    paused = !paused;
+    pauseBtn.textContent = paused ? "▶ Resume Auto-Scan" : "❚❚ Pause Auto-Scan";
+    statusEl.textContent = paused ? "Paused" : "Scanning…";
+    statusEl.style.color = paused ? "var(--muted)" : "var(--warning)";
+  }
+
+  async function doScan() {
+    if (!cam || scanning || paused) return;
+    scanning = true;
+    attempts++;
+    countEl.textContent = `Attempt ${attempts}`;
+    statusEl.textContent = "Analysing…";
+    statusEl.style.color = "var(--accent)";
+
+    const faceImage = cam.capture();
+    const data = await postJSON("/api/verify", { face_image: faceImage });
+
+    if (data.success) {
+      clearInterval(scanInterval);
+      cam.stop();
+      step2.textContent = "✓";
+      step2.classList.add("done");
+      statusEl.textContent = "Identity confirmed!";
+      statusEl.style.color = "var(--success)";
+      showAlert(alertEl, "Identity confirmed! Redirecting…", "success");
+      setTimeout(() => (window.location.href = data.redirect), 1200);
+    } else {
+      statusEl.textContent = "No match — retrying in 2s…";
+      statusEl.style.color = "var(--muted)";
+      // only show face-not-found errors; suppress routine non-match noise
+      if (data.message.toLowerCase().includes("error")) {
+        showAlert(alertEl, data.message, "error");
+      }
+      scanning = false;
+    }
+  }
+</script>
+{% endblock %}

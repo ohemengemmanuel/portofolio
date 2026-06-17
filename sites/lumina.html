@@ -1,0 +1,2819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUMINA — The World of Light</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@100;300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #f0d080;
+    --gold-dim: #7a5f1f;
+    --cream: #faf6ed;
+    --warm-white: #fff9ee;
+    --charcoal: #1a1610;
+    --dark: #0e0b07;
+    --mid: #2a2218;
+    --text-muted: #8a7a5a;
+    --text-warm: #c8b88a;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Josefin Sans', sans-serif;
+    background: var(--dark);
+    color: var(--cream);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  #cursor {
+    position: fixed; width: 8px; height: 8px;
+    background: var(--gold-light); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width .2s, height .2s, opacity .2s;
+    mix-blend-mode: screen;
+  }
+  #cursor-ring {
+    position: fixed; width: 36px; height: 36px;
+    border: 1px solid rgba(201,168,76,0.4); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform .12s ease-out, width .25s, height .25s;
+  }
+  body:hover #cursor { opacity: 1; }
+
+  /* ── HERO ── */
+  #hero {
+    position: relative;
+    height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    overflow: hidden;
+    background: radial-gradient(ellipse 60% 50% at 50% 60%, #2d1f08 0%, #0e0b07 70%);
+  }
+
+  .hero-bulb {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -60%);
+    width: 120px; height: 180px;
+  }
+
+  .bulb-glow {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,200,80,0.18) 0%, rgba(201,168,76,0.05) 40%, transparent 70%);
+    animation: pulse-glow 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { transform: translate(-50%,-50%) scale(1); opacity: .7; }
+    50% { transform: translate(-50%,-50%) scale(1.15); opacity: 1; }
+  }
+
+  .bulb-svg { width: 100%; height: 100%; filter: drop-shadow(0 0 30px rgba(255,180,50,0.6)); animation: flicker 6s ease-in-out infinite; }
+
+  @keyframes flicker {
+    0%,95%,100% { opacity: 1; }
+    96% { opacity: .85; }
+    97% { opacity: 1; }
+    98% { opacity: .9; }
+  }
+
+  .light-rays {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -60%);
+    width: 600px; height: 600px;
+    pointer-events: none;
+  }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    text-align: center;
+    margin-top: 140px;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px; letter-spacing: .4em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 1s .3s both;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(64px, 9vw, 130px);
+    font-weight: 300;
+    line-height: .9;
+    letter-spacing: -.02em;
+    color: var(--cream);
+    animation: fadeUp 1s .5s both;
+  }
+
+  .hero-title em { font-style: italic; color: var(--gold-light); }
+
+  .hero-sub {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 12px; letter-spacing: .3em;
+    color: var(--text-muted);
+    margin-top: 2rem;
+    text-transform: uppercase;
+    animation: fadeUp 1s .7s both;
+  }
+
+  .scroll-hint {
+    position: absolute; bottom: 2.5rem; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    animation: fadeUp 1s 1.2s both;
+  }
+
+  .scroll-hint span {
+    font-size: 9px; letter-spacing: .35em; color: var(--gold-dim); text-transform: uppercase;
+  }
+
+  .scroll-line {
+    width: 1px; height: 50px;
+    background: linear-gradient(to bottom, var(--gold-dim), transparent);
+    animation: scroll-drip 2s ease-in-out infinite;
+  }
+
+  @keyframes scroll-drip {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 1.5rem 3rem;
+    display: flex; align-items: center; justify-content: space-between;
+    mix-blend-mode: normal;
+    transition: background .4s;
+  }
+
+  nav.scrolled { background: rgba(14,11,7,0.92); backdrop-filter: blur(12px); }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 300; letter-spacing: .15em;
+    color: var(--gold-light);
+  }
+
+  .nav-links {
+    display: flex; gap: 2.5rem; list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 10px; letter-spacing: .3em; text-transform: uppercase;
+    color: var(--text-muted); text-decoration: none;
+    transition: color .3s;
+  }
+
+  .nav-links a:hover { color: var(--gold-light); }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-size: 9px; letter-spacing: .5em;
+    color: var(--gold-dim); text-transform: uppercase;
+    margin-bottom: 1.2rem;
+  }
+
+  /* ── INTRO BAND ── */
+  #intro {
+    padding: 8rem 10%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+    border-top: 1px solid rgba(201,168,76,0.08);
+  }
+
+  .intro-left h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(38px, 4.5vw, 62px);
+    font-weight: 300; line-height: 1.1;
+    color: var(--cream);
+    margin-bottom: 2rem;
+  }
+
+  .intro-left h2 em { font-style: italic; color: var(--gold-light); }
+
+  .intro-left p {
+    font-size: 13px; line-height: 2; letter-spacing: .05em;
+    color: var(--text-muted);
+    max-width: 440px;
+  }
+
+  .intro-right {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.5px;
+  }
+
+  .stat-cell {
+    padding: 2rem 1.5rem;
+    background: rgba(201,168,76,0.04);
+    border: 1px solid rgba(201,168,76,0.07);
+    transition: background .3s;
+  }
+
+  .stat-cell:hover { background: rgba(201,168,76,0.08); }
+
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 44px; font-weight: 300;
+    color: var(--gold-light);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 9px; letter-spacing: .3em;
+    color: var(--text-muted); text-transform: uppercase;
+    margin-top: .5rem;
+  }
+
+  /* ── COLLECTION GRID ── */
+  #collection {
+    padding: 6rem 5%;
+  }
+
+  .collection-header {
+    text-align: center;
+    margin-bottom: 5rem;
+  }
+
+  .collection-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(42px, 5vw, 76px);
+    font-weight: 300; letter-spacing: -.01em;
+    color: var(--cream);
+  }
+
+  .collection-header h2 em { font-style: italic; color: var(--gold-light); }
+
+  .lights-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+  }
+
+  .light-card {
+    position: relative;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    background: var(--mid);
+    cursor: none;
+    group: true;
+  }
+
+  .light-card:nth-child(1) { grid-column: span 2; aspect-ratio: unset; min-height: 420px; }
+  .light-card:nth-child(5) { grid-column: span 2; aspect-ratio: unset; min-height: 320px; }
+  .light-card:nth-child(9) { grid-column: span 2; aspect-ratio: unset; min-height: 360px; }
+
+  .card-bg {
+    position: absolute; inset: 0;
+    transition: transform .7s cubic-bezier(.25,.46,.45,.94);
+  }
+
+  .light-card:hover .card-bg { transform: scale(1.06); }
+
+  .card-scene {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-glow-effect {
+    position: absolute; inset: 0;
+    opacity: 0;
+    transition: opacity .5s;
+  }
+
+  .light-card:hover .card-glow-effect { opacity: 1; }
+
+  .card-info {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 2rem 1.5rem 1.5rem;
+    background: linear-gradient(to top, rgba(14,11,7,0.95) 0%, transparent 100%);
+    transform: translateY(30px); opacity: 0;
+    transition: transform .4s, opacity .4s;
+  }
+
+  .light-card:hover .card-info { transform: translateY(0); opacity: 1; }
+
+  .card-info .card-tag {
+    font-size: 9px; letter-spacing: .4em;
+    color: var(--gold-dim); text-transform: uppercase;
+    margin-bottom: .5rem;
+  }
+
+  .card-info .card-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 300;
+    color: var(--cream);
+  }
+
+  .card-number {
+    position: absolute; top: 1.2rem; right: 1.5rem;
+    font-size: 10px; letter-spacing: .2em;
+    color: rgba(201,168,76,0.3);
+  }
+
+  /* Individual card color themes */
+  .card-incandescent { background: linear-gradient(135deg, #1c1408 0%, #2a1d0a 100%); }
+  .card-led { background: linear-gradient(135deg, #0a1020 0%, #0d1830 100%); }
+  .card-chandelier-crystal { background: linear-gradient(135deg, #12101a 0%, #1a1625 100%); }
+  .card-sputnik { background: linear-gradient(135deg, #0f0f0f 0%, #1a1510 100%); }
+  .card-flush { background: linear-gradient(135deg, #101510 0%, #181e14 100%); }
+  .card-pendant { background: linear-gradient(135deg, #100810 0%, #1e0f1e 100%); }
+  .card-ledstrip { background: linear-gradient(135deg, #041010 0%, #081a15 100%); }
+  .card-neon { background: linear-gradient(135deg, #080012 0%, #10051a 100%); }
+  .card-floor { background: linear-gradient(135deg, #120c08 0%, #1a1008 100%); }
+  .card-table { background: linear-gradient(135deg, #0e0c10 0%, #16121a 100%); }
+  .card-desk { background: linear-gradient(135deg, #081210 0%, #0f1e18 100%); }
+  .card-reading { background: linear-gradient(135deg, #100e08 0%, #1a1608 100%); }
+  .card-spotlight { background: linear-gradient(135deg, #080810 0%, #0f0f1a 100%); }
+  .card-wallwasher { background: linear-gradient(135deg, #0a0810 0%, #160f1a 100%); }
+  .card-flood { background: linear-gradient(135deg, #0a1008 0%, #141a0f 100%); }
+
+  /* ── MARQUEE ── */
+  .marquee-wrap {
+    border-top: 1px solid rgba(201,168,76,0.1);
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+    padding: 1.2rem 0;
+    overflow: hidden;
+    background: rgba(201,168,76,0.02);
+    margin: 4rem 0;
+  }
+
+  .marquee-track {
+    display: flex; gap: 3rem;
+    animation: marquee 25s linear infinite;
+    width: max-content;
+  }
+
+  .marquee-item {
+    font-size: 10px; letter-spacing: .35em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    white-space: nowrap;
+    display: flex; align-items: center; gap: 3rem;
+  }
+
+  .marquee-dot {
+    width: 3px; height: 3px; border-radius: 50%;
+    background: var(--gold-dim); flex-shrink: 0;
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ── FEATURE SECTION ── */
+  #feature {
+    padding: 8rem 10%;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 8rem;
+    align-items: center;
+  }
+
+  .feature-visual {
+    position: relative;
+    height: 500px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .feature-text h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 3.5vw, 56px);
+    font-weight: 300; line-height: 1.15;
+    color: var(--cream);
+    margin-bottom: 2.5rem;
+  }
+
+  .feature-text h2 em { font-style: italic; color: var(--gold-light); }
+
+  .feature-text p {
+    font-size: 13px; line-height: 2.1; letter-spacing: .05em;
+    color: var(--text-muted); margin-bottom: 2rem;
+  }
+
+  .feature-list {
+    list-style: none;
+    display: flex; flex-direction: column; gap: .8rem;
+    margin-bottom: 3rem;
+  }
+
+  .feature-list li {
+    display: flex; align-items: center; gap: 1rem;
+    font-size: 11px; letter-spacing: .2em;
+    text-transform: uppercase; color: var(--text-warm);
+  }
+
+  .feature-list li::before {
+    content: '';
+    width: 24px; height: 1px;
+    background: var(--gold-dim);
+    flex-shrink: 0;
+  }
+
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: 1rem;
+    font-size: 10px; letter-spacing: .35em; text-transform: uppercase;
+    color: var(--gold-light);
+    border: 1px solid rgba(201,168,76,0.3);
+    padding: .9rem 2rem;
+    text-decoration: none;
+    transition: background .3s, border-color .3s;
+    cursor: none;
+  }
+
+  .btn-ghost:hover {
+    background: rgba(201,168,76,0.07);
+    border-color: rgba(201,168,76,0.5);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid rgba(201,168,76,0.1);
+    padding: 4rem 10%;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(10,8,4,0.5);
+  }
+
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; font-weight: 300;
+    color: var(--gold-light);
+    letter-spacing: .1em;
+  }
+
+  .footer-copy {
+    font-size: 10px; letter-spacing: .2em;
+    color: var(--gold-dim); text-transform: uppercase;
+  }
+
+  /* ── LIGHT SVGs ── */
+  .light-svg-wrap {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+
+  /* Ambient glow for hovering cards */
+  .ambient-glow {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: amb 3s ease-in-out infinite;
+  }
+
+  @keyframes amb {
+    0%,100% { transform: translate(-50%,-50%) scale(1); }
+    50% { transform: translate(-50%,-50%) scale(1.1); }
+  }
+
+  /* hover line accent */
+  .light-card::after {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform .5s ease;
+  }
+
+  .light-card:hover::after { transform: scaleX(1); }
+
+  /* Interactive spectrum bar */
+  #spectrum {
+    padding: 5rem 10%;
+    text-align: center;
+  }
+
+  #spectrum h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(34px, 4vw, 58px);
+    font-weight: 300; color: var(--cream);
+    margin-bottom: .8rem;
+  }
+
+  #spectrum h2 em { font-style: italic; color: var(--gold-light); }
+
+  #spectrum p {
+    font-size: 12px; letter-spacing: .1em;
+    color: var(--text-muted); margin-bottom: 3.5rem;
+  }
+
+  .spectrum-bar {
+    height: 6px; width: 100%; border-radius: 3px;
+    background: linear-gradient(90deg,
+      #ff2200 0%, #ff6600 10%, #ffaa00 20%, #ffdd00 30%,
+      #ddff00 40%, #00ff88 50%, #00ddff 60%, #0066ff 75%, #8800ff 88%, #ff00ff 100%);
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+
+  .spectrum-labels {
+    display: flex; justify-content: space-between;
+    font-size: 9px; letter-spacing: .25em;
+    color: var(--gold-dim); text-transform: uppercase;
+  }
+
+  .kelvin-scale {
+    margin-top: 3rem;
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 2px;
+  }
+
+  .k-cell {
+    padding: 2rem 1rem;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.04);
+    transition: transform .3s, border-color .3s;
+    cursor: none;
+  }
+
+  .k-cell:hover {
+    transform: translateY(-4px);
+    border-color: rgba(201,168,76,0.2);
+  }
+
+  .k-swatch { width: 40px; height: 40px; border-radius: 50%; margin: 0 auto 1rem; }
+  .k-temp { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 300; color: var(--cream); }
+  .k-desc { font-size: 9px; letter-spacing: .25em; color: var(--text-muted); text-transform: uppercase; margin-top: .3rem; }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">LUMINA</div>
+  <ul class="nav-links">
+    <li><a href="#collection">Collection</a></li>
+    <li><a href="#feature">Technology</a></li>
+    <li><a href="#spectrum">Spectrum</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="bulb-glow"></div>
+
+  <!-- Radiant rays SVG -->
+  <svg class="light-rays" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="rayGrad" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.15"/>
+        <stop offset="100%" stop-color="#c9a84c" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <g opacity="0.6" style="animation: rotate-rays 20s linear infinite; transform-origin: 300px 300px;">
+      <line x1="300" y1="300" x2="300" y2="60" stroke="#c9a84c" stroke-width="0.5" stroke-opacity="0.3"/>
+      <line x1="300" y1="300" x2="490" y2="110" stroke="#c9a84c" stroke-width="0.5" stroke-opacity="0.2"/>
+      <line x1="300" y1="300" x2="540" y2="300" stroke="#c9a84c" stroke-width="0.5" stroke-opacity="0.3"/>
+      <line x1="300" y1="300" x2="490" y2="490" stroke="#c9a84c" stroke-width="0.5" stroke-opacity="0.2"/>
+      <line x1="300" y1="300" x2="300" y2="540" stroke="#c9a84c" stroke-width="0.5" stroke-opacity="0.3"/>
+      <line x1="300" y1="300" x2="110" y2="490" stroke="#c9a84c" stroke-width="0.5" stroke-opacity="0.2"/>
+      <line x1="300" y1="300" x2="60" y2="300" stroke="#c9a84c" stroke-width="0.5" stroke-opacity="0.3"/>
+      <line x1="300" y1="300" x2="110" y2="110" stroke="#c9a84c" stroke-width="0.5" stroke-opacity="0.2"/>
+      <!-- diagonals -->
+      <line x1="300" y1="300" x2="410" y2="80" stroke="#c9a84c" stroke-width="0.3" stroke-opacity="0.15"/>
+      <line x1="300" y1="300" x2="520" y2="190" stroke="#c9a84c" stroke-width="0.3" stroke-opacity="0.15"/>
+      <line x1="300" y1="300" x2="520" y2="410" stroke="#c9a84c" stroke-width="0.3" stroke-opacity="0.15"/>
+      <line x1="300" y1="300" x2="410" y2="520" stroke="#c9a84c" stroke-width="0.3" stroke-opacity="0.15"/>
+      <line x1="300" y1="300" x2="190" y2="520" stroke="#c9a84c" stroke-width="0.3" stroke-opacity="0.15"/>
+      <line x1="300" y1="300" x2="80" y2="410" stroke="#c9a84c" stroke-width="0.3" stroke-opacity="0.15"/>
+      <line x1="300" y1="300" x2="80" y2="190" stroke="#c9a84c" stroke-width="0.3" stroke-opacity="0.15"/>
+      <line x1="300" y1="300" x2="190" y2="80" stroke="#c9a84c" stroke-width="0.3" stroke-opacity="0.15"/>
+    </g>
+  </svg>
+
+  <!-- Incandescent bulb illustration -->
+  <div class="hero-bulb">
+    <svg class="bulb-svg" viewBox="0 0 120 180" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="bulbFill" cx="50%" cy="45%" r="50%">
+          <stop offset="0%" stop-color="#fff5c8"/>
+          <stop offset="40%" stop-color="#ffc840"/>
+          <stop offset="100%" stop-color="#c87800"/>
+        </radialGradient>
+        <radialGradient id="glassGrad" cx="35%" cy="30%" r="70%">
+          <stop offset="0%" stop-color="rgba(255,240,200,0.35)"/>
+          <stop offset="100%" stop-color="rgba(180,120,40,0.05)"/>
+        </radialGradient>
+      </defs>
+      <!-- Glass envelope -->
+      <path d="M60 8 C30 8, 8 32, 8 58 C8 82, 20 96, 34 108 C38 113, 40 118, 40 126 L80 126 C80 118, 82 113, 86 108 C100 96, 112 82, 112 58 C112 32, 90 8, 60 8 Z"
+        fill="url(#bulbFill)" stroke="rgba(255,200,80,0.4)" stroke-width="0.8"/>
+      <!-- Glass sheen -->
+      <path d="M60 8 C30 8, 8 32, 8 58 C8 82, 20 96, 34 108 C38 113, 40 118, 40 126 L80 126 C80 118, 82 113, 86 108 C100 96, 112 82, 112 58 C112 32, 90 8, 60 8 Z"
+        fill="url(#glassGrad)"/>
+      <!-- Filament -->
+      <g stroke="#fff8d0" stroke-width="1.2" fill="none" stroke-linecap="round">
+        <path d="M60 100 L60 90 Q56 85 60 80 Q64 75 60 70 Q56 65 60 60 Q64 55 60 50 Q56 45 60 40"/>
+        <line x1="55" y1="100" x2="65" y2="100"/>
+        <line x1="55" y1="40" x2="65" y2="40"/>
+        <line x1="55" y1="100" x2="55" y2="105"/>
+        <line x1="65" y1="100" x2="65" y2="105"/>
+        <line x1="55" y1="40" x2="55" y2="35"/>
+        <line x1="65" y1="40" x2="65" y2="35"/>
+      </g>
+      <!-- Support wires -->
+      <line x1="50" y1="110" x2="50" y2="35" stroke="rgba(255,220,100,0.25)" stroke-width="0.7"/>
+      <line x1="70" y1="110" x2="70" y2="35" stroke="rgba(255,220,100,0.25)" stroke-width="0.7"/>
+      <!-- Base -->
+      <rect x="40" y="126" width="40" height="8" rx="2" fill="#8a6020"/>
+      <rect x="42" y="134" width="36" height="6" rx="1" fill="#705015"/>
+      <rect x="44" y="140" width="32" height="6" rx="1" fill="#5a4010"/>
+      <rect x="46" y="146" width="28" height="8" rx="2" fill="#484010"/>
+      <rect x="48" y="154" width="24" height="8" rx="2" fill="#3a3010"/>
+      <rect x="52" y="162" width="16" height="14" rx="2" fill="#2a2010"/>
+      <!-- Screw threads -->
+      <line x1="44" y1="136" x2="76" y2="136" stroke="rgba(255,200,80,0.15)" stroke-width="1"/>
+      <line x1="44" y1="140" x2="76" y2="140" stroke="rgba(255,200,80,0.15)" stroke-width="1"/>
+      <line x1="46" y1="144" x2="74" y2="144" stroke="rgba(255,200,80,0.12)" stroke-width="1"/>
+      <line x1="47" y1="148" x2="73" y2="148" stroke="rgba(255,200,80,0.1)" stroke-width="1"/>
+    </svg>
+  </div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">The art of illumination</p>
+    <h1 class="hero-title">Light is <em>life</em></h1>
+    <p class="hero-sub">Fourteen ways to see the world differently</p>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Explore</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- INTRO -->
+<section id="intro">
+  <div class="intro-left">
+    <p class="section-label">Our philosophy</p>
+    <h2>Lighting shapes how we <em>feel</em>, think and see</h2>
+    <p>From the warm amber of a candle-like incandescent to the crisp daylight of an LED panel, every light source carries its own language. Lumina curates the world's finest lighting forms — each selected for its character, craft, and the way it transforms a room into an experience.</p>
+  </div>
+  <div class="intro-right">
+    <div class="stat-cell">
+      <div class="stat-num">14</div>
+      <div class="stat-label">Light families</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num">1879</div>
+      <div class="stat-label">Edison's patent year</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num">10×</div>
+      <div class="stat-label">More efficient than incandescent</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num">6500</div>
+      <div class="stat-label">Max colour temperature K</div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item">Incandescent <div class="marquee-dot"></div></div>
+    <div class="marquee-item">LED Bulb <div class="marquee-dot"></div></div>
+    <div class="marquee-item">Crystal Chandelier <div class="marquee-dot"></div></div>
+    <div class="marquee-item">Sputnik Chandelier <div class="marquee-dot"></div></div>
+    <div class="marquee-item">Flush Mount <div class="marquee-dot"></div></div>
+    <div class="marquee-item">Pendant Light <div class="marquee-dot"></div></div>
+    <div class="marquee-item">LED Strip <div class="marquee-dot"></div></div>
+    <div class="marquee-item">Neon Flex <div class="marquee-dot"></div></div>
+    <div class="marquee-item">Floor Lamp <div class="marquee-dot"></div></div>
+    <div class="marquee-item">Table Lamp <div class="marquee-dot"></div></div>
+    <div class="marquee-item">Desk Lamp <div class="marquee-dot"></div></div>
+    <div class="marquee-item">Reading Lamp <div class="marquee-dot"></div></div>
+    <div class="marquee-item">Spotlight <div class="marquee-dot"></div></div>
+    <div class="marquee-item">Wall Washer <div class="marquee-dot"></div></div>
+    <div class="marquee-item">Floodlight <div class="marquee-dot"></div></div>
+    <!-- repeat for seamless loop -->
+    <div class="marquee-item">Incandescent <div class="marquee-dot"></div></div>
+    <div class="marquee-item">LED Bulb <div class="marquee-dot"></div></div>
+    <div class="marquee-item">Crystal Chandelier <div class="marquee-dot"></div></div>
+    <div class="marquee-item">Sputnik Chandelier <div class="marquee-dot"></div></div>
+    <div class="marquee-item">Flush Mount <div class="marquee-dot"></div></div>
+    <div class="marquee-item">Pendant Light <div class="marquee-dot"></div></div>
+    <div class="marquee-item">LED Strip <div class="marquee-dot"></div></div>
+    <div class="marquee-item">Neon Flex <div class="marquee-dot"></div></div>
+    <div class="marquee-item">Floor Lamp <div class="marquee-dot"></div></div>
+    <div class="marquee-item">Table Lamp <div class="marquee-dot"></div></div>
+    <div class="marquee-item">Desk Lamp <div class="marquee-dot"></div></div>
+    <div class="marquee-item">Reading Lamp <div class="marquee-dot"></div></div>
+    <div class="marquee-item">Spotlight <div class="marquee-dot"></div></div>
+    <div class="marquee-item">Wall Washer <div class="marquee-dot"></div></div>
+    <div class="marquee-item">Floodlight <div class="marquee-dot"></div></div>
+  </div>
+</div>
+
+<!-- COLLECTION GRID -->
+<section id="collection">
+  <div class="collection-header">
+    <p class="section-label">The Collection</p>
+    <h2>Fourteen <em>luminous</em> forms</h2>
+  </div>
+
+  <div class="lights-grid">
+
+    <!-- 1. Incandescent (wide) -->
+    <div class="light-card card-incandescent">
+      <div class="card-bg card-scene">
+        <div class="card-glow-effect" style="background: radial-gradient(circle at 50% 40%, rgba(255,180,40,0.18) 0%, transparent 60%);"></div>
+        <svg width="160" height="220" viewBox="0 0 120 180" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="ig1" cx="50%" cy="45%" r="50%">
+              <stop offset="0%" stop-color="#fff5c8"/><stop offset="50%" stop-color="#ffc840"/><stop offset="100%" stop-color="#c87800"/>
+            </radialGradient>
+          </defs>
+          <ellipse cx="60" cy="58" rx="40" ry="40" fill="url(#ig1)" opacity="0.15"/>
+          <path d="M60 8 C30 8, 8 32, 8 58 C8 82, 20 96, 34 108 C38 113, 40 118, 40 126 L80 126 C80 118, 82 113, 86 108 C100 96, 112 82, 112 58 C112 32, 90 8, 60 8 Z" fill="url(#ig1)" stroke="rgba(255,200,80,0.35)" stroke-width="0.8"/>
+          <path d="M60 8 C30 8, 8 32, 8 58 C8 82, 20 96, 34 108 C38 113, 40 118, 40 126 L80 126 C80 118, 82 113, 86 108 C100 96, 112 82, 112 58 C112 32, 90 8, 60 8 Z" fill="rgba(255,240,200,0.18)"/>
+          <g stroke="#fff8d0" stroke-width="1.2" fill="none" stroke-linecap="round">
+            <path d="M60 100 L60 90 Q56 85 60 80 Q64 75 60 70 Q56 65 60 60 Q64 55 60 50 Q56 45 60 40"/>
+          </g>
+          <rect x="40" y="126" width="40" height="40" rx="3" fill="#5a3010"/>
+        </svg>
+      </div>
+      <span class="card-number">01</span>
+      <div class="card-info">
+        <div class="card-tag">Classic</div>
+        <div class="card-name">Incandescent Bulb</div>
+      </div>
+    </div>
+
+    <!-- 2. LED -->
+    <div class="light-card card-led">
+      <div class="card-bg card-scene">
+        <div class="card-glow-effect" style="background: radial-gradient(circle at 50% 45%, rgba(100,180,255,0.2) 0%, transparent 55%);"></div>
+        <svg width="120" height="200" viewBox="0 0 120 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="ledg" cx="50%" cy="40%" r="55%">
+              <stop offset="0%" stop-color="#e0f4ff"/><stop offset="50%" stop-color="#60c0ff"/><stop offset="100%" stop-color="#1060c0"/>
+            </radialGradient>
+          </defs>
+          <path d="M60 10 C32 10, 10 34, 10 62 C10 84, 22 100, 38 110 C42 115, 44 120, 44 130 L76 130 C76 120, 78 115, 82 110 C98 100, 110 84, 110 62 C110 34, 88 10, 60 10 Z" fill="url(#ledg)" stroke="rgba(100,200,255,0.4)" stroke-width="0.8"/>
+          <!-- LED array dots -->
+          <circle cx="60" cy="62" r="6" fill="rgba(255,255,255,0.9)"/>
+          <circle cx="48" cy="56" r="4" fill="rgba(200,240,255,0.8)"/>
+          <circle cx="72" cy="56" r="4" fill="rgba(200,240,255,0.8)"/>
+          <circle cx="48" cy="68" r="4" fill="rgba(200,240,255,0.8)"/>
+          <circle cx="72" cy="68" r="4" fill="rgba(200,240,255,0.8)"/>
+          <circle cx="60" cy="48" r="3" fill="rgba(180,230,255,0.7)"/>
+          <circle cx="60" cy="76" r="3" fill="rgba(180,230,255,0.7)"/>
+          <rect x="44" y="130" width="32" height="42" rx="3" fill="#183060"/>
+          <line x1="46" y1="140" x2="74" y2="140" stroke="rgba(100,180,255,0.2)" stroke-width="1"/>
+          <line x1="46" y1="148" x2="74" y2="148" stroke="rgba(100,180,255,0.2)" stroke-width="1"/>
+          <line x1="46" y1="156" x2="74" y2="156" stroke="rgba(100,180,255,0.15)" stroke-width="1"/>
+        </svg>
+      </div>
+      <span class="card-number">02</span>
+      <div class="card-info">
+        <div class="card-tag">Modern</div>
+        <div class="card-name">LED Bulb</div>
+      </div>
+    </div>
+
+    <!-- 3. Crystal Chandelier -->
+    <div class="light-card card-chandelier-crystal">
+      <div class="card-bg card-scene">
+        <div class="card-glow-effect" style="background: radial-gradient(circle at 50% 30%, rgba(255,240,200,0.15) 0%, transparent 55%);"></div>
+        <svg width="200" height="240" viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+          <!-- Main stem -->
+          <line x1="100" y1="10" x2="100" y2="50" stroke="#c9a84c" stroke-width="2"/>
+          <!-- Central orb -->
+          <circle cx="100" cy="58" r="12" fill="rgba(255,240,180,0.8)" stroke="rgba(201,168,76,0.5)" stroke-width="1"/>
+          <!-- Arms -->
+          <line x1="100" y1="58" x2="50" y2="90" stroke="#c9a84c" stroke-width="1.5"/>
+          <line x1="100" y1="58" x2="150" y2="90" stroke="#c9a84c" stroke-width="1.5"/>
+          <line x1="100" y1="58" x2="30" y2="80" stroke="#c9a84c" stroke-width="1"/>
+          <line x1="100" y1="58" x2="170" y2="80" stroke="#c9a84c" stroke-width="1"/>
+          <line x1="100" y1="58" x2="70" y2="100" stroke="#c9a84c" stroke-width="1"/>
+          <line x1="100" y1="58" x2="130" y2="100" stroke="#c9a84c" stroke-width="1"/>
+          <!-- Candle holders & bulbs -->
+          <g fill="rgba(255,240,180,0.9)" stroke="rgba(201,168,76,0.4)" stroke-width="0.5">
+            <ellipse cx="50" cy="92" rx="5" ry="3"/><rect x="48" y="90" width="4" height="8" fill="#c9a84c"/>
+            <ellipse cx="150" cy="92" rx="5" ry="3"/><rect x="148" y="90" width="4" height="8" fill="#c9a84c"/>
+            <ellipse cx="30" cy="82" rx="5" ry="3"/><rect x="28" y="80" width="4" height="8" fill="#c9a84c"/>
+            <ellipse cx="170" cy="82" rx="5" ry="3"/><rect x="168" y="80" width="4" height="8" fill="#c9a84c"/>
+            <ellipse cx="70" cy="102" rx="5" ry="3"/><rect x="68" y="100" width="4" height="8" fill="#c9a84c"/>
+            <ellipse cx="130" cy="102" rx="5" ry="3"/><rect x="128" y="100" width="4" height="8" fill="#c9a84c"/>
+          </g>
+          <!-- Crystals -->
+          <g fill="rgba(220,240,255,0.7)" stroke="rgba(180,220,255,0.5)" stroke-width="0.5">
+            <polygon points="52,100 56,115 48,115"/>
+            <polygon points="150,100 154,115 146,115"/>
+            <polygon points="32,90 36,105 28,105"/>
+            <polygon points="172,90 176,105 168,105"/>
+            <polygon points="72,110 76,125 68,125"/>
+            <polygon points="132,110 136,125 128,125"/>
+            <!-- Small crystals -->
+            <polygon points="45,108 48,118 42,118"/>
+            <polygon points="155,108 158,118 152,118"/>
+            <polygon points="100,68 103,78 97,78"/>
+            <!-- hanging chains -->
+            <polygon points="25,90 27,100 23,100"/>
+            <polygon points="175,90 177,100 173,100"/>
+          </g>
+          <!-- Ring of small crystals at base -->
+          <g fill="rgba(200,230,255,0.6)" stroke="rgba(180,210,255,0.4)" stroke-width="0.5">
+            <polygon points="80,120 82,130 78,130"/>
+            <polygon points="90,122 92,132 88,132"/>
+            <polygon points="100,123 102,133 98,133"/>
+            <polygon points="110,122 112,132 108,132"/>
+            <polygon points="120,120 122,130 118,130"/>
+          </g>
+        </svg>
+      </div>
+      <span class="card-number">03</span>
+      <div class="card-info">
+        <div class="card-tag">Grand</div>
+        <div class="card-name">Crystal Chandelier</div>
+      </div>
+    </div>
+
+    <!-- 4. Sputnik Chandelier -->
+    <div class="light-card card-sputnik">
+      <div class="card-bg card-scene">
+        <div class="card-glow-effect" style="background: radial-gradient(circle at 50% 50%, rgba(255,220,100,0.15) 0%, transparent 55%);"></div>
+        <svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <line x1="100" y1="0" x2="100" y2="40" stroke="#888" stroke-width="2"/>
+          <!-- Central sphere -->
+          <circle cx="100" cy="100" r="16" fill="#3a3830" stroke="#c9a84c" stroke-width="1.5"/>
+          <circle cx="94" cy="94" r="5" fill="rgba(201,168,76,0.3)"/>
+          <!-- Spikes with bulbs -->
+          <g stroke="#c9a84c" stroke-width="1.5">
+            <line x1="100" y1="84" x2="100" y2="40"/><circle cx="100" cy="38" r="5" fill="#ffd060" stroke="none"/>
+            <line x1="100" y1="116" x2="100" y2="160"/><circle cx="100" cy="162" r="5" fill="#ffd060" stroke="none"/>
+            <line x1="84" y1="100" x2="40" y2="100"/><circle cx="38" cy="100" r="5" fill="#ffd060" stroke="none"/>
+            <line x1="116" y1="100" x2="160" y2="100"/><circle cx="162" cy="100" r="5" fill="#ffd060" stroke="none"/>
+            <line x1="89" y1="89" x2="55" y2="55"/><circle cx="53" cy="53" r="4" fill="#ffd060" stroke="none"/>
+            <line x1="111" y1="89" x2="145" y2="55"/><circle cx="147" cy="53" r="4" fill="#ffd060" stroke="none"/>
+            <line x1="89" y1="111" x2="55" y2="145"/><circle cx="53" cy="147" r="4" fill="#ffd060" stroke="none"/>
+            <line x1="111" y1="111" x2="145" y2="145"/><circle cx="147" cy="147" r="4" fill="#ffd060" stroke="none"/>
+            <!-- diagonals -->
+            <line x1="100" y1="84" x2="76" y2="48"/><circle cx="74" cy="46" r="3.5" fill="#ffc840" stroke="none"/>
+            <line x1="100" y1="84" x2="124" y2="48"/><circle cx="126" cy="46" r="3.5" fill="#ffc840" stroke="none"/>
+            <line x1="84" y1="100" x2="48" y2="76"/><circle cx="46" cy="74" r="3.5" fill="#ffc840" stroke="none"/>
+            <line x1="84" y1="100" x2="48" y2="124"/><circle cx="46" cy="126" r="3.5" fill="#ffc840" stroke="none"/>
+          </g>
+          <line x1="100" y1="40" x2="100" y2="0" stroke="#888" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <span class="card-number">04</span>
+      <div class="card-info">
+        <div class="card-tag">Mid-Century</div>
+        <div class="card-name">Sputnik Chandelier</div>
+      </div>
+    </div>
+
+    <!-- 5. Flush Mount (wide) -->
+    <div class="light-card card-flush">
+      <div class="card-bg card-scene">
+        <div class="card-glow-effect" style="background: radial-gradient(circle at 50% 40%, rgba(200,255,180,0.12) 0%, transparent 60%);"></div>
+        <svg width="220" height="120" viewBox="0 0 220 120" xmlns="http://www.w3.org/2000/svg">
+          <rect x="20" y="10" width="180" height="12" rx="4" fill="#2a2a28" stroke="#c9a84c" stroke-width="0.8"/>
+          <rect x="30" y="22" width="160" height="60" rx="6" fill="rgba(220,255,200,0.12)" stroke="rgba(200,230,180,0.25)" stroke-width="1"/>
+          <!-- Light diffuser -->
+          <rect x="34" y="26" width="152" height="52" rx="4" fill="rgba(220,255,200,0.06)"/>
+          <ellipse cx="110" cy="52" rx="60" ry="20" fill="rgba(255,255,220,0.08)"/>
+          <!-- screws -->
+          <circle cx="35" cy="16" r="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+          <circle cx="185" cy="16" r="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+          <circle cx="110" cy="16" r="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+        </svg>
+      </div>
+      <span class="card-number">05</span>
+      <div class="card-info">
+        <div class="card-tag">Ceiling</div>
+        <div class="card-name">Flush Mount Ceiling Light</div>
+      </div>
+    </div>
+
+    <!-- 6. Pendant -->
+    <div class="light-card card-pendant">
+      <div class="card-bg card-scene">
+        <div class="card-glow-effect" style="background: radial-gradient(circle at 50% 65%, rgba(200,120,255,0.15) 0%, transparent 55%);"></div>
+        <svg width="120" height="220" viewBox="0 0 120 220" xmlns="http://www.w3.org/2000/svg">
+          <line x1="60" y1="0" x2="60" y2="70" stroke="#888" stroke-width="1.5"/>
+          <!-- Shade -->
+          <path d="M35 70 L15 150 L105 150 L85 70 Z" fill="rgba(80,40,100,0.5)" stroke="rgba(180,100,255,0.4)" stroke-width="1"/>
+          <path d="M35 70 L85 70" stroke="rgba(200,150,255,0.5)" stroke-width="1.5"/>
+          <!-- Inner light -->
+          <ellipse cx="60" cy="148" rx="28" ry="6" fill="rgba(220,180,255,0.4)"/>
+          <ellipse cx="60" cy="145" rx="22" ry="5" fill="rgba(240,200,255,0.25)"/>
+          <!-- cord detail -->
+          <circle cx="60" cy="68" r="5" fill="#503060" stroke="rgba(200,150,255,0.3)" stroke-width="1"/>
+        </svg>
+      </div>
+      <span class="card-number">06</span>
+      <div class="card-info">
+        <div class="card-tag">Hanging</div>
+        <div class="card-name">Pendant Light</div>
+      </div>
+    </div>
+
+    <!-- 7. LED Strip -->
+    <div class="light-card card-ledstrip">
+      <div class="card-bg card-scene">
+        <div class="card-glow-effect" style="background: linear-gradient(90deg, rgba(0,255,180,0.1) 0%, rgba(0,200,255,0.1) 50%, rgba(0,255,180,0.1) 100%);"></div>
+        <svg width="220" height="100" viewBox="0 0 220 100" xmlns="http://www.w3.org/2000/svg">
+          <!-- strip base -->
+          <rect x="10" y="40" width="200" height="18" rx="4" fill="#0a2020" stroke="rgba(0,200,180,0.3)" stroke-width="0.8"/>
+          <!-- LEDs -->
+          <g fill="#00ffcc" opacity="0.9">
+            <rect x="18" y="45" width="6" height="8" rx="1"/>
+            <rect x="30" y="45" width="6" height="8" rx="1"/>
+            <rect x="42" y="45" width="6" height="8" rx="1"/>
+            <rect x="54" y="45" width="6" height="8" rx="1"/>
+            <rect x="66" y="45" width="6" height="8" rx="1"/>
+            <rect x="78" y="45" width="6" height="8" rx="1"/>
+            <rect x="90" y="45" width="6" height="8" rx="1"/>
+            <rect x="102" y="45" width="6" height="8" rx="1"/>
+            <rect x="114" y="45" width="6" height="8" rx="1"/>
+            <rect x="126" y="45" width="6" height="8" rx="1"/>
+            <rect x="138" y="45" width="6" height="8" rx="1"/>
+            <rect x="150" y="45" width="6" height="8" rx="1"/>
+            <rect x="162" y="45" width="6" height="8" rx="1"/>
+            <rect x="174" y="45" width="6" height="8" rx="1"/>
+            <rect x="186" y="45" width="6" height="8" rx="1"/>
+            <rect x="198" y="45" width="6" height="8" rx="1"/>
+          </g>
+          <!-- glow line below -->
+          <rect x="10" y="58" width="200" height="3" rx="2" fill="rgba(0,255,200,0.2)"/>
+          <rect x="10" y="61" width="200" height="2" rx="1" fill="rgba(0,255,200,0.1)"/>
+        </svg>
+      </div>
+      <span class="card-number">07</span>
+      <div class="card-info">
+        <div class="card-tag">Ambient</div>
+        <div class="card-name">LED Strip Light</div>
+      </div>
+    </div>
+
+    <!-- 8. Neon Flex -->
+    <div class="light-card card-neon">
+      <div class="card-bg card-scene">
+        <div class="card-glow-effect" style="background: radial-gradient(circle at 50% 55%, rgba(255,50,150,0.15) 0%, transparent 60%);"></div>
+        <svg width="200" height="160" viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg">
+          <!-- Neon sign spelling "GLOW" in cursive-like path -->
+          <path d="M20 80 Q30 50 50 60 Q70 70 60 90 Q50 110 70 100 Q90 90 80 70"
+            fill="none" stroke="#ff3399" stroke-width="5" stroke-linecap="round" opacity="0.9"/>
+          <path d="M90 80 L90 100 Q90 115 105 115 Q120 115 120 100 L120 65"
+            fill="none" stroke="#ff3399" stroke-width="5" stroke-linecap="round" opacity="0.9"/>
+          <path d="M130 65 L130 115 M130 90 L155 90 M155 65 L155 115"
+            fill="none" stroke="#ff3399" stroke-width="5" stroke-linecap="round" opacity="0.9"/>
+          <path d="M165 80 Q175 60 185 80 Q195 100 185 110 Q175 120 165 110 Q155 100 165 80 Z"
+            fill="none" stroke="#ff3399" stroke-width="5" stroke-linecap="round" opacity="0.9"/>
+          <!-- inner glow -->
+          <path d="M20 80 Q30 50 50 60 Q70 70 60 90 Q50 110 70 100 Q90 90 80 70"
+            fill="none" stroke="rgba(255,150,200,0.4)" stroke-width="10" stroke-linecap="round"/>
+          <path d="M90 80 L90 100 Q90 115 105 115 Q120 115 120 100 L120 65"
+            fill="none" stroke="rgba(255,150,200,0.4)" stroke-width="10" stroke-linecap="round"/>
+          <path d="M130 65 L130 115 M130 90 L155 90 M155 65 L155 115"
+            fill="none" stroke="rgba(255,150,200,0.4)" stroke-width="10" stroke-linecap="round"/>
+          <path d="M165 80 Q175 60 185 80 Q195 100 185 110 Q175 120 165 110 Q155 100 165 80 Z"
+            fill="none" stroke="rgba(255,150,200,0.4)" stroke-width="10" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span class="card-number">08</span>
+      <div class="card-info">
+        <div class="card-tag">Decorative</div>
+        <div class="card-name">Neon Flex Light</div>
+      </div>
+    </div>
+
+    <!-- 9. Floor Lamp (wide) -->
+    <div class="light-card card-floor">
+      <div class="card-bg card-scene">
+        <div class="card-glow-effect" style="background: radial-gradient(ellipse at 50% 25%, rgba(255,200,100,0.15) 0%, transparent 50%);"></div>
+        <svg width="180" height="320" viewBox="0 0 180 320" xmlns="http://www.w3.org/2000/svg">
+          <!-- Shade -->
+          <path d="M55 20 L30 80 L150 80 L125 20 Z" fill="rgba(60,40,20,0.8)" stroke="rgba(201,168,76,0.4)" stroke-width="1"/>
+          <ellipse cx="90" cy="20" rx="35" ry="6" fill="rgba(201,168,76,0.2)" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+          <!-- Inner glow -->
+          <ellipse cx="90" cy="78" rx="48" ry="8" fill="rgba(255,200,80,0.25)"/>
+          <!-- Pole -->
+          <line x1="90" y1="80" x2="90" y2="280" stroke="#8a6830" stroke-width="5"/>
+          <line x1="90" y1="80" x2="90" y2="280" stroke="rgba(201,168,76,0.15)" stroke-width="3"/>
+          <!-- Mid joint -->
+          <rect x="83" y="170" width="14" height="12" rx="3" fill="#6a5020"/>
+          <!-- Base -->
+          <ellipse cx="90" cy="282" rx="40" ry="8" fill="#4a3818"/>
+          <ellipse cx="90" cy="279" rx="34" ry="6" fill="#5a4820"/>
+          <!-- Feet -->
+          <line x1="90" y1="282" x2="55" y2="296" stroke="#4a3818" stroke-width="5" stroke-linecap="round"/>
+          <line x1="90" y1="282" x2="125" y2="296" stroke="#4a3818" stroke-width="5" stroke-linecap="round"/>
+          <line x1="90" y1="282" x2="90" y2="298" stroke="#4a3818" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span class="card-number">09</span>
+      <div class="card-info">
+        <div class="card-tag">Standing</div>
+        <div class="card-name">Floor Lamp</div>
+      </div>
+    </div>
+
+    <!-- 10. Table Lamp -->
+    <div class="light-card card-table">
+      <div class="card-bg card-scene">
+        <div class="card-glow-effect" style="background: radial-gradient(ellipse at 50% 35%, rgba(255,180,80,0.15) 0%, transparent 55%);"></div>
+        <svg width="140" height="220" viewBox="0 0 140 220" xmlns="http://www.w3.org/2000/svg">
+          <!-- Shade -->
+          <path d="M40 30 L20 90 L120 90 L100 30 Z" fill="rgba(100,60,20,0.7)" stroke="rgba(201,168,76,0.35)" stroke-width="1"/>
+          <ellipse cx="70" cy="30" rx="30" ry="5" fill="rgba(201,168,76,0.15)"/>
+          <ellipse cx="70" cy="89" rx="50" ry="7" fill="rgba(255,180,60,0.2)"/>
+          <!-- Stand -->
+          <line x1="70" y1="90" x2="70" y2="170" stroke="#7a5530" stroke-width="4"/>
+          <!-- Decorative orb -->
+          <circle cx="70" cy="140" r="10" fill="#5a3018" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+          <!-- Base -->
+          <ellipse cx="70" cy="172" rx="35" ry="7" fill="#4a3018"/>
+          <ellipse cx="70" cy="169" rx="28" ry="5" fill="#5a3820"/>
+        </svg>
+      </div>
+      <span class="card-number">10</span>
+      <div class="card-info">
+        <div class="card-tag">Accent</div>
+        <div class="card-name">Table Lamp</div>
+      </div>
+    </div>
+
+    <!-- 11. Desk Lamp -->
+    <div class="light-card card-desk">
+      <div class="card-bg card-scene">
+        <div class="card-glow-effect" style="background: radial-gradient(ellipse at 55% 55%, rgba(100,255,180,0.12) 0%, transparent 55%);"></div>
+        <svg width="180" height="200" viewBox="0 0 180 200" xmlns="http://www.w3.org/2000/svg">
+          <!-- Base -->
+          <ellipse cx="80" cy="185" rx="45" ry="8" fill="#1a2820"/>
+          <rect x="70" y="170" width="20" height="18" rx="3" fill="#1a2820"/>
+          <!-- Vertical arm -->
+          <line x1="80" y1="170" x2="80" y2="100" stroke="#243830" stroke-width="6"/>
+          <!-- Joint -->
+          <circle cx="80" cy="100" r="7" fill="#182820" stroke="rgba(100,200,150,0.3)" stroke-width="1"/>
+          <!-- Horizontal arm -->
+          <line x1="80" y1="100" x2="140" y2="80" stroke="#243830" stroke-width="5"/>
+          <!-- Head joint -->
+          <circle cx="140" cy="80" r="6" fill="#182820" stroke="rgba(100,200,150,0.3)" stroke-width="1"/>
+          <!-- Head/shade -->
+          <path d="M130 70 L150 70 L160 100 L120 100 Z" fill="#1a2828" stroke="rgba(100,200,150,0.35)" stroke-width="1"/>
+          <!-- Light cone -->
+          <path d="M120 100 L95 140 L165 140 L160 100 Z" fill="rgba(100,220,160,0.05)"/>
+          <ellipse cx="140" cy="99" rx="22" ry="4" fill="rgba(100,255,180,0.2)"/>
+        </svg>
+      </div>
+      <span class="card-number">11</span>
+      <div class="card-info">
+        <div class="card-tag">Task</div>
+        <div class="card-name">Desk Lamp</div>
+      </div>
+    </div>
+
+    <!-- 12. Reading Lamp -->
+    <div class="light-card card-reading">
+      <div class="card-bg card-scene">
+        <div class="card-glow-effect" style="background: radial-gradient(ellipse at 50% 40%, rgba(255,220,140,0.15) 0%, transparent 55%);"></div>
+        <svg width="140" height="220" viewBox="0 0 140 220" xmlns="http://www.w3.org/2000/svg">
+          <!-- slim pole -->
+          <line x1="70" y1="200" x2="70" y2="60" stroke="#5a4820" stroke-width="3"/>
+          <!-- Flexible neck -->
+          <path d="M70 60 Q80 40 100 50 Q120 60 110 40" fill="none" stroke="#5a4820" stroke-width="4" stroke-linecap="round"/>
+          <!-- Tiny shade -->
+          <path d="M100 28 L95 45 L125 45 L120 28 Z" fill="#3a2810" stroke="rgba(201,168,76,0.4)" stroke-width="1"/>
+          <ellipse cx="110" cy="44" rx="16" ry="4" fill="rgba(255,200,80,0.25)"/>
+          <!-- Clip base -->
+          <rect x="60" y="196" width="20" height="10" rx="3" fill="#3a3020"/>
+          <ellipse cx="70" cy="196" rx="18" ry="5" fill="#4a3828"/>
+        </svg>
+      </div>
+      <span class="card-number">12</span>
+      <div class="card-info">
+        <div class="card-tag">Focus</div>
+        <div class="card-name">Reading Lamp</div>
+      </div>
+    </div>
+
+    <!-- 13. Spotlight -->
+    <div class="light-card card-spotlight">
+      <div class="card-bg card-scene">
+        <div class="card-glow-effect" style="background: radial-gradient(ellipse at 50% 70%, rgba(220,230,255,0.18) 0%, transparent 55%);"></div>
+        <svg width="160" height="220" viewBox="0 0 160 220" xmlns="http://www.w3.org/2000/svg">
+          <!-- Track rail -->
+          <rect x="10" y="20" width="140" height="10" rx="5" fill="#2a2a35" stroke="#3a3a45" stroke-width="0.5"/>
+          <!-- Mount -->
+          <rect x="64" y="26" width="32" height="20" rx="4" fill="#202030"/>
+          <!-- Body cylinder -->
+          <rect x="60" y="46" width="40" height="60" rx="8" fill="#181828" stroke="#2a2a3a" stroke-width="1"/>
+          <!-- Lens -->
+          <ellipse cx="80" cy="106" rx="18" ry="8" fill="#0a0a18" stroke="rgba(200,220,255,0.35)" stroke-width="1"/>
+          <ellipse cx="80" cy="104" rx="14" ry="6" fill="rgba(200,220,255,0.15)"/>
+          <!-- Cone of light -->
+          <path d="M62 106 L30 200 L130 200 L98 106 Z" fill="rgba(200,220,255,0.04)"/>
+          <line x1="62" y1="106" x2="30" y2="200" stroke="rgba(200,220,255,0.06)" stroke-width="0.5"/>
+          <line x1="98" y1="106" x2="130" y2="200" stroke="rgba(200,220,255,0.06)" stroke-width="0.5"/>
+          <!-- Ground circle -->
+          <ellipse cx="80" cy="200" rx="50" ry="8" fill="rgba(200,220,255,0.06)"/>
+        </svg>
+      </div>
+      <span class="card-number">13</span>
+      <div class="card-info">
+        <div class="card-tag">Directional</div>
+        <div class="card-name">Spotlight</div>
+      </div>
+    </div>
+
+    <!-- 14. Wall Washer -->
+    <div class="light-card card-wallwasher">
+      <div class="card-bg card-scene">
+        <div class="card-glow-effect" style="background: radial-gradient(ellipse at 20% 50%, rgba(180,140,255,0.18) 0%, transparent 60%);"></div>
+        <svg width="160" height="180" viewBox="0 0 160 180" xmlns="http://www.w3.org/2000/svg">
+          <!-- Wall -->
+          <rect x="0" y="0" width="30" height="180" fill="#0e0c14"/>
+          <!-- Fixture -->
+          <rect x="5" y="60" width="30" height="60" rx="4" fill="#1a1428" stroke="rgba(160,120,255,0.35)" stroke-width="1"/>
+          <!-- LED array -->
+          <g fill="rgba(180,150,255,0.9)">
+            <rect x="10" y="70" width="4" height="4" rx="1"/>
+            <rect x="10" y="80" width="4" height="4" rx="1"/>
+            <rect x="10" y="90" width="4" height="4" rx="1"/>
+            <rect x="10" y="100" width="4" height="4" rx="1"/>
+            <rect x="10" y="110" width="4" height="4" rx="1"/>
+          </g>
+          <!-- Wash of light on wall -->
+          <path d="M35 60 L155 20 L155 160 L35 120 Z" fill="rgba(160,120,255,0.04)"/>
+          <!-- Gradient wash -->
+          <rect x="35" y="20" width="120" height="140" fill="url(#washGrad)" opacity="0.5"/>
+          <defs>
+            <linearGradient id="washGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#a080ff" stop-opacity="0.12"/>
+              <stop offset="100%" stop-color="#a080ff" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <!-- Horizontal bands -->
+          <line x1="35" y1="60" x2="155" y2="30" stroke="rgba(180,150,255,0.05)" stroke-width="1"/>
+          <line x1="35" y1="70" x2="155" y2="50" stroke="rgba(180,150,255,0.05)" stroke-width="1"/>
+          <line x1="35" y1="80" x2="155" y2="70" stroke="rgba(180,150,255,0.05)" stroke-width="1"/>
+          <line x1="35" y1="90" x2="155" y2="90" stroke="rgba(180,150,255,0.05)" stroke-width="1"/>
+          <line x1="35" y1="100" x2="155" y2="110" stroke="rgba(180,150,255,0.05)" stroke-width="1"/>
+          <line x1="35" y1="110" x2="155" y2="130" stroke="rgba(180,150,255,0.05)" stroke-width="1"/>
+          <line x1="35" y1="120" x2="155" y2="150" stroke="rgba(180,150,255,0.05)" stroke-width="1"/>
+        </svg>
+      </div>
+      <span class="card-number">14</span>
+      <div class="card-info">
+        <div class="card-tag">Architectural</div>
+        <div class="card-name">Wall Washer</div>
+      </div>
+    </div>
+
+    <!-- 15. Floodlight -->
+    <div class="light-card card-flood">
+      <div class="card-bg card-scene">
+        <div class="card-glow-effect" style="background: radial-gradient(ellipse at 50% 45%, rgba(200,240,180,0.15) 0%, transparent 55%);"></div>
+        <svg width="180" height="160" viewBox="0 0 180 160" xmlns="http://www.w3.org/2000/svg">
+          <!-- Bracket -->
+          <line x1="90" y1="0" x2="90" y2="30" stroke="#3a4530" stroke-width="4"/>
+          <line x1="70" y1="30" x2="110" y2="30" stroke="#3a4530" stroke-width="5"/>
+          <!-- Housing body -->
+          <rect x="40" y="30" width="100" height="55" rx="6" fill="#1e2818" stroke="#2a3820" stroke-width="1"/>
+          <!-- LED grid -->
+          <g fill="rgba(200,255,150,0.85)">
+            <rect x="50" y="38" width="6" height="6" rx="1"/>
+            <rect x="62" y="38" width="6" height="6" rx="1"/>
+            <rect x="74" y="38" width="6" height="6" rx="1"/>
+            <rect x="86" y="38" width="6" height="6" rx="1"/>
+            <rect x="98" y="38" width="6" height="6" rx="1"/>
+            <rect x="110" y="38" width="6" height="6" rx="1"/>
+            <rect x="122" y="38" width="6" height="6" rx="1"/>
+            <rect x="50" y="50" width="6" height="6" rx="1"/>
+            <rect x="62" y="50" width="6" height="6" rx="1"/>
+            <rect x="74" y="50" width="6" height="6" rx="1"/>
+            <rect x="86" y="50" width="6" height="6" rx="1"/>
+            <rect x="98" y="50" width="6" height="6" rx="1"/>
+            <rect x="110" y="50" width="6" height="6" rx="1"/>
+            <rect x="122" y="50" width="6" height="6" rx="1"/>
+            <rect x="50" y="62" width="6" height="6" rx="1"/>
+            <rect x="62" y="62" width="6" height="6" rx="1"/>
+            <rect x="74" y="62" width="6" height="6" rx="1"/>
+            <rect x="86" y="62" width="6" height="6" rx="1"/>
+            <rect x="98" y="62" width="6" height="6" rx="1"/>
+            <rect x="110" y="62" width="6" height="6" rx="1"/>
+            <rect x="122" y="62" width="6" height="6" rx="1"/>
+          </g>
+          <!-- Heat fins -->
+          <g stroke="#2a3820" stroke-width="1" fill="none">
+            <line x1="55" y1="85" x2="55" y2="100"/>
+            <line x1="65" y1="85" x2="65" y2="100"/>
+            <line x1="75" y1="85" x2="75" y2="100"/>
+            <line x1="85" y1="85" x2="85" y2="100"/>
+            <line x1="95" y1="85" x2="95" y2="100"/>
+            <line x1="105" y1="85" x2="105" y2="100"/>
+            <line x1="115" y1="85" x2="115" y2="100"/>
+            <line x1="125" y1="85" x2="125" y2="100"/>
+          </g>
+          <!-- Light spread -->
+          <path d="M40 85 L10 155 L170 155 L140 85 Z" fill="rgba(200,255,150,0.03)"/>
+          <ellipse cx="90" cy="155" rx="80" ry="8" fill="rgba(200,255,150,0.05)"/>
+        </svg>
+      </div>
+      <span class="card-number">15</span>
+      <div class="card-info">
+        <div class="card-tag">Outdoor</div>
+        <div class="card-name">Floodlight</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- COLOUR TEMPERATURE SPECTRUM -->
+<section id="spectrum">
+  <p class="section-label">Colour temperature</p>
+  <h2>The <em>warmth</em> of light</h2>
+  <p>Every light source emits at a colour temperature measured in Kelvin — from the warm amber of a candle to the crisp blue of daylight.</p>
+
+  <div class="spectrum-bar"></div>
+  <div class="spectrum-labels">
+    <span>1800K — Candlelight</span>
+    <span>2700K — Incandescent</span>
+    <span>4000K — Neutral</span>
+    <span>5000K — Daylight</span>
+    <span>6500K — Cool Blue</span>
+  </div>
+
+  <div class="kelvin-scale">
+    <div class="k-cell">
+      <div class="k-swatch" style="background: #ff9030;"></div>
+      <div class="k-temp">1800K</div>
+      <div class="k-desc">Candlelight</div>
+    </div>
+    <div class="k-cell">
+      <div class="k-swatch" style="background: #ffb060;"></div>
+      <div class="k-temp">2700K</div>
+      <div class="k-desc">Warm white</div>
+    </div>
+    <div class="k-cell">
+      <div class="k-swatch" style="background: #ffcf80;"></div>
+      <div class="k-temp">3000K</div>
+      <div class="k-desc">Soft white</div>
+    </div>
+    <div class="k-cell">
+      <div class="k-swatch" style="background: #fff0c0;"></div>
+      <div class="k-temp">4000K</div>
+      <div class="k-desc">Cool white</div>
+    </div>
+    <div class="k-cell">
+      <div class="k-swatch" style="background: #f0f8ff;"></div>
+      <div class="k-temp">5000K</div>
+      <div class="k-desc">Daylight</div>
+    </div>
+    <div class="k-cell">
+      <div class="k-swatch" style="background: #d0e8ff;"></div>
+      <div class="k-temp">6500K</div>
+      <div class="k-desc">Cool blue</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURE -->
+<section id="feature">
+  <div class="feature-visual">
+    <svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" style="animation: slow-spin 40s linear infinite; transform-origin: 200px 200px;">
+      <defs>
+        <radialGradient id="featGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="rgba(201,168,76,0.15)"/>
+          <stop offset="100%" stop-color="transparent"/>
+        </radialGradient>
+      </defs>
+      <!-- Outer ring -->
+      <circle cx="200" cy="200" r="160" fill="none" stroke="rgba(201,168,76,0.12)" stroke-width="1"/>
+      <circle cx="200" cy="200" r="130" fill="none" stroke="rgba(201,168,76,0.08)" stroke-width="0.5" stroke-dasharray="4 8"/>
+      <circle cx="200" cy="200" r="100" fill="none" stroke="rgba(201,168,76,0.12)" stroke-width="1"/>
+      <circle cx="200" cy="200" r="70" fill="none" stroke="rgba(201,168,76,0.06)" stroke-width="0.5"/>
+      <!-- Radial lines -->
+      <g stroke="rgba(201,168,76,0.1)" stroke-width="0.5">
+        <line x1="200" y1="40" x2="200" y2="360"/>
+        <line x1="40" y1="200" x2="360" y2="200"/>
+        <line x1="87" y1="87" x2="313" y2="313"/>
+        <line x1="313" y1="87" x2="87" y2="313"/>
+      </g>
+      <!-- Dots on ring -->
+      <g fill="#c9a84c" opacity="0.6">
+        <circle cx="200" cy="40" r="3"/><circle cx="360" cy="200" r="3"/>
+        <circle cx="200" cy="360" r="3"/><circle cx="40" cy="200" r="3"/>
+        <circle cx="313" cy="87" r="2"/><circle cx="313" cy="313" r="2"/>
+        <circle cx="87" cy="313" r="2"/><circle cx="87" cy="87" r="2"/>
+      </g>
+      <!-- Center -->
+      <circle cx="200" cy="200" r="8" fill="none" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+      <circle cx="200" cy="200" r="3" fill="rgba(255,220,100,0.8)"/>
+    </svg>
+    <div style="position: absolute; text-align: center;">
+      <div style="font-family: 'Cormorant Garamond', serif; font-size: 72px; font-weight: 300; color: rgba(201,168,76,0.9); line-height: 1;">14</div>
+      <div style="font-size: 9px; letter-spacing: .4em; color: var(--text-muted); text-transform: uppercase;">Light Forms</div>
+    </div>
+  </div>
+
+  <div class="feature-text">
+    <p class="section-label">Technology</p>
+    <h2>From filament to <em>photon</em></h2>
+    <p>The science of artificial light has evolved over 145 years — from Edison's carbon filament glowing at 2400K, to quantum-dot LEDs approaching 200 lumens per watt with perfect colour rendering.</p>
+    <ul class="feature-list">
+      <li>Incandescent — thermal radiation, 2700K</li>
+      <li>LED — electroluminescence, 80–200 lm/W</li>
+      <li>Neon — gas discharge at 15,000–18,000V</li>
+      <li>Chandelier — optics via lead crystal refraction</li>
+      <li>Floodlight — high-lumen area illumination</li>
+    </ul>
+    <a href="#collection" class="btn-ghost">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M3 8H13M9 4L13 8L9 12" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Explore all lights
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">LUMINA</div>
+  <div class="footer-copy">© 2025 — The art of illumination</div>
+  <div style="font-size: 10px; letter-spacing: .2em; color: var(--gold-dim); text-transform: uppercase;">Light is life</div>
+</footer>
+
+<style>
+@keyframes rotate-rays { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes slow-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+</style>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursor-ring');
+  let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX; mouseY = e.clientY;
+    cursor.style.left = mouseX + 'px';
+    cursor.style.top = mouseY + 'px';
+  });
+
+  function animateRing() {
+    ringX += (mouseX - ringX) * 0.12;
+    ringY += (mouseY - ringY) *.12;
+    ring.style.left = ringX + 'px';
+    ring.style.top = ringY + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  // Nav scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Hover bulge on cards
+  document.querySelectorAll('.light-card').forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      cursor.style.width = '16px';
+      cursor.style.height = '16px';
+    });
+    card.addEventListener('mouseleave', () => {
+      cursor.style.width = '8px';
+      cursor.style.height = '8px';
+    });
+  });
+
+  // Scroll reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.light-card, .stat-cell, .k-cell').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity .6s ease, transform .6s ease';
+    observer.observe(el);
+  });
+</script>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- LIGHT CONFIGURATOR                              -->
+<!-- ═══════════════════════════════════════════════ -->
+<style>
+#configurator {
+  padding: 8rem 10%;
+  border-top: 1px solid rgba(201,168,76,0.08);
+}
+.config-header { text-align: center; margin-bottom: 5rem; }
+.config-header h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(38px, 5vw, 68px); font-weight: 300;
+  color: var(--cream);
+}
+.config-header h2 em { font-style: italic; color: var(--gold-light); }
+.config-header p { font-size: 12px; letter-spacing: .1em; color: var(--text-muted); margin-top: .8rem; }
+
+.config-body {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 5rem;
+  align-items: start;
+}
+
+/* Controls */
+.config-controls { display: flex; flex-direction: column; gap: 2.5rem; }
+
+.ctrl-group label {
+  display: block;
+  font-size: 9px; letter-spacing: .4em; text-transform: uppercase;
+  color: var(--gold-dim); margin-bottom: 1rem;
+}
+
+.ctrl-row {
+  display: flex; align-items: center; gap: 1rem;
+}
+
+.ctrl-row input[type=range] {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 2px;
+  background: rgba(201,168,76,0.2);
+  border-radius: 1px;
+  outline: none;
+}
+.ctrl-row input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--gold-light);
+  cursor: pointer;
+  border: 2px solid var(--dark);
+  box-shadow: 0 0 8px rgba(201,168,76,0.5);
+}
+.ctrl-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px; font-weight: 300;
+  color: var(--gold-light); min-width: 56px; text-align: right;
+}
+
+.ctrl-chips {
+  display: flex; flex-wrap: wrap; gap: .6rem;
+}
+.chip {
+  font-size: 9px; letter-spacing: .3em; text-transform: uppercase;
+  padding: .5rem 1rem;
+  border: 1px solid rgba(201,168,76,0.2);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background .25s, color .25s, border-color .25s;
+  user-select: none;
+}
+.chip.active, .chip:hover {
+  background: rgba(201,168,76,0.1);
+  color: var(--gold-light);
+  border-color: rgba(201,168,76,0.4);
+}
+
+.config-readout {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(201,168,76,0.1);
+  background: rgba(201,168,76,0.03);
+}
+.readout-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: .6rem 0;
+  border-bottom: 1px solid rgba(201,168,76,0.06);
+  font-size: 11px; letter-spacing: .15em;
+}
+.readout-row:last-child { border-bottom: none; }
+.readout-label { color: var(--text-muted); text-transform: uppercase; }
+.readout-val { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 300; color: var(--gold-light); }
+
+/* Preview room */
+.config-preview {
+  position: relative;
+  height: 420px;
+  background: #0a0806;
+  border: 1px solid rgba(201,168,76,0.08);
+  overflow: hidden;
+}
+.room-floor {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 120px;
+  background: linear-gradient(to top, #12100a, transparent);
+}
+.room-wall-left {
+  position: absolute; top: 0; left: 0;
+  width: 30%; height: 100%;
+  background: linear-gradient(to right, rgba(10,8,5,0.5), transparent);
+}
+.preview-light-cone {
+  position: absolute;
+  left: 50%; top: 0;
+  transform: translateX(-50%);
+  width: 0; height: 0;
+  transition: all .4s ease;
+}
+.preview-bulb {
+  position: absolute;
+  left: 50%; top: 30px;
+  transform: translateX(-50%);
+  transition: all .4s ease;
+}
+.preview-bulb svg { transition: filter .4s; }
+.preview-glow-floor {
+  position: absolute; bottom: 60px; left: 50%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  transition: all .4s ease;
+  pointer-events: none;
+}
+.preview-label {
+  position: absolute; bottom: 1.2rem; left: 50%; transform: translateX(-50%);
+  font-size: 9px; letter-spacing: .4em; color: rgba(201,168,76,0.3);
+  text-transform: uppercase; white-space: nowrap;
+}
+</style>
+
+<section id="configurator">
+  <div class="config-header">
+    <p class="section-label">Interactive</p>
+    <h2>Build your <em>atmosphere</em></h2>
+    <p>Adjust colour temperature, brightness and light type to feel the difference in real time.</p>
+  </div>
+
+  <div class="config-body">
+    <div class="config-controls">
+
+      <div class="ctrl-group">
+        <label>Colour Temperature</label>
+        <div class="ctrl-row">
+          <input type="range" id="ctSlider" min="1800" max="6500" value="2700" step="100">
+          <span class="ctrl-value" id="ctVal">2700K</span>
+        </div>
+      </div>
+
+      <div class="ctrl-group">
+        <label>Brightness</label>
+        <div class="ctrl-row">
+          <input type="range" id="briSlider" min="5" max="100" value="70" step="1">
+          <span class="ctrl-value" id="briVal">70%</span>
+        </div>
+      </div>
+
+      <div class="ctrl-group">
+        <label>Beam Spread</label>
+        <div class="ctrl-row">
+          <input type="range" id="beamSlider" min="10" max="120" value="60" step="5">
+          <span class="ctrl-value" id="beamVal">60°</span>
+        </div>
+      </div>
+
+      <div class="ctrl-group">
+        <label>Light Type</label>
+        <div class="ctrl-chips" id="typeChips">
+          <div class="chip active" data-type="incandescent">Incandescent</div>
+          <div class="chip" data-type="led">LED</div>
+          <div class="chip" data-type="pendant">Pendant</div>
+          <div class="chip" data-type="spotlight">Spotlight</div>
+          <div class="chip" data-type="neon">Neon Flex</div>
+          <div class="chip" data-type="floor">Floor Lamp</div>
+        </div>
+      </div>
+
+      <div class="config-readout">
+        <div class="readout-row">
+          <span class="readout-label">Colour</span>
+          <span class="readout-val" id="roColour">Warm White</span>
+        </div>
+        <div class="readout-row">
+          <span class="readout-label">Luminous flux</span>
+          <span class="readout-val" id="roLumen">630 lm</span>
+        </div>
+        <div class="readout-row">
+          <span class="readout-label">CRI</span>
+          <span class="readout-val" id="roCRI">Ra 100</span>
+        </div>
+        <div class="readout-row">
+          <span class="readout-label">Energy class</span>
+          <span class="readout-val" id="roEnergy">E</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Room preview -->
+    <div class="config-preview" id="configPreview">
+      <div class="room-wall-left"></div>
+
+      <!-- Light cone (SVG) -->
+      <svg id="lightCone" style="position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;" viewBox="0 0 500 420">
+        <defs>
+          <radialGradient id="coneGrad" cx="50%" cy="0%" r="100%" fx="50%" fy="0%">
+            <stop offset="0%" stop-color="#ffcc66" stop-opacity="0.35" id="coneStop1"/>
+            <stop offset="100%" stop-color="#ffaa33" stop-opacity="0" id="coneStop2"/>
+          </radialGradient>
+          <radialGradient id="floorGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ffcc66" stop-opacity="0.2" id="floorStop"/>
+            <stop offset="100%" stop-color="#ffaa33" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <polygon id="conePoly" points="250,60 170,380 330,380" fill="url(#coneGrad)" opacity="0.7"/>
+        <ellipse id="floorEllipse" cx="250" cy="375" rx="80" ry="18" fill="url(#floorGrad)"/>
+      </svg>
+
+      <!-- Bulb SVG -->
+      <div class="preview-bulb" id="previewBulb">
+        <svg width="60" height="90" viewBox="0 0 120 180" id="previewBulbSvg">
+          <defs>
+            <radialGradient id="pvGrad" cx="50%" cy="45%" r="50%">
+              <stop offset="0%" stop-color="#fff5c8" id="pvG1"/>
+              <stop offset="50%" stop-color="#ffc840" id="pvG2"/>
+              <stop offset="100%" stop-color="#c87800" id="pvG3"/>
+            </radialGradient>
+          </defs>
+          <path d="M60 8 C30 8,8 32,8 58 C8 82,20 96,34 108 C38 113,40 118,40 126 L80 126 C80 118,82 113,86 108 C100 96,112 82,112 58 C112 32,90 8,60 8 Z" fill="url(#pvGrad)" stroke="rgba(255,200,80,0.4)" stroke-width="0.8"/>
+          <path d="M60 8 C30 8,8 32,8 58 C8 82,20 96,34 108 C38 113,40 118,40 126 L80 126 C80 118,82 113,86 108 C100 96,112 82,112 58 C112 32,90 8,60 8 Z" fill="rgba(255,240,200,0.18)"/>
+          <g stroke="#fff8d0" stroke-width="1.2" fill="none" stroke-linecap="round">
+            <path d="M60 100 L60 90 Q56 85 60 80 Q64 75 60 70 Q56 65 60 60 Q64 55 60 50 Q56 45 60 40"/>
+          </g>
+          <rect x="40" y="126" width="40" height="40" rx="3" fill="#5a3010"/>
+        </svg>
+      </div>
+
+      <!-- Cord from ceiling -->
+      <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:1px;height:32px;background:rgba(201,168,76,0.25);"></div>
+
+      <div class="room-floor"></div>
+      <div class="preview-label" id="previewLabel">Incandescent — 2700K</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- TIMELINE OF LIGHT                              -->
+<!-- ═══════════════════════════════════════════════ -->
+<style>
+#timeline {
+  padding: 8rem 10%;
+  border-top: 1px solid rgba(201,168,76,0.08);
+}
+.timeline-header { margin-bottom: 5rem; }
+.timeline-header h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(38px,5vw,68px); font-weight: 300; color: var(--cream);
+}
+.timeline-header h2 em { font-style: italic; color: var(--gold-light); }
+
+.timeline-track {
+  position: relative;
+  padding-left: 3rem;
+}
+.timeline-track::before {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, rgba(201,168,76,0.3) 10%, rgba(201,168,76,0.3) 90%, transparent);
+}
+
+.tl-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 3rem;
+  padding: 2.5rem 0;
+  border-bottom: 1px solid rgba(201,168,76,0.05);
+  opacity: 0; transform: translateX(-20px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.tl-item.visible { opacity: 1; transform: translateX(0); }
+
+.tl-item::before {
+  content: '';
+  position: absolute; left: -3rem;
+  top: 3rem;
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  border: 1px solid var(--gold-dim);
+  background: var(--dark);
+  transform: translateX(-4px);
+}
+.tl-item:hover::before { background: var(--gold); border-color: var(--gold-light); }
+
+.tl-year {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px; font-weight: 300;
+  color: rgba(201,168,76,0.4);
+  line-height: 1; padding-top: .2rem;
+  transition: color .3s;
+}
+.tl-item:hover .tl-year { color: var(--gold-light); }
+
+.tl-content h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px; font-weight: 300;
+  color: var(--cream); margin-bottom: .6rem;
+}
+.tl-content p {
+  font-size: 12px; line-height: 1.9; letter-spacing: .06em;
+  color: var(--text-muted); max-width: 560px;
+}
+.tl-tag {
+  display: inline-block;
+  font-size: 8px; letter-spacing: .35em; text-transform: uppercase;
+  color: var(--gold-dim);
+  border: 1px solid rgba(201,168,76,0.15);
+  padding: .25rem .7rem;
+  margin-top: .8rem;
+}
+</style>
+
+<section id="timeline">
+  <div class="timeline-header">
+    <p class="section-label">History</p>
+    <h2>145 years of <em>artificial light</em></h2>
+  </div>
+
+  <div class="timeline-track">
+
+    <div class="tl-item">
+      <div class="tl-year">1802</div>
+      <div class="tl-content">
+        <h3>Humphry Davy's arc lamp</h3>
+        <p>The English chemist demonstrated the first electric arc light using 2,000 battery cells — a blinding, impractical, magnificent beginning. It proved electricity could produce light, igniting a century of innovation.</p>
+        <span class="tl-tag">Arc Discharge</span>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-year">1879</div>
+      <div class="tl-content">
+        <h3>Edison's carbon filament bulb</h3>
+        <p>Thomas Edison patented a practical incandescent bulb using a carbonised bamboo filament that lasted 1,200 hours. The era of domestic electric lighting began. The warm 2700K glow of the incandescent became the benchmark humanity would measure all artificial light against.</p>
+        <span class="tl-tag">Incandescent</span>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-year">1910</div>
+      <div class="tl-content">
+        <h3>Tungsten filament & neon tubes</h3>
+        <p>William Coolidge's tungsten filament dramatically improved bulb lifespan. That same decade, Georges Claude displayed the first neon lamp at the Paris Motor Show — a vivid crimson tube that would define the visual identity of the 20th century city.</p>
+        <span class="tl-tag">Incandescent · Neon</span>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-year">1938</div>
+      <div class="tl-content">
+        <h3>Fluorescent lighting arrives</h3>
+        <p>General Electric introduced the first commercial fluorescent tubes. Offices and factories would never look the same. Cool, efficient, and clinical — it traded the warmth of incandescent for economy. The fluorescent tube became shorthand for institutional light.</p>
+        <span class="tl-tag">Fluorescent</span>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-year">1962</div>
+      <div class="tl-content">
+        <h3>Nick Holonyak Jr. invents the LED</h3>
+        <p>At General Electric, Holonyak created the first visible-spectrum LED — a dim red point of light. He predicted it would one day replace the incandescent bulb. It took 50 years, but he was right. The LED now accounts for over 50% of global lighting sales.</p>
+        <span class="tl-tag">LED</span>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-year">1993</div>
+      <div class="tl-content">
+        <h3>Blue LED — completing the spectrum</h3>
+        <p>Shuji Nakamura achieved the high-brightness blue LED at Nichia Corporation — the missing piece. Combining blue with yellow phosphor produced white light. Nakamura, Akasaki, and Amano won the 2014 Nobel Prize in Physics. The modern lighting revolution was complete.</p>
+        <span class="tl-tag">LED · Nobel Prize</span>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-year">2008</div>
+      <div class="tl-content">
+        <h3>LED strips & flexible light</h3>
+        <p>The miniaturisation of surface-mount LEDs made continuous flexible strips possible — light could now bend around corners, run under cabinets, outline architecture, and be cut to any length. Lighting became truly spatial and three-dimensional.</p>
+        <span class="tl-tag">LED Strip</span>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-year">2015</div>
+      <div class="tl-content">
+        <h3>Smart lighting & tunable white</h3>
+        <p>Connected bulbs from Philips Hue, LIFX, and others brought full colour spectrum control to consumers. Circadian lighting — automatically shifting from 2700K warmth at dawn to 5000K daylight at noon — became available in homes. Light was no longer static.</p>
+        <span class="tl-tag">Smart · Circadian</span>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-year">Today</div>
+      <div class="tl-content">
+        <h3>200 lm/W and beyond</h3>
+        <p>Laboratory LEDs have surpassed 300 lumens per watt. Quantum-dot technology enables perfect colour rendering at Ra 99+. OLEDs bring diffuse, shadow-free panel light. Micro-LEDs promise displays and illumination from a single substrate. The journey from Edison's bamboo filament continues.</p>
+        <span class="tl-tag">Quantum Dot · OLED · MicroLED</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- ROOM MOOD SELECTOR                             -->
+<!-- ═══════════════════════════════════════════════ -->
+<style>
+#moods {
+  padding: 8rem 10%;
+  border-top: 1px solid rgba(201,168,76,0.08);
+  text-align: center;
+}
+.moods-header h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(36px,5vw,64px); font-weight: 300; color: var(--cream);
+  margin-bottom: .8rem;
+}
+.moods-header h2 em { font-style: italic; color: var(--gold-light); }
+.moods-header p { font-size: 12px; letter-spacing: .1em; color: var(--text-muted); margin-bottom: 4rem; }
+
+.mood-tabs {
+  display: flex; justify-content: center; gap: .4rem;
+  flex-wrap: wrap; margin-bottom: 3rem;
+}
+.mood-tab {
+  font-size: 9px; letter-spacing: .35em; text-transform: uppercase;
+  padding: .7rem 1.4rem;
+  border: 1px solid rgba(201,168,76,0.18);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all .25s;
+  user-select: none;
+}
+.mood-tab.active, .mood-tab:hover {
+  background: rgba(201,168,76,0.1);
+  color: var(--gold-light);
+  border-color: rgba(201,168,76,0.4);
+}
+
+.mood-scene {
+  position: relative;
+  height: 380px;
+  overflow: hidden;
+  border: 1px solid rgba(201,168,76,0.08);
+  transition: background .8s ease;
+}
+
+.mood-scene-content {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  transition: opacity .6s ease;
+  pointer-events: none;
+}
+.mood-scene-content.active { opacity: 1; }
+
+.mood-info {
+  margin-top: 2.5rem;
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 2px;
+}
+.mood-stat {
+  padding: 1.5rem;
+  background: rgba(201,168,76,0.03);
+  border: 1px solid rgba(201,168,76,0.06);
+}
+.mood-stat-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px; font-weight: 300; color: var(--gold-light);
+}
+.mood-stat-label {
+  font-size: 9px; letter-spacing: .3em; text-transform: uppercase;
+  color: var(--text-muted); margin-top: .3rem;
+}
+</style>
+
+<section id="moods">
+  <div class="moods-header">
+    <p class="section-label">Room moods</p>
+    <h2>Light sets the <em>mood</em></h2>
+    <p>The same room feels entirely different under different light. Choose a scene below.</p>
+  </div>
+
+  <div class="mood-tabs">
+    <div class="mood-tab active" data-mood="cosy">Cosy Evening</div>
+    <div class="mood-tab" data-mood="work">Focus Work</div>
+    <div class="mood-tab" data-mood="dinner">Dinner Party</div>
+    <div class="mood-tab" data-mood="gallery">Gallery</div>
+    <div class="mood-tab" data-mood="night">Night Mode</div>
+  </div>
+
+  <div class="mood-scene" id="moodScene">
+
+    <!-- Cosy -->
+    <div class="mood-scene-content active" id="mood-cosy">
+      <svg width="700" height="380" viewBox="0 0 700 380" style="position:absolute;inset:0;width:100%;height:100%;">
+        <defs>
+          <radialGradient id="cosyBg" cx="50%" cy="30%" r="70%">
+            <stop offset="0%" stop-color="#3d1e08"/><stop offset="100%" stop-color="#0e0804"/>
+          </radialGradient>
+          <radialGradient id="lampGlow1" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ffa030" stop-opacity="0.5"/>
+            <stop offset="100%" stop-color="#ff6010" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="lampGlow2" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ff8020" stop-opacity="0.4"/>
+            <stop offset="100%" stop-color="#ff5010" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="700" height="380" fill="url(#cosyBg)"/>
+        <!-- Floor -->
+        <rect x="0" y="310" width="700" height="70" fill="#0c0702"/>
+        <!-- Left table lamp glow -->
+        <ellipse cx="130" cy="200" rx="120" ry="100" fill="url(#lampGlow1)"/>
+        <!-- Right table lamp glow -->
+        <ellipse cx="570" cy="210" rx="100" ry="90" fill="url(#lampGlow2)"/>
+        <!-- Sofa silhouette -->
+        <rect x="200" y="270" width="300" height="45" rx="8" fill="#1a120a"/>
+        <rect x="190" y="248" width="320" height="30" rx="8" fill="#1e1510"/>
+        <rect x="190" y="245" width="30" height="60" rx="4" fill="#1a110a"/>
+        <rect x="480" y="245" width="30" height="60" rx="4" fill="#1a110a"/>
+        <!-- Left lamp -->
+        <rect x="110" y="300" width="14" height="45" fill="#2a1a0a"/>
+        <ellipse cx="117" cy="300" rx="22" ry="5" fill="#2a1a0a"/>
+        <path d="M95 200 L80 280 L155 280 L140 200 Z" fill="#2a1808" stroke="rgba(201,168,76,0.2)" stroke-width="0.8"/>
+        <ellipse cx="117" cy="278" rx="38" ry="6" fill="rgba(255,160,50,0.3)"/>
+        <!-- Right lamp -->
+        <rect x="563" y="300" width="14" height="45" fill="#2a1a0a"/>
+        <ellipse cx="570" cy="300" rx="22" ry="5" fill="#2a1a0a"/>
+        <path d="M548 210 L533 285 L608 285 L593 210 Z" fill="#2a1808" stroke="rgba(201,168,76,0.2)" stroke-width="0.8"/>
+        <ellipse cx="570" cy="283" rx="38" ry="6" fill="rgba(255,140,40,0.3)"/>
+        <!-- Text overlay -->
+        <text x="350" y="160" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="28" font-weight="300" fill="rgba(255,200,100,0.55)">2700K — Warm White</text>
+      </svg>
+    </div>
+
+    <!-- Focus Work -->
+    <div class="mood-scene-content" id="mood-work">
+      <svg width="700" height="380" viewBox="0 0 700 380" style="position:absolute;inset:0;width:100%;height:100%;">
+        <defs>
+          <radialGradient id="workBg" cx="55%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#0f1828"/><stop offset="100%" stop-color="#06090e"/>
+          </radialGradient>
+          <radialGradient id="deskGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#8ab8ff" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="#4488ff" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="monitorGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#a0d0ff" stop-opacity="0.2"/>
+            <stop offset="100%" stop-color="#6090cc" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="700" height="380" fill="url(#workBg)"/>
+        <!-- Desk -->
+        <rect x="150" y="260" width="400" height="12" rx="2" fill="#1a2030"/>
+        <rect x="155" y="272" width="5" height="60" fill="#151820"/>
+        <rect x="540" y="272" width="5" height="60" fill="#151820"/>
+        <!-- Monitor glow -->
+        <ellipse cx="350" cy="240" rx="180" ry="60" fill="url(#monitorGlow)"/>
+        <!-- Monitor -->
+        <rect x="270" y="175" width="160" height="100" rx="4" fill="#0a1018" stroke="rgba(100,180,255,0.25)" stroke-width="1"/>
+        <rect x="274" y="179" width="152" height="90" rx="2" fill="#0d1520"/>
+        <!-- Screen content lines -->
+        <g fill="rgba(100,180,255,0.3)">
+          <rect x="282" y="190" width="60" height="3" rx="1"/>
+          <rect x="282" y="198" width="100" height="2" rx="1"/>
+          <rect x="282" y="204" width="80" height="2" rx="1"/>
+          <rect x="282" y="214" width="120" height="2" rx="1"/>
+          <rect x="282" y="220" width="70" height="2" rx="1"/>
+          <rect x="360" y="190" width="50" height="40" rx="2" fill="rgba(100,180,255,0.1)"/>
+        </g>
+        <!-- Monitor stand -->
+        <rect x="340" y="275" width="20" height="20" rx="1" fill="#0d1220"/>
+        <!-- Desk lamp -->
+        <line x1="480" y1="260" x2="480" y2="200" stroke="#1a2838" stroke-width="4"/>
+        <line x1="480" y1="200" x2="530" y2="185" stroke="#1a2838" stroke-width="3"/>
+        <path d="M520 175 L545 175 L552 198 L515 198 Z" fill="#0d1828" stroke="rgba(100,180,255,0.3)" stroke-width="1"/>
+        <ellipse cx="533" cy="197" rx="20" ry="4" fill="rgba(140,200,255,0.35)"/>
+        <!-- Desk glow pool -->
+        <ellipse cx="480" cy="262" rx="120" ry="20" fill="url(#deskGlow)"/>
+        <!-- Keyboard -->
+        <rect x="300" y="268" width="100" height="14" rx="2" fill="#111820"/>
+        <text x="350" y="145" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="28" font-weight="300" fill="rgba(140,200,255,0.5)">4000K — Cool White</text>
+      </svg>
+    </div>
+
+    <!-- Dinner Party -->
+    <div class="mood-scene-content" id="mood-dinner">
+      <svg width="700" height="380" viewBox="0 0 700 380" style="position:absolute;inset:0;width:100%;height:100%;">
+        <defs>
+          <radialGradient id="dinnerBg" cx="50%" cy="20%" r="80%">
+            <stop offset="0%" stop-color="#2a1205"/><stop offset="100%" stop-color="#080402"/>
+          </radialGradient>
+          <radialGradient id="chandelierGlow" cx="50%" cy="0%" r="80%">
+            <stop offset="0%" stop-color="#ffd080" stop-opacity="0.4"/>
+            <stop offset="100%" stop-color="#ffa030" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="tableGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ffc060" stop-opacity="0.25"/>
+            <stop offset="100%" stop-color="#ff8020" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="700" height="380" fill="url(#dinnerBg)"/>
+        <!-- Table -->
+        <ellipse cx="350" cy="310" rx="200" ry="30" fill="#1a0e06"/>
+        <rect x="150" y="296" width="400" height="15" rx="3" fill="#1a0e06"/>
+        <!-- Table cloth -->
+        <ellipse cx="350" cy="295" rx="195" ry="25" fill="#1e1208"/>
+        <!-- Table glow -->
+        <ellipse cx="350" cy="295" rx="180" ry="22" fill="url(#tableGlow)"/>
+        <!-- Chandelier -->
+        <line x1="350" y1="0" x2="350" y2="50" stroke="#886030" stroke-width="2"/>
+        <g transform="translate(350,65)">
+          <circle cx="0" cy="0" r="10" fill="#3a2010" stroke="rgba(201,168,76,0.4)" stroke-width="1"/>
+          <!-- Arms -->
+          <line x1="0" y1="0" x2="-80" y2="25" stroke="#c9a84c" stroke-width="1.2"/>
+          <line x1="0" y1="0" x2="80" y2="25" stroke="#c9a84c" stroke-width="1.2"/>
+          <line x1="0" y1="0" x2="-45" y2="30" stroke="#c9a84c" stroke-width="1"/>
+          <line x1="0" y1="0" x2="45" y2="30" stroke="#c9a84c" stroke-width="1"/>
+          <line x1="0" y1="0" x2="0" y2="30" stroke="#c9a84c" stroke-width="1"/>
+          <!-- Candle holders -->
+          <g fill="#ffd060">
+            <circle cx="-80" cy="27" r="4"/><circle cx="80" cy="27" r="4"/>
+            <circle cx="-45" cy="32" r="3.5"/><circle cx="45" cy="32" r="3.5"/>
+            <circle cx="0" cy="32" r="3.5"/>
+          </g>
+          <!-- Crystals -->
+          <g fill="rgba(220,240,255,0.7)">
+            <polygon points="-80,32 -83,45 -77,45"/>
+            <polygon points="80,32 83,45 77,45"/>
+            <polygon points="-45,37 -47,48 -43,48"/>
+            <polygon points="45,37 47,48 43,48"/>
+            <polygon points="0,37 2,48 -2,48"/>
+          </g>
+        </g>
+        <!-- Chandelier glow -->
+        <ellipse cx="350" cy="95" rx="250" ry="120" fill="url(#chandelierGlow)"/>
+        <!-- Candles on table -->
+        <g fill="#ffd060" stroke="none">
+          <rect x="270" y="270" width="6" height="20" rx="1" fill="#f0e0a0"/>
+          <circle cx="273" cy="268" r="3"/>
+          <rect x="430" y="268" width="6" height="22" rx="1" fill="#f0e0a0"/>
+          <circle cx="433" cy="266" r="3"/>
+        </g>
+        <!-- Plates -->
+        <circle cx="290" cy="294" r="18" fill="none" stroke="rgba(255,200,100,0.2)" stroke-width="1"/>
+        <circle cx="350" cy="292" r="18" fill="none" stroke="rgba(255,200,100,0.2)" stroke-width="1"/>
+        <circle cx="410" cy="294" r="18" fill="none" stroke="rgba(255,200,100,0.2)" stroke-width="1"/>
+        <text x="350" y="145" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="28" font-weight="300" fill="rgba(255,200,100,0.5)">2200K — Candlelight Warm</text>
+      </svg>
+    </div>
+
+    <!-- Gallery -->
+    <div class="mood-scene-content" id="mood-gallery">
+      <svg width="700" height="380" viewBox="0 0 700 380" style="position:absolute;inset:0;width:100%;height:100%;">
+        <defs>
+          <radialGradient id="spotGlow1" cx="50%" cy="0%" r="100%">
+            <stop offset="0%" stop-color="#f0f4ff" stop-opacity="0.6"/>
+            <stop offset="100%" stop-color="#d0d8ff" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="spotGlow2" cx="50%" cy="0%" r="100%">
+            <stop offset="0%" stop-color="#f0f4ff" stop-opacity="0.55"/>
+            <stop offset="100%" stop-color="#d0d8ff" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="spotGlow3" cx="50%" cy="0%" r="100%">
+            <stop offset="0%" stop-color="#f0f4ff" stop-opacity="0.5"/>
+            <stop offset="100%" stop-color="#d0d8ff" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="700" height="380" fill="#06060c"/>
+        <!-- Track rail -->
+        <rect x="50" y="30" width="600" height="8" rx="4" fill="#181820"/>
+        <!-- Three spotlights + cones -->
+        <!-- Spot 1 -->
+        <rect x="155" y="34" width="22" height="30" rx="4" fill="#101018"/>
+        <polygon points="166,64 100,280 235,280" fill="rgba(220,230,255,0.04)"/>
+        <ellipse cx="166" cy="280" rx="68" ry="12" fill="rgba(220,230,255,0.08)"/>
+        <!-- Spot 2 -->
+        <rect x="339" y="34" width="22" height="30" rx="4" fill="#101018"/>
+        <polygon points="350,64 290,290 410,290" fill="rgba(220,230,255,0.04)"/>
+        <ellipse cx="350" cy="290" rx="60" ry="12" fill="rgba(220,230,255,0.09)"/>
+        <!-- Spot 3 -->
+        <rect x="523" y="34" width="22" height="30" rx="4" fill="#101018"/>
+        <polygon points="534,64 475,280 595,280" fill="rgba(220,230,255,0.04)"/>
+        <ellipse cx="534" cy="280" rx="60" ry="12" fill="rgba(220,230,255,0.08)"/>
+        <!-- Artwork frames -->
+        <rect x="100" y="120" width="130" height="160" rx="2" fill="#0d0d14" stroke="rgba(220,230,255,0.15)" stroke-width="1.5"/>
+        <rect x="106" y="126" width="118" height="148" rx="1" fill="#12121c"/>
+        <!-- Art fill abstract blocks -->
+        <rect x="112" y="132" width="50" height="80" fill="#1e1830" opacity="0.8"/>
+        <rect x="168" y="145" width="50" height="60" fill="#182030" opacity="0.8"/>
+        <rect x="112" y="218" width="106" height="48" fill="#1a1828" opacity="0.6"/>
+        <rect x="284" y="110" width="130" height="180" rx="2" fill="#0d0d14" stroke="rgba(220,230,255,0.15)" stroke-width="1.5"/>
+        <rect x="290" y="116" width="118" height="168" rx="1" fill="#12121c"/>
+        <circle cx="349" cy="200" r="55" fill="#1a1a28" opacity="0.9"/>
+        <circle cx="349" cy="200" r="30" fill="#202035" opacity="0.8"/>
+        <rect x="468" y="130" width="130" height="150" rx="2" fill="#0d0d14" stroke="rgba(220,230,255,0.15)" stroke-width="1.5"/>
+        <rect x="474" y="136" width="118" height="138" rx="1" fill="#12121c"/>
+        <polygon points="510,158 555,158 577,248 488,248" fill="#182030" opacity="0.8"/>
+        <text x="350" y="346" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="24" font-weight="300" fill="rgba(200,220,255,0.4)">5000K — Gallery White</text>
+      </svg>
+    </div>
+
+    <!-- Night Mode -->
+    <div class="mood-scene-content" id="mood-night">
+      <svg width="700" height="380" viewBox="0 0 700 380" style="position:absolute;inset:0;width:100%;height:100%;">
+        <defs>
+          <radialGradient id="nightGlow" cx="50%" cy="40%" r="50%">
+            <stop offset="0%" stop-color="#ff2060" stop-opacity="0.12"/>
+            <stop offset="100%" stop-color="#880030" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="700" height="380" fill="#040208"/>
+        <!-- Stars -->
+        <g fill="rgba(255,255,255,0.4)">
+          <circle cx="80" cy="40" r="1"/><circle cx="150" cy="25" r="0.8"/>
+          <circle cx="220" cy="50" r="1"/><circle cx="300" cy="30" r="0.7"/>
+          <circle cx="400" cy="20" r="1"/><circle cx="500" cy="38" r="0.8"/>
+          <circle cx="580" cy="55" r="1"/><circle cx="640" cy="28" r="0.7"/>
+          <circle cx="60" cy="90" r="0.7"/><circle cx="180" cy="80" r="1"/>
+          <circle cx="450" cy="75" r="0.8"/><circle cx="620" cy="95" r="0.7"/>
+        </g>
+        <!-- Neon strip along floor -->
+        <rect x="0" y="330" width="700" height="3" rx="1" fill="#ff1060" opacity="0.7"/>
+        <rect x="0" y="333" width="700" height="6" rx="1" fill="rgba(255,20,80,0.15)"/>
+        <rect x="0" y="339" width="700" height="10" rx="1" fill="rgba(255,20,80,0.06)"/>
+        <!-- Neon strip along ceiling -->
+        <rect x="0" y="48" width="700" height="3" rx="1" fill="#8020ff" opacity="0.5"/>
+        <rect x="0" y="44" width="700" height="6" rx="1" fill="rgba(130,30,255,0.15)"/>
+        <!-- Left wall neon curve -->
+        <path d="M20 100 Q20 200 20 300" fill="none" stroke="#00d4ff" stroke-width="3" stroke-opacity="0.5" stroke-linecap="round"/>
+        <path d="M18 100 Q18 200 18 300" fill="none" stroke="rgba(0,210,255,0.15)" stroke-width="8"/>
+        <!-- Room glow -->
+        <ellipse cx="350" cy="200" rx="300" ry="180" fill="url(#nightGlow)"/>
+        <!-- Minimal furniture silhouette -->
+        <rect x="250" y="285" width="200" height="50" rx="6" fill="#0a0410"/>
+        <rect x="240" y="270" width="220" height="20" rx="4" fill="#0c0614"/>
+        <!-- Person silhouette -->
+        <ellipse cx="350" cy="246" rx="18" ry="18" fill="#050210"/>
+        <rect x="335" y="264" width="30" height="50" rx="5" fill="#050210"/>
+        <text x="350" y="145" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="26" font-weight="300" fill="rgba(255,80,180,0.45)">1800K — Deep Amber Night</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="mood-info" id="moodInfo">
+    <div class="mood-stat"><div class="mood-stat-num" id="moodKelvin">2700K</div><div class="mood-stat-label">Temperature</div></div>
+    <div class="mood-stat"><div class="mood-stat-num" id="moodLight">Table Lamp</div><div class="mood-stat-label">Recommended fixture</div></div>
+    <div class="mood-stat"><div class="mood-stat-num" id="moodBri">30–50%</div><div class="mood-stat-label">Ideal brightness</div></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- QUOTES                                         -->
+<!-- ═══════════════════════════════════════════════ -->
+<style>
+#quotes {
+  padding: 8rem 10%;
+  border-top: 1px solid rgba(201,168,76,0.08);
+}
+.quotes-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2px;
+}
+.quote-card {
+  padding: 3rem 2rem;
+  border: 1px solid rgba(201,168,76,0.07);
+  background: rgba(201,168,76,0.02);
+  position: relative;
+  transition: background .3s;
+}
+.quote-card:hover { background: rgba(201,168,76,0.05); }
+.quote-card::before {
+  content: '\201C';
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 80px; font-weight: 300;
+  color: rgba(201,168,76,0.12);
+  position: absolute; top: .5rem; left: 1.5rem;
+  line-height: 1;
+}
+.quote-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px; font-weight: 300; font-style: italic;
+  line-height: 1.6; color: var(--cream);
+  margin-top: 1rem; margin-bottom: 2rem;
+}
+.quote-author {
+  font-size: 9px; letter-spacing: .35em; text-transform: uppercase;
+  color: var(--gold-dim);
+}
+.quote-role {
+  font-size: 9px; letter-spacing: .2em;
+  color: var(--text-muted); margin-top: .3rem;
+}
+.quotes-large {
+  grid-column: span 3;
+  text-align: center; padding: 5rem 4rem;
+  background: none; border: none;
+}
+.quotes-large .quote-text {
+  font-size: clamp(28px, 3.5vw, 52px);
+  color: var(--gold-light); opacity: .85;
+}
+.quotes-large::before { display: none; }
+</style>
+
+<section id="quotes">
+  <p class="section-label" style="text-align:center;margin-bottom:4rem;">On light</p>
+  <div class="quotes-grid">
+
+    <div class="quote-card quotes-large">
+      <div class="quote-text">Light is the first of painters. There is no object so foul that intense light will not make it beautiful.</div>
+      <div class="quote-author" style="font-size:11px;color:var(--gold-dim);">Ralph Waldo Emerson</div>
+    </div>
+
+    <div class="quote-card">
+      <div class="quote-text">Give light, and the darkness will disappear of itself.</div>
+      <div class="quote-author">Desiderius Erasmus</div>
+      <div class="quote-role">Philosopher, 1466–1536</div>
+    </div>
+
+    <div class="quote-card">
+      <div class="quote-text">Lighting is everything. It creates atmosphere, drama, romance, and magic.</div>
+      <div class="quote-author">Bryan Adams</div>
+      <div class="quote-role">Photographer & Musician</div>
+    </div>
+
+    <div class="quote-card">
+      <div class="quote-text">The soul which has no fixed purpose in life is lost; to be everywhere is to be nowhere.</div>
+      <div class="quote-author">Michel de Montaigne</div>
+      <div class="quote-role">On focused light, adapted</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- BUYING GUIDE                                   -->
+<!-- ═══════════════════════════════════════════════ -->
+<style>
+#guide {
+  padding: 8rem 10%;
+  border-top: 1px solid rgba(201,168,76,0.08);
+}
+.guide-header { text-align: center; margin-bottom: 5rem; }
+.guide-header h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(36px,5vw,64px); font-weight: 300; color: var(--cream);
+}
+.guide-header h2 em { font-style: italic; color: var(--gold-light); }
+
+.guide-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+}
+.guide-card {
+  padding: 2.5rem 2rem;
+  border: 1px solid rgba(201,168,76,0.07);
+  position: relative;
+  overflow: hidden;
+  transition: border-color .3s;
+}
+.guide-card:hover { border-color: rgba(201,168,76,0.2); }
+.guide-card::after {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .5s;
+}
+.guide-card:hover::after { transform: scaleX(1); }
+
+.guide-icon {
+  margin-bottom: 1.5rem;
+}
+.guide-card h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px; font-weight: 300; color: var(--cream);
+  margin-bottom: .8rem;
+}
+.guide-card p {
+  font-size: 11px; line-height: 1.9; letter-spacing: .05em;
+  color: var(--text-muted);
+}
+.guide-tip {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: rgba(201,168,76,0.04);
+  border-left: 2px solid var(--gold-dim);
+  font-size: 10px; letter-spacing: .1em;
+  color: var(--text-warm);
+  line-height: 1.7;
+}
+</style>
+
+<section id="guide">
+  <div class="guide-header">
+    <p class="section-label">Buying guide</p>
+    <h2>How to choose the <em>right</em> light</h2>
+  </div>
+
+  <div class="guide-grid">
+
+    <div class="guide-card">
+      <div class="guide-icon">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <circle cx="16" cy="16" r="14" stroke="rgba(201,168,76,0.4)" stroke-width="1"/>
+          <circle cx="16" cy="16" r="6" fill="rgba(201,168,76,0.15)" stroke="rgba(201,168,76,0.5)" stroke-width="1"/>
+          <line x1="16" y1="2" x2="16" y2="8" stroke="rgba(201,168,76,0.4)" stroke-width="1"/>
+          <line x1="16" y1="24" x2="16" y2="30" stroke="rgba(201,168,76,0.4)" stroke-width="1"/>
+          <line x1="2" y1="16" x2="8" y2="16" stroke="rgba(201,168,76,0.4)" stroke-width="1"/>
+          <line x1="24" y1="16" x2="30" y2="16" stroke="rgba(201,168,76,0.4)" stroke-width="1"/>
+        </svg>
+      </div>
+      <h3>Match your room's purpose</h3>
+      <p>A reading nook demands a warm, directional light around 2700–3000K. A kitchen benefits from cool 4000K task lighting. A bathroom needs high CRI (90+) to render skin tones accurately. Always consider what activity happens in the space.</p>
+      <div class="guide-tip">Rule of thumb: warm for rest, cool for work, neutral for versatility.</div>
+    </div>
+
+    <div class="guide-card">
+      <div class="guide-icon">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <path d="M16 4 L20 12 L29 13 L22 20 L24 29 L16 25 L8 29 L10 20 L3 13 L12 12 Z" stroke="rgba(201,168,76,0.4)" stroke-width="1" fill="rgba(201,168,76,0.06)"/>
+        </svg>
+      </div>
+      <h3>Lumens, not watts</h3>
+      <p>Watts measure energy consumption; lumens measure actual light output. A 10W LED can produce the same 800 lumens as a 60W incandescent. For general living spaces, aim for 300–500 lm/m². For task areas, go up to 750–1000 lm/m².</p>
+      <div class="guide-tip">800 lm replaces a 60W bulb. 1600 lm replaces a 100W bulb.</div>
+    </div>
+
+    <div class="guide-card">
+      <div class="guide-icon">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <rect x="4" y="10" width="24" height="14" rx="3" stroke="rgba(201,168,76,0.4)" stroke-width="1" fill="rgba(201,168,76,0.04)"/>
+          <line x1="4" y1="17" x2="28" y2="17" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+          <circle cx="10" cy="17" r="2" fill="rgba(201,168,76,0.5)"/>
+          <circle cx="16" cy="17" r="2" fill="rgba(201,168,76,0.35)"/>
+          <circle cx="22" cy="17" r="2" fill="rgba(201,168,76,0.2)"/>
+        </svg>
+      </div>
+      <h3>CRI — Colour Rendering Index</h3>
+      <p>CRI measures how accurately a light source reveals colours compared to natural sunlight (Ra 100). For homes, Ra 90+ is ideal. Retail and art require Ra 95+. Avoid anything below Ra 80 — colours will look washed out and skin will appear pallid.</p>
+      <div class="guide-tip">Good LEDs now achieve Ra 97–98 at reasonable cost.</div>
+    </div>
+
+    <div class="guide-card">
+      <div class="guide-icon">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <path d="M8 28 L8 10 Q8 4 16 4 Q24 4 24 10 L24 28" stroke="rgba(201,168,76,0.4)" stroke-width="1" fill="none"/>
+          <line x1="6" y1="28" x2="26" y2="28" stroke="rgba(201,168,76,0.4)" stroke-width="1"/>
+          <line x1="10" y1="20" x2="22" y2="20" stroke="rgba(201,168,76,0.2)" stroke-width="1" stroke-dasharray="2 2"/>
+        </svg>
+      </div>
+      <h3>Dimming compatibility</h3>
+      <p>Not all LEDs dim smoothly. Look for "dimmable" certification and pair with a trailing-edge dimmer (not leading-edge) for flicker-free operation. Warm-dim LEDs are a premium option that shift from 3000K to 1800K as dimmed, mimicking incandescent behaviour.</p>
+      <div class="guide-tip">Test at 10% brightness — cheap dimmers flicker visibly.</div>
+    </div>
+
+    <div class="guide-card">
+      <div class="guide-icon">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <path d="M6 26 Q6 6 16 6 Q26 6 26 26" stroke="rgba(201,168,76,0.4)" stroke-width="1" fill="rgba(201,168,76,0.04)"/>
+          <line x1="16" y1="6" x2="16" y2="2" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+          <line x1="6" y1="16" x2="2" y2="14" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+          <line x1="26" y1="16" x2="30" y2="14" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+        </svg>
+      </div>
+      <h3>Beam angle matters</h3>
+      <p>Spotlights typically have 10–25° beams for accent and artwork. Pendants and table lamps spread at 90–120° for ambient. Floodlights cover 120°+. Layering narrow accents with wide ambient sources creates the depth and drama of professional interior lighting.</p>
+      <div class="guide-tip">Layer three types: ambient, task, and accent.</div>
+    </div>
+
+    <div class="guide-card">
+      <div class="guide-icon">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <rect x="4" y="8" width="24" height="18" rx="3" stroke="rgba(201,168,76,0.4)" stroke-width="1" fill="none"/>
+          <path d="M10 14 Q16 10 22 14 Q28 18 22 22 Q16 26 10 22 Q4 18 10 14 Z" stroke="rgba(201,168,76,0.3)" stroke-width="0.8" fill="rgba(201,168,76,0.06)"/>
+          <circle cx="16" cy="18" r="3" fill="rgba(201,168,76,0.3)" stroke="rgba(201,168,76,0.5)" stroke-width="0.8"/>
+        </svg>
+      </div>
+      <h3>IP rating for wet areas</h3>
+      <p>IP (Ingress Protection) ratings define water and dust resistance. IP44 is the minimum for bathroom zones 2. IP65 is required in shower zones (zone 1). Outdoor fixtures should be IP65 or higher. Never install an unrated interior fixture in a bathroom — it is a legal and safety issue.</p>
+      <div class="guide-tip">IP65 = dust-tight + protected against jets of water.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- NEWSLETTER                                     -->
+<!-- ═══════════════════════════════════════════════ -->
+<style>
+#newsletter {
+  padding: 8rem 10%;
+  border-top: 1px solid rgba(201,168,76,0.08);
+  position: relative;
+  overflow: hidden;
+}
+#newsletter::before {
+  content: '';
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  border: 1px solid rgba(201,168,76,0.04);
+  pointer-events: none;
+}
+#newsletter::after {
+  content: '';
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  border: 1px solid rgba(201,168,76,0.06);
+  pointer-events: none;
+}
+.nl-inner {
+  position: relative; z-index: 1;
+  text-align: center; max-width: 600px; margin: 0 auto;
+}
+.nl-inner h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(36px,5vw,62px); font-weight: 300; color: var(--cream);
+  margin-bottom: .8rem;
+}
+.nl-inner h2 em { font-style: italic; color: var(--gold-light); }
+.nl-inner p {
+  font-size: 12px; letter-spacing: .1em; color: var(--text-muted);
+  margin-bottom: 3rem; line-height: 1.9;
+}
+.nl-form {
+  display: flex; gap: 0;
+  border: 1px solid rgba(201,168,76,0.25);
+  overflow: hidden;
+  max-width: 460px; margin: 0 auto 1.5rem;
+}
+.nl-form input {
+  flex: 1;
+  background: transparent;
+  border: none; outline: none;
+  padding: 1rem 1.5rem;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 11px; letter-spacing: .2em;
+  color: var(--cream);
+}
+.nl-form input::placeholder { color: var(--text-muted); }
+.nl-form button {
+  background: rgba(201,168,76,0.12);
+  border: none; border-left: 1px solid rgba(201,168,76,0.25);
+  padding: 1rem 1.8rem;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 9px; letter-spacing: .35em; text-transform: uppercase;
+  color: var(--gold-light);
+  cursor: pointer;
+  transition: background .3s;
+}
+.nl-form button:hover { background: rgba(201,168,76,0.2); }
+.nl-note {
+  font-size: 9px; letter-spacing: .2em; color: var(--gold-dim);
+  text-transform: uppercase;
+}
+</style>
+
+<section id="newsletter">
+  <div class="nl-inner">
+    <p class="section-label">Stay illuminated</p>
+    <h2>Light as a <em>letter</em></h2>
+    <p>Monthly dispatches on new fixtures, lighting science, interior mood guides, and the stories behind the world's most beautiful spaces. Never a dark inbox.</p>
+    <div class="nl-form">
+      <input type="email" placeholder="Your email address" id="nlEmail">
+      <button onclick="handleNL()">Subscribe</button>
+    </div>
+    <p class="nl-note" id="nlMsg">No noise. Unsubscribe anytime.</p>
+  </div>
+</section>
+
+<!-- EXTENDED FOOTER -->
+<style>
+footer.full {
+  border-top: 1px solid rgba(201,168,76,0.1);
+  padding: 5rem 10% 3rem;
+  background: rgba(8,6,3,0.6);
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 4rem;
+  margin-bottom: 4rem;
+}
+.footer-brand .footer-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px; font-weight: 300;
+  color: var(--gold-light);
+  letter-spacing: .1em;
+  display: block; margin-bottom: 1rem;
+}
+.footer-brand p {
+  font-size: 11px; letter-spacing: .08em; line-height: 1.9;
+  color: var(--text-muted); max-width: 280px;
+}
+.footer-col h4 {
+  font-size: 9px; letter-spacing: .4em; text-transform: uppercase;
+  color: var(--gold-dim); margin-bottom: 1.5rem;
+}
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: .7rem; }
+.footer-col ul a {
+  font-size: 11px; letter-spacing: .1em;
+  color: var(--text-muted); text-decoration: none;
+  transition: color .3s;
+}
+.footer-col ul a:hover { color: var(--gold-light); }
+.footer-bottom {
+  border-top: 1px solid rgba(201,168,76,0.06);
+  padding-top: 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.footer-bottom span {
+  font-size: 9px; letter-spacing: .25em;
+  color: var(--gold-dim); text-transform: uppercase;
+}
+</style>
+
+<footer class="full">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <span class="footer-logo">LUMINA</span>
+      <p>The art and science of illumination. Celebrating fourteen forms of artificial light from Edison's first filament to today's quantum-dot LEDs.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Collection</h4>
+      <ul>
+        <li><a href="#">Incandescent</a></li>
+        <li><a href="#">LED Bulb</a></li>
+        <li><a href="#">Chandeliers</a></li>
+        <li><a href="#">Pendants</a></li>
+        <li><a href="#">Floor Lamps</a></li>
+        <li><a href="#">Spotlights</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="#">Buying Guide</a></li>
+        <li><a href="#">Kelvin Scale</a></li>
+        <li><a href="#">History of Light</a></li>
+        <li><a href="#">Room Planner</a></li>
+        <li><a href="#">Configurator</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">Press</a></li>
+        <li><a href="#">Stockists</a></li>
+        <li><a href="#">Sustainability</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Lumina. All rights reserved.</span>
+    <span>Light is life</span>
+    <span>Made with care</span>
+  </div>
+</footer>
+
+<!-- CONFIGURATOR LOGIC -->
+<script>
+(function() {
+  const ctSlider = document.getElementById('ctSlider');
+  const briSlider = document.getElementById('briSlider');
+  const beamSlider = document.getElementById('beamSlider');
+  const ctVal = document.getElementById('ctVal');
+  const briVal = document.getElementById('briVal');
+  const beamVal = document.getElementById('beamVal');
+  const roColour = document.getElementById('roColour');
+  const roLumen = document.getElementById('roLumen');
+  const roCRI = document.getElementById('roCRI');
+  const roEnergy = document.getElementById('roEnergy');
+  const previewLabel = document.getElementById('previewLabel');
+  const conePoly = document.getElementById('conePoly');
+  const floorEllipse = document.getElementById('floorEllipse');
+  const coneStop1 = document.getElementById('coneStop1');
+  const coneStop2 = document.getElementById('coneStop2');
+  const floorStop = document.getElementById('floorStop');
+  const pvG1 = document.getElementById('pvG1');
+  const pvG2 = document.getElementById('pvG2');
+  const pvG3 = document.getElementById('pvG3');
+
+  const lightTypes = {
+    incandescent: { cri: 'Ra 100', energy: 'E', baseLm: 630, criScale: 1 },
+    led:          { cri: 'Ra 85',  energy: 'A+', baseLm: 800, criScale: 0.85 },
+    pendant:      { cri: 'Ra 90',  energy: 'B', baseLm: 400, criScale: 0.9 },
+    spotlight:    { cri: 'Ra 92',  energy: 'A', baseLm: 350, criScale: 0.92 },
+    neon:         { cri: 'Ra 65',  energy: 'C', baseLm: 200, criScale: 0.65 },
+    floor:        { cri: 'Ra 88',  energy: 'B', baseLm: 900, criScale: 0.88 }
+  };
+  let currentType = 'incandescent';
+
+  function kelvinToHex(k) {
+    if (k < 2200) return '#ff8020';
+    if (k < 2700) return '#ffa040';
+    if (k < 3000) return '#ffb860';
+    if (k < 3500) return '#ffd080';
+    if (k < 4000) return '#ffe8a0';
+    if (k < 5000) return '#fff8e8';
+    if (k < 6000) return '#f0f4ff';
+    return '#d8e8ff';
+  }
+
+  function kelvinToName(k) {
+    if (k < 2200) return 'Candlelight';
+    if (k < 2800) return 'Warm White';
+    if (k < 3200) return 'Soft White';
+    if (k < 4200) return 'Cool White';
+    if (k < 5500) return 'Daylight';
+    return 'Cool Daylight';
+  }
+
+  function update() {
+    const ct = +ctSlider.value;
+    const bri = +briSlider.value;
+    const beam = +beamSlider.value;
+    const lt = lightTypes[currentType];
+
+    ctVal.textContent = ct + 'K';
+    briVal.textContent = bri + '%';
+    beamVal.textContent = beam + '°';
+
+    const colour = kelvinToHex(ct);
+    const colourName = kelvinToName(ct);
+    const lm = Math.round(lt.baseLm * bri / 100);
+    roColour.textContent = colourName;
+    roLumen.textContent = lm + ' lm';
+    roCRI.textContent = lt.cri;
+    roEnergy.textContent = lt.energy;
+    previewLabel.textContent = currentType.charAt(0).toUpperCase() + currentType.slice(1) + ' — ' + ct + 'K';
+
+    // Update bulb color
+    const alpha = bri / 100;
+    pvG1.setAttribute('stop-color', colour);
+    pvG2.setAttribute('stop-color', colour);
+    pvG3.setAttribute('stop-color', colour);
+
+    // Update cone
+    const halfBeam = beam / 2;
+    const coneHalfWidth = Math.tan(halfBeam * Math.PI / 180) * 320;
+    const cx = 250;
+    conePoly.setAttribute('points', `${cx},60 ${cx-coneHalfWidth},380 ${cx+coneHalfWidth},380`);
+    floorEllipse.setAttribute('cx', cx);
+    floorEllipse.setAttribute('rx', Math.min(coneHalfWidth * 0.8, 200));
+
+    coneStop1.setAttribute('stop-color', colour);
+    coneStop1.setAttribute('stop-opacity', 0.3 * alpha);
+    coneStop2.setAttribute('stop-color', colour);
+    coneStop2.setAttribute('stop-opacity', 0);
+    floorStop.setAttribute('stop-color', colour);
+    floorStop.setAttribute('stop-opacity', 0.18 * alpha);
+
+    const svgFilter = bri > 10 ? `drop-shadow(0 0 ${Math.round(bri/5)}px ${colour})` : 'none';
+    document.getElementById('previewBulbSvg').style.filter = svgFilter;
+  }
+
+  ctSlider.addEventListener('input', update);
+  briSlider.addEventListener('input', update);
+  beamSlider.addEventListener('input', update);
+
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      currentType = chip.dataset.type;
+      update();
+    });
+  });
+
+  update();
+})();
+</script>
+
+<!-- MOOD TABS LOGIC -->
+<script>
+(function() {
+  const moodData = {
+    cosy:    { kelvin: '2700K', light: 'Table Lamp', bri: '30–50%' },
+    work:    { kelvin: '4000K', light: 'Desk Lamp', bri: '70–90%' },
+    dinner:  { kelvin: '2200K', light: 'Chandelier', bri: '20–40%' },
+    gallery: { kelvin: '5000K', light: 'Spotlight', bri: '80–100%' },
+    night:   { kelvin: '1800K', light: 'Neon Flex', bri: '10–20%' }
+  };
+
+  document.querySelectorAll('.mood-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const mood = tab.dataset.mood;
+      document.querySelectorAll('.mood-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      document.querySelectorAll('.mood-scene-content').forEach(s => s.classList.remove('active'));
+      document.getElementById('mood-' + mood).classList.add('active');
+      const d = moodData[mood];
+      document.getElementById('moodKelvin').textContent = d.kelvin;
+      document.getElementById('moodLight').textContent = d.light;
+      document.getElementById('moodBri').textContent = d.bri;
+    });
+  });
+})();
+</script>
+
+<!-- TIMELINE REVEAL -->
+<script>
+(function() {
+  const tlObs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.tl-item').forEach(el => tlObs.observe(el));
+})();
+</script>
+
+<!-- REVEAL OTHER SECTIONS -->
+<script>
+(function() {
+  const obs2 = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.guide-card, .quote-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(18px)';
+    el.style.transition = 'opacity .5s ease, transform .5s ease';
+    obs2.observe(el);
+  });
+})();
+</script>
+
+<!-- NEWSLETTER HANDLER -->
+<script>
+function handleNL() {
+  const email = document.getElementById('nlEmail').value;
+  const msg = document.getElementById('nlMsg');
+  if (email && email.includes('@')) {
+    msg.textContent = 'You\'re in — expect light in your inbox.';
+    msg.style.color = 'rgba(201,168,76,0.7)';
+    document.getElementById('nlEmail').value = '';
+  } else {
+    msg.textContent = 'Please enter a valid email.';
+    msg.style.color = 'rgba(255,100,80,0.7)';
+  }
+}
+</script>
+</body>
+</html>
