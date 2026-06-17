@@ -31,6 +31,8 @@
     text-align: center;
     font-size: 10pt;
     margin-bottom: 18px;
+    word-break: break-word;
+    overflow-wrap: break-word;
   }
 
   .cv-contact a {
@@ -109,6 +111,29 @@
 
   .skills-row strong {
     font-weight: bold;
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 640px) {
+    body {
+      padding: 24px 18px;
+      font-size: 10pt;
+    }
+    .cv-name {
+      font-size: 14pt;
+      letter-spacing: 0.02em;
+    }
+    .cv-contact {
+      font-size: 8.5pt;
+      line-height: 1.8;
+    }
+    .cv-contact br-spacer { display: block; }
+    .section-title { font-size: 10pt; }
+    .entry-title { font-size: 10pt; }
+    .entry-sub, li, .edu-programme, .edu-standing, .edu-courses, .skills-row {
+      font-size: 9.5pt;
+    }
+    ul { padding-left: 16px; }
   }
 
   /* ── PRINT ── */
