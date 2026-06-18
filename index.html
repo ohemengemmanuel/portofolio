@@ -1,9 +1,17 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Emmanuel Ohemeng — Portfolio</title>
+  <meta name="description" content="Emmanuel Ohemeng — Computer Science undergraduate, freelance designer & developer based in Ghana. Building polished web experiences and Python-powered systems.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Emmanuel Ohemeng — Portfolio">
+  <meta property="og:description" content="Computer Science undergraduate and freelance designer & developer — building polished web experiences and Python-powered systems from Ghana.">
+  <meta property="og:image" content="my portrait.jpeg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Emmanuel Ohemeng — Portfolio">
+  <meta name="twitter:description" content="Computer Science undergraduate and freelance designer & developer — building polished web experiences and Python-powered systems from Ghana.">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <script>
     (function(){var t=localStorage.getItem('eo-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();
@@ -320,21 +328,13 @@
       width: 100%;
       overflow: hidden;
       background: var(--bg-card2);
+      aspect-ratio: 16 / 10;
     }
 
-    .preview-scaler {
-      position: absolute;
-      top: 0; left: 0;
-      width: 1440px;
-      height: 900px;
-      transform-origin: top left;
-    }
-
-    .site-preview iframe {
-      width: 1440px;
-      height: 900px;
-      border: none;
-      pointer-events: none;
+    .site-snapshot {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       display: block;
     }
 
@@ -396,8 +396,38 @@
       border-radius: 10px;
       padding: 40px;
       transition: border-color 0.3s, border-radius 0.3s;
+      position: relative;
+      overflow: hidden;
     }
     .project-card:hover { border-color: rgba(200,169,110,0.35); border-radius: 18px; }
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      z-index: 1;
+    }
+
+    .project-snapshot {
+      margin: -40px -40px 28px -40px;
+      height: 160px;
+      overflow: hidden;
+    }
+    .project-snapshot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+    .project-card:hover .project-snapshot img { transform: scale(1.03); }
+    .project-card:nth-child(1)::before {
+      background: linear-gradient(90deg, var(--gold) 0%, #4a9dd4 100%);
+    }
+    .project-card:nth-child(2)::before {
+      background: linear-gradient(90deg, var(--gold) 0%, #9b6dd4 100%);
+    }
 
     .project-number {
       font-family: 'Cormorant Garamond', serif;
@@ -799,8 +829,10 @@
     }
 
     .resume-download {
-      margin-top: 48px;
+      margin-top: 24px;
+      margin-bottom: 8px;
       grid-column: 1 / -1;
+      text-align: center;
     }
 
     /* ── CONTACT STRIP ── */
@@ -893,9 +925,9 @@
   <nav>
     <a href="#hero" class="nav-logo">E<span>.</span>Ohemeng</a>
     <ul class="nav-links">
-      <li><a href="#sites">Designs</a></li>
       <li><a href="#projects">Projects</a></li>
       <li><a href="#showcase">Showcase</a></li>
+      <li><a href="#sites">Designs & Sites</a></li>
       <li><a href="#uiux">UI/UX</a></li>
       <li><a href="#resume">Resume</a></li>
       <li><a href="#contact">Contact</a></li>
@@ -921,7 +953,7 @@
         client websites to real-time facial recognition applications.
       </p>
       <div class="hero-cta">
-        <a href="#sites" class="btn-primary">View Designs</a>
+        <a href="#projects" class="btn-primary">View Projects</a>
         <a href="#resume" class="btn-ghost">Resume</a>
       </div>
     </div>
@@ -929,145 +961,10 @@
     <div class="hero-photo">
       <div class="photo-frame">
         <div class="photo-placeholder">
-          <img src="my potrait.jpeg" alt="Emmanuel Ohemeng">
+          <img src="my portrait.jpeg" alt="Emmanuel Ohemeng">
         </div>
       </div>
     </div>
-  </section>
-
-  <!-- SITES -->
-  <section id="sites">
-    <div class="section-header">
-      <p class="section-eyebrow">Web Design</p>
-      <h2 class="section-title">Designs &amp; Sites</h2>
-      <div class="section-divider"></div>
-    </div>
-
-    <div class="sites-carousel">
-      <button class="carousel-nav-btn carousel-btn-prev" id="sitesPrev" aria-label="Previous">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-      </button>
-      <button class="carousel-nav-btn carousel-btn-next" id="sitesNext" aria-label="Next">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-      </button>
-      <div class="carousel-track-wrap">
-        <div class="carousel-track" id="sitesTrack">
-
-      <div class="site-card">
-        <div class="site-preview"><div class="preview-scaler" id="scale-casa"></div></div>
-        <div class="site-info">
-          <div>
-            <div class="site-name">Casa</div>
-            <div class="site-tag">Real Estate</div>
-          </div>
-          <a href="sites/casa.html" target="_blank" class="site-link">View →</a>
-        </div>
-        <div class="site-overlay" onclick="window.open('sites/casa.html','_blank')"></div>
-      </div>
-
-      <div class="site-card">
-        <div class="site-preview"><div class="preview-scaler" id="scale-scoops"></div></div>
-        <div class="site-info">
-          <div>
-            <div class="site-name">Scoops &amp; Co.</div>
-            <div class="site-tag">Artisan Ice Cream</div>
-          </div>
-          <a href="sites/scoops-website.html" target="_blank" class="site-link">View →</a>
-        </div>
-        <div class="site-overlay" onclick="window.open('sites/scoops-website.html','_blank')"></div>
-      </div>
-
-      <div class="site-card">
-        <div class="site-preview"><div class="preview-scaler" id="scale-lumina"></div></div>
-        <div class="site-info">
-          <div>
-            <div class="site-name">Lumina</div>
-            <div class="site-tag">Museum &amp; Exhibition</div>
-          </div>
-          <a href="sites/lumina.html" target="_blank" class="site-link">View →</a>
-        </div>
-        <div class="site-overlay" onclick="window.open('sites/lumina.html','_blank')"></div>
-      </div>
-
-      <div class="site-card">
-        <div class="site-preview"><div class="preview-scaler" id="scale-tidal"></div></div>
-        <div class="site-info">
-          <div>
-            <div class="site-name">Tidal</div>
-            <div class="site-tag">Luxury Water Experience</div>
-          </div>
-          <a href="sites/tidal-waterpark.html" target="_blank" class="site-link">View →</a>
-        </div>
-        <div class="site-overlay" onclick="window.open('sites/tidal-waterpark.html','_blank')"></div>
-      </div>
-
-      <div class="site-card">
-        <div class="site-preview"><div class="preview-scaler" id="scale-freq"></div></div>
-        <div class="site-info">
-          <div>
-            <div class="site-name">FREQ</div>
-            <div class="site-tag">Concert Booking</div>
-          </div>
-          <a href="sites/freq-concerts.html" target="_blank" class="site-link">View →</a>
-        </div>
-        <div class="site-overlay" onclick="window.open('sites/freq-concerts.html','_blank')"></div>
-      </div>
-
-      <div class="site-card">
-        <div class="site-preview"><div class="preview-scaler" id="scale-nexus"></div></div>
-        <div class="site-info">
-          <div>
-            <div class="site-name">Nexus</div>
-            <div class="site-tag">Tech Store</div>
-          </div>
-          <a href="sites/techshop.html" target="_blank" class="site-link">View →</a>
-        </div>
-        <div class="site-overlay" onclick="window.open('sites/techshop.html','_blank')"></div>
-      </div>
-
-      <div class="site-card">
-        <div class="site-preview"><div class="preview-scaler" id="scale-elinesis"></div></div>
-        <div class="site-info">
-          <div>
-            <div class="site-name">Elinesis</div>
-            <div class="site-tag">Water Park &amp; Leisure</div>
-          </div>
-          <a href="sites/elinesis.html" target="_blank" class="site-link">View →</a>
-        </div>
-        <div class="site-overlay" onclick="window.open('sites/elinesis.html','_blank')"></div>
-      </div>
-
-      <div class="site-card">
-        <div class="site-preview"><div class="preview-scaler" id="scale-bakery"></div></div>
-        <div class="site-info">
-          <div>
-            <div class="site-name">Aurore</div>
-            <div class="site-tag">Artisan Bakery</div>
-          </div>
-          <a href="sites/bakery.html" target="_blank" class="site-link">View →</a>
-        </div>
-        <div class="site-overlay" onclick="window.open('sites/bakery.html','_blank')"></div>
-      </div>
-
-      <div class="site-card">
-        <div class="site-preview"><div class="preview-scaler" id="scale-nba"></div></div>
-        <div class="site-info">
-          <div>
-            <div class="site-name">NBA ELITE</div>
-            <div class="site-tag">Sports Gallery</div>
-          </div>
-          <a href="sites/NBA/index.html" target="_blank" class="site-link">View →</a>
-        </div>
-        <div class="site-overlay" onclick="window.open('sites/NBA/index.html','_blank')"></div>
-      </div>
-
-        </div><!-- /.carousel-track -->
-      </div><!-- /.carousel-track-wrap -->
-      <div class="carousel-footer">
-        <div class="carousel-dots" id="sitesDots"></div>
-        <span class="carousel-counter" id="sitesCounter">1 / 9</span>
-      </div>
-    </div><!-- /.sites-carousel -->
   </section>
 
   <!-- PROJECTS -->
@@ -1081,6 +978,7 @@
     <div class="projects-grid">
 
       <div class="project-card">
+        <div class="project-snapshot"><img src="snapshots/attendlog.png" alt="AttendLog dashboard screenshot"></div>
         <div class="project-number">01</div>
         <h3 class="project-title">AttendLog — Facial Recognition Attendance System</h3>
         <p class="project-desc">
@@ -1101,6 +999,7 @@
       </div>
 
       <div class="project-card">
+        <div class="project-snapshot"><img src="snapshots/faceid.png" alt="FaceID landing page screenshot"></div>
         <div class="project-number">02</div>
         <h3 class="project-title">FaceID — Web-Based Facial Authentication</h3>
         <p class="project-desc">
@@ -1433,6 +1332,141 @@
 
   </section>
 
+  <!-- SITES -->
+  <section id="sites">
+    <div class="section-header">
+      <p class="section-eyebrow">Web Design</p>
+      <h2 class="section-title">Designs &amp; Sites</h2>
+      <div class="section-divider"></div>
+    </div>
+
+    <div class="sites-carousel">
+      <button class="carousel-nav-btn carousel-btn-prev" id="sitesPrev" aria-label="Previous">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
+      <button class="carousel-nav-btn carousel-btn-next" id="sitesNext" aria-label="Next">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </button>
+      <div class="carousel-track-wrap">
+        <div class="carousel-track" id="sitesTrack">
+
+      <div class="site-card">
+        <div class="site-preview"><img src="snapshots/casa.png" alt="Casa" class="site-snapshot"></div>
+        <div class="site-info">
+          <div>
+            <div class="site-name">Casa</div>
+            <div class="site-tag">Real Estate</div>
+          </div>
+          <a href="sites/casa.html" target="_blank" class="site-link">View →</a>
+        </div>
+        <div class="site-overlay" onclick="window.open('sites/casa.html','_blank')"></div>
+      </div>
+
+      <div class="site-card">
+        <div class="site-preview"><img src="snapshots/scoops.png" alt="Scoops &amp; Co." class="site-snapshot"></div>
+        <div class="site-info">
+          <div>
+            <div class="site-name">Scoops &amp; Co.</div>
+            <div class="site-tag">Artisan Ice Cream</div>
+          </div>
+          <a href="sites/scoops-website.html" target="_blank" class="site-link">View →</a>
+        </div>
+        <div class="site-overlay" onclick="window.open('sites/scoops-website.html','_blank')"></div>
+      </div>
+
+      <div class="site-card">
+        <div class="site-preview"><img src="snapshots/lumina.png" alt="Lumina" class="site-snapshot"></div>
+        <div class="site-info">
+          <div>
+            <div class="site-name">Lumina</div>
+            <div class="site-tag">Museum &amp; Exhibition</div>
+          </div>
+          <a href="sites/lumina.html" target="_blank" class="site-link">View →</a>
+        </div>
+        <div class="site-overlay" onclick="window.open('sites/lumina.html','_blank')"></div>
+      </div>
+
+      <div class="site-card">
+        <div class="site-preview"><img src="snapshots/tidal.png" alt="Tidal" class="site-snapshot"></div>
+        <div class="site-info">
+          <div>
+            <div class="site-name">Tidal</div>
+            <div class="site-tag">Luxury Water Experience</div>
+          </div>
+          <a href="sites/tidal-waterpark.html" target="_blank" class="site-link">View →</a>
+        </div>
+        <div class="site-overlay" onclick="window.open('sites/tidal-waterpark.html','_blank')"></div>
+      </div>
+
+      <div class="site-card">
+        <div class="site-preview"><img src="snapshots/freq.png" alt="FREQ" class="site-snapshot"></div>
+        <div class="site-info">
+          <div>
+            <div class="site-name">FREQ</div>
+            <div class="site-tag">Concert Booking</div>
+          </div>
+          <a href="sites/freq-concerts.html" target="_blank" class="site-link">View →</a>
+        </div>
+        <div class="site-overlay" onclick="window.open('sites/freq-concerts.html','_blank')"></div>
+      </div>
+
+      <div class="site-card">
+        <div class="site-preview"><img src="snapshots/nexus.png" alt="Nexus" class="site-snapshot"></div>
+        <div class="site-info">
+          <div>
+            <div class="site-name">Nexus</div>
+            <div class="site-tag">Tech Store</div>
+          </div>
+          <a href="sites/techshop.html" target="_blank" class="site-link">View →</a>
+        </div>
+        <div class="site-overlay" onclick="window.open('sites/techshop.html','_blank')"></div>
+      </div>
+
+      <div class="site-card">
+        <div class="site-preview"><img src="snapshots/elinesis.png" alt="Elinesis" class="site-snapshot"></div>
+        <div class="site-info">
+          <div>
+            <div class="site-name">Elinesis</div>
+            <div class="site-tag">Water Park &amp; Leisure</div>
+          </div>
+          <a href="sites/elinesis.html" target="_blank" class="site-link">View →</a>
+        </div>
+        <div class="site-overlay" onclick="window.open('sites/elinesis.html','_blank')"></div>
+      </div>
+
+      <div class="site-card">
+        <div class="site-preview"><img src="snapshots/bakery.png" alt="Aurore" class="site-snapshot"></div>
+        <div class="site-info">
+          <div>
+            <div class="site-name">Aurore</div>
+            <div class="site-tag">Artisan Bakery</div>
+          </div>
+          <a href="sites/bakery.html" target="_blank" class="site-link">View →</a>
+        </div>
+        <div class="site-overlay" onclick="window.open('sites/bakery.html','_blank')"></div>
+      </div>
+
+      <div class="site-card">
+        <div class="site-preview"><img src="snapshots/nba.png" alt="NBA ELITE" class="site-snapshot"></div>
+        <div class="site-info">
+          <div>
+            <div class="site-name">NBA ELITE</div>
+            <div class="site-tag">Sports Gallery</div>
+          </div>
+          <a href="sites/NBA/index.html" target="_blank" class="site-link">View →</a>
+        </div>
+        <div class="site-overlay" onclick="window.open('sites/NBA/index.html','_blank')"></div>
+      </div>
+
+        </div><!-- /.carousel-track -->
+      </div><!-- /.carousel-track-wrap -->
+      <div class="carousel-footer">
+        <div class="carousel-dots" id="sitesDots"></div>
+        <span class="carousel-counter" id="sitesCounter">1 / 9</span>
+      </div>
+    </div><!-- /.sites-carousel -->
+  </section>
+
   <!-- UI/UX -->
   <section id="uiux">
     <div class="section-header">
@@ -1674,37 +1708,6 @@
       localStorage.setItem('eo-theme', next);
     });
 
-    const previews = [
-      { id: 'scale-casa',     src: 'sites/casa.html' },
-      { id: 'scale-scoops',   src: 'sites/scoops-website.html' },
-      { id: 'scale-lumina',   src: 'sites/lumina.html' },
-      { id: 'scale-tidal',    src: 'sites/tidal-waterpark.html' },
-      { id: 'scale-freq',     src: 'sites/freq-concerts.html' },
-      { id: 'scale-nexus',    src: 'sites/techshop.html' },
-      { id: 'scale-elinesis', src: 'sites/elinesis.html' },
-      { id: 'scale-bakery',   src: 'sites/bakery.html' },
-      { id: 'scale-nba',     src: 'sites/NBA/index.html' },
-    ];
-
-    function scaleIframes() {
-      previews.forEach(({ id, src }) => {
-        const scaler = document.getElementById(id);
-        if (!scaler) return;
-        const parent = scaler.closest('.site-preview');
-        const cardWidth = parent.offsetWidth;
-        if (!cardWidth) return;
-        const scale = cardWidth / 1440;
-        scaler.style.transform = `scale(${scale})`;
-        parent.style.height = (900 * scale) + 'px';
-        if (!scaler.querySelector('iframe')) {
-          const iframe = document.createElement('iframe');
-          iframe.src = src;
-          iframe.title = id;
-          scaler.appendChild(iframe);
-        }
-      });
-    }
-
     // ── SITES CAROUSEL (peek style) ──
     const CARD_RATIO = 0.68; // 68% of container width; ~16% peeking each side
     const GAP = 20;
@@ -1736,7 +1739,6 @@
         cards.forEach(c => { c.style.width = cardW + 'px'; });
         applyTransform();
         applyCardStyles();
-        scaleIframes();
       }
 
       function applyTransform() {
