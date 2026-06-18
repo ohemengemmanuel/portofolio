@@ -164,9 +164,21 @@
       letter-spacing: 0.14em;
       text-transform: uppercase;
       text-decoration: none;
+      border-radius: 6px;
       transition: border-color 0.2s, color 0.2s;
     }
     .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+    .btn-cv {
+      border-color: #e53e3e;
+      color: #e53e3e;
+      box-shadow: 0 0 8px rgba(229,62,62,0.45), 0 0 20px rgba(229,62,62,0.18);
+    }
+    .btn-cv:hover {
+      border-color: #ff6b6b;
+      color: #ff6b6b;
+      box-shadow: 0 0 14px rgba(255,107,107,0.65), 0 0 32px rgba(255,107,107,0.28);
+    }
 
     /* ── PHOTO PLACEHOLDER ── */
     .hero-photo {
@@ -1024,7 +1036,7 @@
       <div class="hero-cta">
         <a href="#projects" class="btn-primary">View Projects</a>
         <a href="#resume" class="btn-ghost">Resume</a>
-        <a href="Emmanuel_Ohemeng_CV.pdf" download class="btn-ghost">Download CV</a>
+        <a href="Emmanuel_Ohemeng_CV.pdf" download class="btn-ghost btn-cv">Download CV</a>
       </div>
     </div>
 
