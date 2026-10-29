@@ -145,8 +145,11 @@
   }
 
   /* ── PRINT ── */
+  @page { size: A4; }
   @media print {
     body { padding: 32px 48px; }
+    .entry, li { break-inside: avoid; }
+    .section-title { break-after: avoid; }
     a { color: #1a56cc; text-decoration: underline; }
     a[href*="vercel.app"] { color: #1a56cc !important; font-weight: bold; }
   }
@@ -194,8 +197,24 @@
   <div class="entry">
     <ul>
       <li>
+        <div class="entry-header"><strong>Sports Scene - Automated Sports Post Generator</strong><span class="entry-date">2026</span></div>
+        Building a Next.js and TypeScript web app that turns live scores, fixtures, and news from ESPN into ready-to-post social graphics, with 14 templates, team-colour theming, auto-written captions, and platform-specific sizes for Instagram, TikTok, Facebook, and X. Includes an Autopilot that drafts posts every 10 minutes into a review queue and publishes approved ones automatically.
+      </li>
+      <li>
         <div class="entry-header"><strong>NBA Elite - Sports Showcase Website</strong><span class="entry-date">2026</span></div>
         Built a dynamic single-page application featuring 58+ players across four eras, with real-time search, era-based filtering, and a click-to-open player modal system.
+      </li>
+      <li>
+        <div class="entry-header"><strong>ShopFlow - E-Commerce &amp; Inventory Platform</strong><span class="entry-date">2026</span></div>
+        Built a storefront with product search, category filtering, and a slide-out cart and checkout flow, paired with an inventory dashboard for adding products and tracking stock levels and status.
+      </li>
+      <li>
+        <div class="entry-header"><strong>The Den - Cinema Website</strong><span class="entry-date">2026</span></div>
+        Designed and built a responsive film showcase with a full-screen video hero, an asymmetric "Now Showing" grid, genre browsing, a featured-film section, and scroll-reveal animations.
+      </li>
+      <li>
+        <div class="entry-header"><strong>FaceID - Web-Based Facial Authentication</strong><span class="entry-date">2026</span></div>
+        Developed a passwordless login system where users register with a face capture and sign in through live camera verification against stored encodings, using Python, Flask, face_recognition, and SQLite.
       </li>
       <li>
         <div class="entry-header"><strong>Multimedia Technologies - Interactive Prototype</strong><span class="entry-date">2024</span></div>
@@ -290,10 +309,16 @@
   <div class="section-title">Skills and Interests</div>
 
   <div class="skills-row">
-    <strong>Technical:</strong> Python &nbsp;|&nbsp; Flask &nbsp;|&nbsp; HTML / CSS &nbsp;|&nbsp; JavaScript &nbsp;|&nbsp; React &nbsp;|&nbsp; C++ &nbsp;|&nbsp; SQLite &nbsp;|&nbsp; OpenCV &nbsp;|&nbsp; Database Management
+    <strong>Languages:</strong> Python &nbsp;|&nbsp; JavaScript &nbsp;|&nbsp; TypeScript &nbsp;|&nbsp; HTML / CSS &nbsp;|&nbsp; C++ &nbsp;|&nbsp; PHP &nbsp;|&nbsp; SQL
   </div>
   <div class="skills-row">
-    <strong>Design:</strong> Figma &nbsp;|&nbsp; Adobe Photoshop &nbsp;|&nbsp; UI/UX Design &nbsp;|&nbsp; Web Design &nbsp;|&nbsp; Graphic Design &nbsp;|&nbsp; Flyer &amp; Ad Design
+    <strong>Frameworks &amp; Libraries:</strong> React &nbsp;|&nbsp; Next.js &nbsp;|&nbsp; React Native (Expo) &nbsp;|&nbsp; Flask &nbsp;|&nbsp; Tailwind CSS &nbsp;|&nbsp; OpenCV &nbsp;|&nbsp; face_recognition
+  </div>
+  <div class="skills-row">
+    <strong>Databases &amp; Tools:</strong> SQLite &nbsp;|&nbsp; PostgreSQL &nbsp;|&nbsp; Supabase &nbsp;|&nbsp; REST APIs &nbsp;|&nbsp; Git &amp; GitHub &nbsp;|&nbsp; Vercel &nbsp;|&nbsp; Database Management
+  </div>
+  <div class="skills-row">
+    <strong>Design:</strong> Figma &nbsp;|&nbsp; Adobe Photoshop &nbsp;|&nbsp; UI/UX Design &nbsp;|&nbsp; Web Design &nbsp;|&nbsp; Responsive Design &nbsp;|&nbsp; Wireframing &amp; Prototyping &nbsp;|&nbsp; Brand &amp; Logo Design &nbsp;|&nbsp; Graphic Design &nbsp;|&nbsp; Flyer &amp; Ad Design &nbsp;|&nbsp; Framer
   </div>
   <div class="skills-row">
     <strong>Office &amp; Productivity:</strong> Microsoft Word &nbsp;|&nbsp; Excel &nbsp;|&nbsp; PowerPoint &nbsp;|&nbsp; Access
